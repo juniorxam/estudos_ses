@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Gestor em Saúde (SUS)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #005c9e;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #005c9e 0%, #003f6b 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-number {
+            color: #005c9e;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .option:hover:not(.answered) {
+            border-color: #005c9e;
+            background: #e6f0fa;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            margin-top: 3px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            color: #333;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .option.selected {
+            border-color: #005c9e;
+            background: #e6f0fa;
+        }
+
+        .option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            cursor: not-allowed;
+        }
+
+        .option.correct label {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            cursor: not-allowed;
+        }
+
+        .option.incorrect label {
+            color: #c62828;
+            font-weight: 600;
+        }
+
+        .option.answered {
+            cursor: not-allowed;
+        }
+
+        .explanation-box {
+            background: #e6f0fa;
+            border-left: 4px solid #005c9e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .explanation-box.show {
+            display: block;
+        }
+
+        .explanation-title {
+            font-weight: 600;
+            color: #005c9e;
+            margin-bottom: 8px;
+        }
+
+        .explanation-text {
+            color: #5d4037;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
+            color: white;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .btn-confirm:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 92, 158, 0.4);
+        }
+
+        .btn-confirm:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
+            color: white;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 92, 158, 0.4);
+        }
+
+        .btn-prev {
+            background: #e0e0e0;
+            color: #333;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .btn-prev:hover:not(:disabled) {
+            background: #d0d0d0;
+        }
+
+        .results-container {
+            text-align: center;
+            display: none;
+        }
+
+        .results-container.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 30px rgba(0, 92, 158, 0.3);
+        }
+
+        .score-text {
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .results-message {
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .results-details {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 92, 158, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            .buttons { flex-direction: column; }
+            .btn-next, .btn-prev, .btn-confirm { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Quiz - Gestor em Saúde (SUS)</h1>
+            <p>30 questões específicas: Legislação, Gestão, Informática, Português e Raciocínio Lógico</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div id="quizContainer">
+            <div class="question-number" id="questionNumber"></div>
+            <div class="question-text" id="questionText"></div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="explanation-box" id="explanationBox">
+                <div class="explanation-title" id="explanationTitle"></div>
+                <div class="explanation-text" id="explanationText"></div>
+            </div>
+            <div class="buttons">
+                <button class="btn-prev" id="btnPrev" onclick="previousQuestion()">← Anterior</button>
+                <button class="btn-confirm" id="btnConfirm" onclick="confirmAnswer()">Confirmar Resposta</button>
+                <button class="btn-next" id="btnNext" onclick="nextQuestion()" style="display: none;">Próxima →</button>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <div class="score-circle">
+                <div class="score-text" id="scorePercentage"></div>
+            </div>
+            <div class="results-message" id="resultsMessage"></div>
+            <div class="results-details" id="resultsDetails"></div>
+            <button class="btn-restart" onclick="restartQuiz()">Refazer Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // LEGISLAÇÃO E GESTÃO EM SAÚDE (Questões 1-15)
+            {
+                question: "De acordo com a Lei nº 8.080/90, a iniciativa privada poderá participar do Sistema Único de Saúde (SUS) em caráter:",
+                options: ["Prioritário, com preferência de financiamento público", "Complementar, mediante contrato de direito público ou convênio", "Substitutivo à rede pública, quando esta for insuficiente", "Exclusivo para serviços de alta complexidade", "Filantrópico, sem necessidade de licitação"],
+                correct: 1,
+                explanation: "Art. 24 da Lei 8.080/90: 'Quando as suas disponibilidades forem insuficientes para garantir a cobertura assistencial à população de uma determinada área, o Sistema Único de Saúde (SUS) poderá recorrer aos serviços ofertados pela iniciativa privada' em caráter complementar."
+            },
+            {
+                question: "A Política Nacional de Humanização (PNH), também conhecida como HumanizaSUS, possui como um de seus princípios:",
+                options: ["A centralidade do poder técnico nas decisões de saúde", "A gestão centralizada e hierarquizada dos serviços", "A transversalidade, que aumenta a comunicação entre os sujeitos", "A exclusividade do atendimento médico na atenção básica", "A redução dos custos com pessoal"],
+                correct: 2,
+                explanation: "A transversalidade é um dos princípios da PNH, reconhecendo que as diferentes especialidades e saberes podem se comunicar, ampliando as trocas de conhecimento e experiências. [citation:1]"
+            },
+            {
+                question: "Segundo a Lei nº 8.142/90, o Conselho de Saúde, em cada esfera de governo, é um órgão:",
+                options: ["Consultivo e executivo", "Colegiado de caráter permanente e deliberativo", "Normativo e fiscalizador, sem participação popular", "Temporário e consultivo", "Jurisdicional e normativo"],
+                correct: 1,
+                explanation: "O Conselho de Saúde é um órgão colegiado, permanente e deliberativo, que atua na formulação de estratégias e no controle da execução da política de saúde, incluindo aspectos econômicos e financeiros."
+            },
+            {
+                question: "O Decreto nº 7.508/2011, que regulamenta a Lei nº 8.080/90, define como 'Rede de Atenção à Saúde':",
+                options: ["O conjunto de hospitais privados conveniados ao SUS", "A articulação entre o Ministério da Saúde e as Secretarias Estaduais", "O conjunto de ações e serviços de saúde articulados em níveis de complexidade crescente", "A relação de medicamentos disponibilizados pelo SUS", "O mapa de saúde de cada município"],
+                correct: 2,
+                explanation: "O Decreto define as Redes de Atenção à Saúde como 'conjunto de ações e serviços de saúde articulados em níveis de complexidade crescente, com a finalidade de garantir a integralidade da assistência à saúde'. [citation:5]"
+            },
+            {
+                question: "Em relação ao Controle Social no SUS, é correto afirmar que:",
+                options: ["É exercido exclusivamente pelos gestores municipais", "Acontece apenas nas Conferências de Saúde, a cada 4 anos", "É garantido por meio dos Conselhos e Conferências de Saúde, com participação de usuários, trabalhadores e gestores", "Os usuários têm direito a 50% dos votos, mas não podem propor pautas", "É uma ferramenta de fiscalização sem poder deliberativo"],
+                correct: 2,
+                explanation: "A participação social é uma diretriz do SUS, garantida pela Lei 8.142/90, através dos Conselhos e Conferências de Saúde, com representação paritária de usuários, trabalhadores, gestores e prestadores de serviço. [citation:1]"
+            },
+            {
+                question: "A Comissão Intergestores Tripartite (CIT) é um espaço de articulação e pactuação entre:",
+                options: ["União, Estados e Municípios", "Ministério da Saúde e Conselhos de Secretários Municipais", "Apenas entre os gestores estaduais", "Governo Federal e entidades filantrópicas", "Secretarias Estaduais e Conselhos de Saúde"],
+                correct: 0,
+                explanation: "A CIT é uma instância de negociação e pactuação entre gestores federal (Ministério da Saúde), estadual (CONASS) e municipal (CONASEMS)."
+            },
+            {
+                question: "A regionalização da saúde, conforme a legislação do SUS, deve ser organizada a partir de:",
+                options: ["Divisões puramente geográficas sem critérios sanitários", "Redes hierarquizadas e regiões de saúde", "Demanda espontânea da população", "Interesses políticos locais", "Capacidade financeira isolada de cada município"],
+                correct: 1,
+                explanation: "A regionalização é uma diretriz do SUS que organiza os serviços em redes hierarquizadas e regiões de saúde, com base em critérios epidemiológicos e territoriais, garantindo acesso e integralidade. [citation:1][citation:5]"
+            },
+            {
+                question: "São objetivos da Política Nacional de Educação Permanente em Saúde (PNEPS):",
+                options: ["Promover cursos pontuais e desarticulados da prática", "Transformar as práticas profissionais a partir da reflexão crítica sobre o trabalho", "Centralizar a formação em nível de pós-graduação", "Reduzir os custos com treinamento de pessoal", "Excluir trabalhadores de nível médio dos processos formativos"],
+                correct: 1,
+                explanation: "A Educação Permanente em Saúde propõe a aprendizagem significativa no cotidiano de trabalho, transformando as práticas a partir da análise crítica da realidade."
+            },
+            {
+                question: "De acordo com a Lei nº 1.818/2007 (Estatuto dos Servidores do Tocantins), ao entrar em exercício, o servidor nomeado para cargo de provimento efetivo ficará sujeito a estágio probatório por período de:",
+                options: ["12 meses", "24 meses", "36 meses", "48 meses", "6 meses"],
+                correct: 2,
+                explanation: "O Art. 23 da Lei Estadual nº 1.818/2007 estabelece que o servidor nomeado para cargo de provimento efetivo fica sujeito a estágio probatório por 36 meses (três anos), durante o qual sua aptidão e capacidade serão objeto de avaliação."
+            },
+            {
+                question: "A Constituição Federal de 1988, em seu art. 196, define a saúde como:",
+                options: ["Um serviço a ser concedido à iniciativa privada", "Direito de todos e dever do Estado", "Um privilégio do cidadão contribuinte", "Dever exclusivo dos municípios", "Uma política de governo, não de Estado"],
+                correct: 1,
+                explanation: "Art. 196: 'A saúde é direito de todos e dever do Estado, garantido mediante políticas sociais e econômicas que visem à redução do risco de doença e de outros agravos...'"
+            },
+            {
+                question: "No âmbito da gestão do SUS, o financiamento das ações e serviços de saúde é de competência:",
+                options: ["Exclusiva da União", "Exclusiva dos municípios", "Compartilhada entre União, Estados, DF e Municípios", "Exclusiva dos Estados", "Da iniciativa privada, com repasse público"],
+                correct: 2,
+                explanation: "O SUS é financiado com recursos do orçamento da seguridade social da União, dos Estados, do Distrito Federal e dos Municípios, conforme art. 198 da CF/88."
+            },
+            {
+                question: "A Política Nacional de Atenção Básica (PNAB) estabelece que a Estratégia Saúde da Família (ESF) é:",
+                options: ["Uma opção para municípios com mais de 100 mil habitantes", "A estratégia prioritária para expansão e consolidação da Atenção Básica", "Um programa temporário do Ministério da Saúde", "Focada exclusivamente em ações curativas", "Substituta dos hospitais regionais"],
+                correct: 1,
+                explanation: "A PNAB reconhece a ESF como estratégia prioritária para organização da Atenção Básica, devido à sua capacidade de orientar o modelo assistencial e promover vínculo com a população. [citation:1]"
+            },
+            {
+                question: "De acordo com a Lei nº 8.080/90, está incluída no campo de atuação do Sistema Único de Saúde (SUS):",
+                options: ["A formulação de política de saneamento básico", "A execução de ações de assistência social", "A colaboração na proteção do meio ambiente, nele compreendido o do trabalho", "A administração da previdência social", "A fiscalização de alimentos, exceto quanto ao teor nutricional"],
+                correct: 2,
+                explanation: "Art. 6º, II: 'a participação na formulação da política e na execução de ações de saneamento básico' e 'a colaboração na proteção do meio ambiente, nele compreendido o do trabalho' são campos de atuação do SUS."
+            },
+            {
+                question: "O Apoio Matricial em saúde é uma estratégia de gestão que visa:",
+                options: ["Centralizar as decisões no gestor municipal", "Hierarquizar rigidamente o atendimento", "Garantir retaguarda especializada a equipes e profissionais de referência", "Substituir a atenção básica pela atenção especializada", "Reduzir o número de profissionais na ponta"],
+                correct: 2,
+                explanation: "O apoio matricial é um arranjo organizacional que visa oferecer suporte técnico especializado às equipes de referência, ampliando a capacidade de cuidado e garantindo a integralidade. [citation:8]"
+            },
+            {
+                question: "A 'RAS' (Rede de Atenção à Saúde) tem como um de seus elementos constitutivos:",
+                options: ["A centralização administrativa", "A população e região de saúde definidas", "O financiamento exclusivamente federal", "A eliminação da atenção primária", "A hierarquização sem integração"],
+                correct: 1,
+                explanation: "A estrutura operacional das Redes de Atenção à Saúde é composta por: população/região de saúde definidas, estrutura operacional (pontos de atenção) e sistemas de apoio. [citation:5]"
+            },
+
+            // INFORMÁTICA BÁSICA (Questões 16-20)
+            {
+                question: "No Microsoft Excel, a função que retorna a média aritmética dos argumentos é:",
+                options: ["SOMA()", "MEDIA()", "CONT.NUM()", "MÉDIA()", "SOMASE()"],
+                correct: 3,
+                explanation: "No Excel em português, a função para calcular a média aritmética é '=MÉDIA()'. 'MEDIA' sem acento não é reconhecida. [citation:2]"
+            },
+            {
+                question: "No contexto da internet, qual é a função principal de um programa antivírus?",
+                options: ["Acelerar a conexão com a internet", "Criar redes Wi-Fi", "Detectar e eliminar softwares maliciosos", "Editar planilhas online", "Gerenciar senhas do navegador"],
+                correct: 2,
+                explanation: "O antivírus é um software projetado para detectar, bloquear e remover vírus e outros malwares (códigos maliciosos) do computador, protegendo o sistema e os dados."
+            },
+            {
+                question: "No Sistema Operacional Windows, a combinação de teclas 'Ctrl + C' e 'Ctrl + V' é utilizada, respectivamente, para:",
+                options: ["Recortar e Colar", "Copiar e Colar", "Abrir e Fechar arquivo", "Salvar e Imprimir", "Desfazer e Refazer"],
+                correct: 1,
+                explanation: "Os atalhos padrão do Windows são: Ctrl+C (copiar), Ctrl+X (recortar) e Ctrl+V (colar)."
+            },
+            {
+                question: "Um 'firewall' é um sistema de segurança que:",
+                options: ["Aumenta a velocidade de processamento do computador", "Controla o tráfego de rede, bloqueando acessos não autorizados", "Edita textos e planilhas", "Cria backups automáticos", "Gerencia o consumo de energia"],
+                correct: 1,
+                explanation: "Firewall é uma solução de segurança que monitora e controla o tráfego de rede com base em regras predefinidas, criando uma barreira entre redes confiáveis e não confiáveis."
+            },
+            {
+                question: "O prontuário eletrônico do paciente, utilizado em sistemas como o e-SUS AB, é um exemplo de:",
+                options: ["Sistema de informação em saúde", "Editor de texto", "Planilha eletrônica", "Navegador de internet", "Sistema operacional"],
+                correct: 0,
+                explanation: "O prontuário eletrônico é um tipo de Sistema de Informação em Saúde (SIS), essencial para o registro, armazenamento e gestão de dados clínicos e administrativos dos pacientes. [citation:2]"
+            },
+
+            // LÍNGUA PORTUGUESA (Questões 21-25)
+            {
+                question: "Assinale a alternativa em que a concordância verbal está de acordo com a norma culta:",
+                options: ["Fazem cinco anos que trabalho na saúde pública.", "Houveram muitas reclamações sobre o atendimento.", "Mais de um gestor participaram da reunião.", "Precisam-se de técnicos especializados.", "Tratam-se de questões importantes para o SUS."],
+                correct: 4,
+                explanation: "'Tratar-se de' seguido de preposição é invariável quando o 'se' é índice de indeterminação do sujeito. O correto seria 'Trata-se de questões'. Todas as outras estão incorretas: 'Faz cinco anos', 'Houve muitas reclamações', 'Mais de um gestor participou', 'Precisa-se de técnicos'."
+            },
+            {
+                question: "Assinale a opção em que o uso do acento indicativo de crase está correto:",
+                options: ["O projeto foi entregue à todas as secretarias.", "O gestor referiu-se àquela política de saúde.", "A reunião começa à partir das 14h.", "Os recursos serão destinados à entidades privadas.", "Fizemos uma visita à um hospital de referência."],
+                correct: 1,
+                explanation: "A crase é obrigatória na contração da preposição 'a' com o demonstrativo 'aquele(s)' ou 'aquela(s)'. Portanto: 'referiu-se àquela política'."
+            },
+            {
+                question: "Na frase 'O secretário entregou o relatório ao diretor', o termo 'ao diretor' exerce a função sintática de:",
+                options: ["Objeto direto", "Adjunto adnominal", "Objeto indireto", "Complemento nominal", "Adjunto adverbial"],
+                correct: 2,
+                explanation: "O verbo 'entregar' é transitivo direto e indireto (bitransitivo). 'O relatório' é objeto direto (entrega algo). 'Ao diretor' é objeto indireto (entrega a alguém), pois é complemento verbal preposicionado."
+            },
+            {
+                question: "Em relação à tipologia textual, um documento como uma ata de reunião do Conselho de Saúde é predominantemente:",
+                options: ["Narrativo", "Descritivo", "Dissertativo-argumentativo", "Injuntivo", "Narrativo-descritivo"],
+                correct: 1,
+                explanation: "A ata é um texto predominantemente descritivo, pois relata, de forma objetiva e cronológica, os fatos, discussões e decisões ocorridos em uma reunião."
+            },
+            {
+                question: "Assinale a alternativa em que a colocação pronominal está correta segundo a norma padrão:",
+                options: ["Me entregue os documentos agora.", "Não me entregaram o relatório.", "Em se tratando de gestão, ele é expert.", "Falaram-me que a reunião acabou.", "Tudo me disseram sobre o projeto."],
+                correct: 1,
+                explanation: "Com palavras negativas ('não'), a próclise é obrigatória: 'Não me entregaram'. Nas demais: 'Entregue-me' (início de frase), 'Tratando-se' (gerúndio sem preposição), 'Disseram-me' (preferência), 'Disseram-me tudo' (colocação mais adequada)."
+            },
+
+            // RACIOCÍNIO LÓGICO (Questões 26-30)
+            {
+                question: "Uma UBS atende 120 pessoas por dia. Se 30% são atendimentos de demanda espontânea e o restante são consultas agendadas, quantas consultas agendadas ocorrem por dia?",
+                options: ["36", "40", "80", "84", "90"],
+                correct: 4,
+                explanation: "30% de 120 = 36 (demanda espontânea). Agendadas = 120 - 36 = 84. Alternativa correta: 84."
+            },
+            {
+                question: "Em um hospital, 5 enfermeiros conseguem atender 20 pacientes em 4 horas. Quantos enfermeiros seriam necessários para atender 30 pacientes em 2 horas, mantendo o mesmo ritmo de trabalho?",
+                options: ["10", "12", "15", "18", "20"],
+                correct: 2,
+                explanation: "Regra de três composta: (5 enfermeiros / x) = (20 pacientes / 30) * (2 horas / 4) → 5/x = (20/30) * (2/4) = (2/3)*(1/2) = 1/3 → x = 15 enfermeiros."
+            },
+            {
+                question: "Uma proposição logicamente equivalente a 'Se o gestor é eficiente, então a meta é cumprida' é:",
+                options: ["Se a meta é cumprida, então o gestor é eficiente.", "O gestor é eficiente e a meta não é cumprida.", "O gestor não é eficiente ou a meta é cumprida.", "Se o gestor não é eficiente, então a meta não é cumprida.", "A meta não é cumprida ou o gestor é eficiente."],
+                correct: 2,
+                explanation: "A equivalência lógica de p → q é ~p ∨ q (não p ou q). Portanto: 'O gestor não é eficiente ou a meta é cumprida'."
+            },
+            {
+                question: "Em uma sala, há 10 gestores e 15 técnicos. Será formada uma comissão com 3 pessoas. Qual é a probabilidade de a comissão ser composta por exatamente 2 gestores e 1 técnico?",
+                options: ["(C10,2 * C15,1) / C25,3", "(10 * 15) / C25,3", "(C10,3 + C15,3) / C25,3", "10/25 * 9/24 * 15/23", "(10 * 9 * 15) / 3"],
+                correct: 0,
+                explanation: "O número total de combinações é C25,3. O número de formas de escolher 2 gestores entre 10 é C10,2 e 1 técnico entre 15 é C15,1. A probabilidade é o produto dividido pelo total: (C10,2 * C15,1) / C25,3."
+            },
+            {
+                question: "Considere as afirmações: 'Todo gestor conhece o SUS. Alguns gestores são médicos. Logo, podemos concluir que:'",
+                options: ["Todo médico conhece o SUS", "Alguns médicos conhecem o SUS", "Nenhum médico conhece o SUS", "Todo gestor é médico", "Alguns médicos não são gestores"],
+                correct: 1,
+                explanation: "A interseção entre o conjunto de gestores e o conjunto de médicos existe ('alguns gestores são médicos'). Como todo gestor conhece o SUS, esses gestores que são médicos também conhecem o SUS. Portanto, 'alguns médicos conhecem o SUS'."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(quizData.length).fill(null);
+        let answered = new Array(quizData.length).fill(false);
+        let confirmed = new Array(quizData.length).fill(false);
+
+        function loadQuestion() {
+            const question = quizData[currentQuestion];
+            document.getElementById('questionNumber').textContent = `Questão ${currentQuestion + 1} de ${quizData.length}`;
+            document.getElementById('questionText').textContent = question.question;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                if (answers[currentQuestion] === index) optionDiv.classList.add('selected');
+                if (confirmed[currentQuestion]) {
+                    optionDiv.classList.add('answered');
+                    if (index === question.correct) optionDiv.classList.add('correct');
+                    else if (index === answers[currentQuestion]) optionDiv.classList.add('incorrect');
+                }
+
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'option';
+                input.value = index;
+                input.id = `option${index}`;
+                input.checked = answers[currentQuestion] === index;
+                input.disabled = confirmed[currentQuestion];
+                input.onchange = () => selectOption(index);
+
+                const label = document.createElement('label');
+                label.htmlFor = `option${index}`;
+                label.textContent = `${String.fromCharCode(65 + index)}) ${option}`;
+
+                optionDiv.appendChild(input);
+                optionDiv.appendChild(label);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            updateProgressBar();
+            updateButtons();
+            
+            if (confirmed[currentQuestion]) {
+                showExplanation();
+            } else {
+                document.getElementById('explanationBox').classList.remove('show');
+            }
+        }
+
+        function selectOption(index) {
+            if (!confirmed[currentQuestion]) {
+                answers[currentQuestion] = index;
+                answered[currentQuestion] = true;
+                
+                const options = document.querySelectorAll('.option');
+                options.forEach((opt, i) => {
+                    opt.classList.remove('selected');
+                    if (i === index) opt.classList.add('selected');
+                });
+                
+                updateButtons();
+            }
+        }
+
+        function confirmAnswer() {
+            if (answered[currentQuestion]) {
+                confirmed[currentQuestion] = true;
+                loadQuestion();
+            }
+        }
+
+        function showExplanation() {
+            const question = quizData[currentQuestion];
+            const isCorrect = answers[currentQuestion] === question.correct;
+            
+            document.getElementById('explanationTitle').textContent = isCorrect ? '✓ Resposta Correta!' : '✗ Resposta Incorreta';
+            document.getElementById('explanationText').textContent = question.explanation;
+            document.getElementById('explanationBox').classList.add('show');
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function updateProgressBar() {
+            const answeredCount = confirmed.filter(c => c).length;
+            const progress = (answeredCount / quizData.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function updateButtons() {
+            document.getElementById('btnPrev').disabled = currentQuestion === 0;
+            
+            if (confirmed[currentQuestion]) {
+                document.getElementById('btnConfirm').style.display = 'none';
+                document.getElementById('btnNext').style.display = 'block';
+                document.getElementById('btnNext').textContent = currentQuestion === quizData.length - 1 ? 'Finalizar Quiz →' : 'Próxima →';
+            } else {
+                document.getElementById('btnConfirm').style.display = 'block';
+                document.getElementById('btnNext').style.display = 'none';
+                document.getElementById('btnConfirm').disabled = !answered[currentQuestion];
+            }
+        }
+
+        function showResults() {
+            let correctCount = 0;
+            for (let i = 0; i < quizData.length; i++) {
+                if (answers[i] === quizData[i].correct) correctCount++;
+            }
+            
+            const percentage = Math.round((correctCount / quizData.length) * 100);
+            
+            document.getElementById('scorePercentage').textContent = percentage + '%';
+            
+            let message = '';
+            if (percentage >= 90) message = '🌟 Excelente! Você domina a gestão em saúde!';
+            else if (percentage >= 70) message = '📚 Muito bem! Continue estudando.';
+            else if (percentage >= 50) message = '✏️ Bom estudo! Reveja as legislações.';
+            else message = '📖 Estude mais e tente novamente!';
+            
+            document.getElementById('resultsMessage').textContent = message;
+            document.getElementById('resultsDetails').textContent = `Você acertou ${correctCount} de ${quizData.length} questões.`;
+            
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultsContainer').classList.add('show');
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            answers = new Array(quizData.length).fill(null);
+            answered = new Array(quizData.length).fill(false);
+            confirmed = new Array(quizData.length).fill(false);
+            
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('resultsContainer').classList.remove('show');
+            
+            loadQuestion();
+        }
+
+        // Inicializar quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
