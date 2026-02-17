@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Completo - Gestor em Saúde (100 Questões)</title>
+    <title>Quiz Personalizável - Gestor em Saúde</title>
     <style>
+        /* (mesmos estilos anteriores, mantidos) */
         * {
             margin: 0;
             padding: 0;
@@ -48,7 +49,180 @@
             font-size: 14px;
         }
 
-        /* Mini cards de desempenho por disciplina */
+        /* Tela de configuração inicial */
+        .setup-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .setup-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #005c9e;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .setup-section {
+            margin-bottom: 25px;
+        }
+
+        .setup-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .setup-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .setup-option {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .setup-option input[type="radio"],
+        .setup-option input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+
+        .setup-option label {
+            color: #333;
+            font-size: 15px;
+        }
+
+        .discipline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .discipline-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .discipline-item:hover {
+            border-color: #005c9e;
+            background: #e6f0fa;
+        }
+
+        .discipline-item.selected {
+            border-color: #005c9e;
+            background: #e6f0fa;
+        }
+
+        .discipline-item input[type="checkbox"] {
+            display: none;
+        }
+
+        .discipline-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .discipline-count {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .total-questions {
+            background: #005c9e;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 92, 158, 0.4);
+        }
+
+        .btn-start:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .continue-session {
+            background: #e6f0fa;
+            border-left: 4px solid #005c9e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .continue-session.show {
+            display: flex;
+        }
+
+        .continue-info {
+            color: #333;
+        }
+
+        .continue-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-continue {
+            background: #005c9e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-new {
+            background: #e0e0e0;
+            color: #333;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Mini cards de desempenho */
         .discipline-mini-cards {
             display: flex;
             flex-wrap: wrap;
@@ -319,6 +493,17 @@
             background: #d0d0d0;
         }
 
+        .btn-save {
+            background: #4caf50;
+            color: white;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .btn-save:hover {
+            background: #43a047;
+        }
+
         .results-container {
             text-align: center;
             display: none;
@@ -411,55 +596,141 @@
             box-shadow: 0 10px 20px rgba(0, 92, 158, 0.4);
         }
 
+        .btn-config {
+            background: #6c757d;
+            color: white;
+            padding: 15px 40px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
         @media (max-width: 600px) {
             .container { padding: 20px; }
             .buttons { flex-direction: column; }
-            .btn-next, .btn-prev, .btn-confirm { max-width: 100%; }
+            .btn-next, .btn-prev, .btn-confirm, .btn-save { max-width: 100%; }
             .discipline-mini-cards { flex-direction: column; }
+            .discipline-grid { grid-template-columns: 1fr; }
+            .continue-session { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏥 Quiz Completo - Gestor em Saúde</h1>
-            <p>100 questões distribuídas em 5 disciplinas | Ordem aleatória</p>
+            <h1>🏥 Quiz Personalizável - Gestor em Saúde</h1>
+            <p>Escolha as disciplinas e a quantidade de questões | Progresso salvo automaticamente</p>
         </div>
 
-        <!-- Mini cards de desempenho por disciplina -->
-        <div class="discipline-mini-cards" id="disciplineMiniCards">
+        <!-- Aviso de sessão salva -->
+        <div class="continue-session" id="continueSession">
+            <div class="continue-info">
+                <strong>📌 Sessão anterior encontrada!</strong><br>
+                <span id="sessionInfo"></span>
+            </div>
+            <div class="continue-buttons">
+                <button class="btn-continue" onclick="loadSavedSession()">Continuar de onde parou</button>
+                <button class="btn-new" onclick="startNewSession()">Iniciar novo quiz</button>
+            </div>
+        </div>
+
+        <!-- Tela de configuração inicial -->
+        <div id="setupContainer" class="setup-container">
+            <div class="setup-title">⚙️ Configurar seu Quiz</div>
+            
+            <div class="setup-section">
+                <span class="setup-label">📊 Escolha as disciplinas:</span>
+                <div class="discipline-grid" id="disciplineGrid">
+                    <div class="discipline-item selected" data-discipline="legislacao" onclick="toggleDiscipline('legislacao')">
+                        <input type="checkbox" id="discLeg" checked>
+                        <div class="discipline-name">📋 Legislação</div>
+                        <div class="discipline-count">20 questões</div>
+                    </div>
+                    <div class="discipline-item selected" data-discipline="portugues" onclick="toggleDiscipline('portugues')">
+                        <input type="checkbox" id="discPort" checked>
+                        <div class="discipline-name">📝 Português</div>
+                        <div class="discipline-count">20 questões</div>
+                    </div>
+                    <div class="discipline-item selected" data-discipline="informatica" onclick="toggleDiscipline('informatica')">
+                        <input type="checkbox" id="discInf" checked>
+                        <div class="discipline-name">💻 Informática</div>
+                        <div class="discipline-count">20 questões</div>
+                    </div>
+                    <div class="discipline-item selected" data-discipline="raciocinio" onclick="toggleDiscipline('raciocinio')">
+                        <input type="checkbox" id="discRac" checked>
+                        <div class="discipline-name">🧮 Raciocínio</div>
+                        <div class="discipline-count">20 questões</div>
+                    </div>
+                    <div class="discipline-item selected" data-discipline="historia" onclick="toggleDiscipline('historia')">
+                        <input type="checkbox" id="discHist" checked>
+                        <div class="discipline-name">🌍 Tocantins</div>
+                        <div class="discipline-count">20 questões</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setup-section">
+                <span class="setup-label">🔢 Número de questões:</span>
+                <div class="setup-options">
+                    <div class="setup-option">
+                        <input type="radio" name="questionCount" id="q20" value="20" checked>
+                        <label for="q20">20 questões</label>
+                    </div>
+                    <div class="setup-option">
+                        <input type="radio" name="questionCount" id="q50" value="50">
+                        <label for="q50">50 questões</label>
+                    </div>
+                    <div class="setup-option">
+                        <input type="radio" name="questionCount" id="q100" value="100">
+                        <label for="q100">100 questões (todas)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="total-questions" id="totalQuestions">
+                Total: 100 questões
+            </div>
+
+            <button class="btn-start" id="btnStart" onclick="startQuiz()">🚀 Iniciar Quiz</button>
+        </div>
+
+        <!-- Mini cards de desempenho (aparecem durante o quiz) -->
+        <div class="discipline-mini-cards" id="disciplineMiniCards" style="display: none;">
             <div class="mini-card leg" id="miniLeg">
                 <div class="discipline-name">LEGISLAÇÃO</div>
                 <div class="progress"><div class="progress-fill" id="progressLeg" style="width: 0%"></div></div>
-                <div class="score" id="scoreLeg">0/20</div>
+                <div class="score" id="scoreLeg">0/0</div>
             </div>
             <div class="mini-card port" id="miniPort">
                 <div class="discipline-name">PORTUGUÊS</div>
                 <div class="progress"><div class="progress-fill" id="progressPort" style="width: 0%"></div></div>
-                <div class="score" id="scorePort">0/20</div>
+                <div class="score" id="scorePort">0/0</div>
             </div>
             <div class="mini-card inf" id="miniInf">
                 <div class="discipline-name">INFORMÁTICA</div>
                 <div class="progress"><div class="progress-fill" id="progressInf" style="width: 0%"></div></div>
-                <div class="score" id="scoreInf">0/20</div>
+                <div class="score" id="scoreInf">0/0</div>
             </div>
             <div class="mini-card rac" id="miniRac">
                 <div class="discipline-name">RACIOCÍNIO</div>
                 <div class="progress"><div class="progress-fill" id="progressRac" style="width: 0%"></div></div>
-                <div class="score" id="scoreRac">0/20</div>
+                <div class="score" id="scoreRac">0/0</div>
             </div>
             <div class="mini-card hist" id="miniHist">
                 <div class="discipline-name">TOCANTINS</div>
                 <div class="progress"><div class="progress-fill" id="progressHist" style="width: 0%"></div></div>
-                <div class="score" id="scoreHist">0/20</div>
+                <div class="score" id="scoreHist">0/0</div>
             </div>
         </div>
 
-        <div class="progress-bar">
+        <div class="progress-bar" id="progressBar" style="display: none;">
             <div class="progress-fill" id="progressFill"></div>
         </div>
 
-        <div id="quizContainer">
+        <div id="quizContainer" style="display: none;">
             <div class="question-number" id="questionNumber"></div>
             <div class="discipline-tag" id="disciplineTag">Legislação em Saúde</div>
             <div class="question-text" id="questionText"></div>
@@ -472,6 +743,7 @@
                 <button class="btn-prev" id="btnPrev" onclick="previousQuestion()">← Anterior</button>
                 <button class="btn-confirm" id="btnConfirm" onclick="confirmAnswer()">Confirmar Resposta</button>
                 <button class="btn-next" id="btnNext" onclick="nextQuestion()" style="display: none;">Próxima →</button>
+                <button class="btn-save" id="btnSave" onclick="saveProgress()">💾 Salvar</button>
             </div>
         </div>
 
@@ -484,12 +756,13 @@
             
             <div class="results-summary" id="disciplineSummary"></div>
             
-            <button class="btn-restart" onclick="restartQuiz()">Refazer Quiz</button>
+            <button class="btn-restart" onclick="showSetup()">⚙️ Configurar Novo Quiz</button>
+            <button class="btn-config" onclick="showSetup()">← Voltar à Configuração</button>
         </div>
     </div>
 
     <script>
-        // Banco de questões por disciplina
+        // Banco de questões por disciplina (corrigido)
         const questionBank = {
             legislacao: [
                 {
@@ -992,7 +1265,7 @@
                 },
                 {
                     question: "O primeiro governador do estado do Tocantins foi:",
-                    options: ["Siqueira Campos", "Moisés Avelino", "José Wilson Siqueira Campos", "Orlando Pessuti", "Raimundo Boi"],
+                    options: ["Siqueira Campos", "Moisés Avelino", "José Sarney", "Orlando Pessuti", "Raimundo Boi"],
                     correct: 0,
                     explanation: "Siqueira Campos foi o primeiro governador do Tocantins, tendo sido eleito em 1988 e governado de 1989 a 1991."
                 },
@@ -1040,7 +1313,7 @@
                 },
                 {
                     question: "Quantos municípios compõem o estado do Tocantins aproximadamente?",
-                    options: ["139", "141", "139", "139", "139"],
+                    options: ["139", "141", "140", "142", "138"],
                     correct: 0,
                     explanation: "O Tocantins possui 139 municípios."
                 },
@@ -1107,88 +1380,234 @@
             ]
         };
 
-        // Embaralhar e combinar questões
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+        // Variáveis globais
+        let quizData = [];
+        let currentQuestion = 0;
+        let answers = [];
+        let answered = [];
+        let confirmed = [];
+        let selectedDisciplines = ['legislacao', 'portugues', 'informatica', 'raciocinio', 'historia'];
+        let totalQuestions = 100;
+        let disciplineCounts = {
+            legislacao: 20,
+            portugues: 20,
+            informatica: 20,
+            raciocinio: 20,
+            historia: 20
+        };
+
+        // Chaves do localStorage
+        const SESSION_KEY = 'quiz_session';
+        const CONFIG_KEY = 'quiz_config';
+
+        // Funções de configuração
+        function toggleDiscipline(discipline) {
+            const item = document.querySelector(`[data-discipline="${discipline}"]`);
+            const checkbox = document.getElementById(`disc${discipline.charAt(0).toUpperCase() + discipline.slice(1)}`);
+            
+            if (selectedDisciplines.includes(discipline)) {
+                selectedDisciplines = selectedDisciplines.filter(d => d !== discipline);
+                item.classList.remove('selected');
+                checkbox.checked = false;
+            } else {
+                selectedDisciplines.push(discipline);
+                item.classList.add('selected');
+                checkbox.checked = true;
             }
-            return array;
+            
+            updateTotalQuestions();
+            saveConfig();
         }
 
-        // Preparar quizData com questões de todas as disciplinas
-        let quizData = [];
-
-        // Adicionar questões com disciplina identificada
-        questionBank.legislacao.forEach(q => {
-            quizData.push({ ...q, discipline: 'legislacao', disciplineName: 'Legislação e SUS' });
-        });
-        questionBank.portugues.forEach(q => {
-            quizData.push({ ...q, discipline: 'portugues', disciplineName: 'Língua Portuguesa' });
-        });
-        questionBank.informatica.forEach(q => {
-            quizData.push({ ...q, discipline: 'informatica', disciplineName: 'Informática Básica' });
-        });
-        questionBank.raciocinio.forEach(q => {
-            quizData.push({ ...q, discipline: 'raciocinio', disciplineName: 'Raciocínio Lógico' });
-        });
-        questionBank.historia.forEach(q => {
-            quizData.push({ ...q, discipline: 'historia', disciplineName: 'História e Geografia do Tocantins' });
-        });
-
-        // Embaralhar todas as questões
-        quizData = shuffleArray(quizData);
-
-        // Variáveis de controle
-        let currentQuestion = 0;
-        let answers = new Array(quizData.length).fill(null);
-        let answered = new Array(quizData.length).fill(false);
-        let confirmed = new Array(quizData.length).fill(false);
-
-        // Função para atualizar os mini cards de desempenho
-        function updateDisciplinePerformance() {
-            const disciplineStats = {
-                legislacao: { total: 20, acertos: 0 },
-                portugues: { total: 20, acertos: 0 },
-                informatica: { total: 20, acertos: 0 },
-                raciocinio: { total: 20, acertos: 0 },
-                historia: { total: 20, acertos: 0 }
-            };
-
-            // Calcular acertos por disciplina
-            for (let i = 0; i < quizData.length; i++) {
-                if (confirmed[i] && answers[i] === quizData[i].correct) {
-                    disciplineStats[quizData[i].discipline].acertos++;
+        function updateTotalQuestions() {
+            const qtyRadios = document.getElementsByName('questionCount');
+            let selectedQty = 100;
+            for (let radio of qtyRadios) {
+                if (radio.checked) {
+                    selectedQty = parseInt(radio.value);
+                    break;
                 }
             }
-
-            // Atualizar os elementos HTML
-            document.getElementById('scoreLeg').textContent = `${disciplineStats.legislacao.acertos}/20`;
-            document.getElementById('progressLeg').style.width = `${(disciplineStats.legislacao.acertos/20)*100}%`;
-
-            document.getElementById('scorePort').textContent = `${disciplineStats.portugues.acertos}/20`;
-            document.getElementById('progressPort').style.width = `${(disciplineStats.portugues.acertos/20)*100}%`;
-
-            document.getElementById('scoreInf').textContent = `${disciplineStats.informatica.acertos}/20`;
-            document.getElementById('progressInf').style.width = `${(disciplineStats.informatica.acertos/20)*100}%`;
-
-            document.getElementById('scoreRac').textContent = `${disciplineStats.raciocinio.acertos}/20`;
-            document.getElementById('progressRac').style.width = `${(disciplineStats.raciocinio.acertos/20)*100}%`;
-
-            document.getElementById('scoreHist').textContent = `${disciplineStats.historia.acertos}/20`;
-            document.getElementById('progressHist').style.width = `${(disciplineStats.historia.acertos/20)*100}%`;
+            
+            const availableQuestions = selectedDisciplines.reduce((sum, disc) => sum + disciplineCounts[disc], 0);
+            totalQuestions = Math.min(selectedQty, availableQuestions);
+            
+            document.getElementById('totalQuestions').textContent = `Total: ${totalQuestions} questões (${availableQuestions} disponíveis)`;
+            
+            document.getElementById('btnStart').disabled = selectedDisciplines.length === 0;
         }
 
+        // Funções de salvamento
+        function saveConfig() {
+            const config = {
+                disciplines: selectedDisciplines,
+                totalQuestions: totalQuestions,
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+        }
+
+        function saveProgress() {
+            if (!quizData.length) return;
+            
+            const session = {
+                quizData: quizData.map(q => ({
+                    ...q,
+                    // Não salvar as questões inteiras para economizar espaço
+                    question: q.question,
+                    options: q.options,
+                    correct: q.correct,
+                    explanation: q.explanation,
+                    discipline: q.discipline,
+                    disciplineName: q.disciplineName
+                })),
+                currentQuestion: currentQuestion,
+                answers: answers,
+                answered: answered,
+                confirmed: confirmed,
+                timestamp: new Date().getTime()
+            };
+            
+            localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+            
+            // Feedback visual
+            const btn = document.getElementById('btnSave');
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Salvo!';
+            btn.style.background = '#4caf50';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        function checkSavedSession() {
+            const session = localStorage.getItem(SESSION_KEY);
+            const config = localStorage.getItem(CONFIG_KEY);
+            
+            if (session && config) {
+                try {
+                    const sessionData = JSON.parse(session);
+                    const configData = JSON.parse(config);
+                    
+                    const sessionDate = new Date(sessionData.timestamp);
+                    const now = new Date();
+                    const hoursDiff = Math.round((now - sessionDate) / (1000 * 60 * 60));
+                    
+                    const answeredCount = sessionData.confirmed.filter(c => c).length;
+                    const totalCount = sessionData.quizData.length;
+                    
+                    document.getElementById('sessionInfo').innerHTML = 
+                        `Você fez ${answeredCount} de ${totalCount} questões há ${hoursDiff} horas.`;
+                    
+                    document.getElementById('continueSession').classList.add('show');
+                } catch (e) {
+                    console.error('Erro ao carregar sessão:', e);
+                }
+            }
+        }
+
+        function loadSavedSession() {
+            const session = JSON.parse(localStorage.getItem(SESSION_KEY));
+            if (session) {
+                quizData = session.quizData;
+                currentQuestion = session.currentQuestion;
+                answers = session.answers;
+                answered = session.answered;
+                confirmed = session.confirmed;
+                
+                startQuiz(true);
+            }
+        }
+
+        function startNewSession() {
+            localStorage.removeItem(SESSION_KEY);
+            document.getElementById('continueSession').classList.remove('show');
+            showSetup();
+        }
+
+        // Funções do quiz
+        function startQuiz(continueSession = false) {
+            if (!continueSession) {
+                // Criar novo quiz baseado na configuração
+                quizData = [];
+                
+                selectedDisciplines.forEach(discipline => {
+                    const questions = questionBank[discipline];
+                    // Embaralhar e pegar a quantidade proporcional
+                    const shuffled = shuffleArray([...questions]);
+                    const qtyPerDiscipline = Math.floor(totalQuestions / selectedDisciplines.length);
+                    
+                    // Distribuir questões proporcionalmente
+                    let qty = qtyPerDiscipline;
+                    if (discipline === selectedDisciplines[selectedDisciplines.length - 1]) {
+                        qty = totalQuestions - (qtyPerDiscipline * (selectedDisciplines.length - 1));
+                    }
+                    
+                    const selected = shuffled.slice(0, Math.min(qty, questions.length));
+                    selected.forEach(q => {
+                        quizData.push({
+                            ...q,
+                            discipline: discipline,
+                            disciplineName: getDisciplineName(discipline)
+                        });
+                    });
+                });
+                
+                // Embaralhar tudo
+                quizData = shuffleArray(quizData);
+                
+                // Inicializar arrays
+                answers = new Array(quizData.length).fill(null);
+                answered = new Array(quizData.length).fill(false);
+                confirmed = new Array(quizData.length).fill(false);
+                currentQuestion = 0;
+            }
+            
+            // Atualizar interface
+            document.getElementById('setupContainer').style.display = 'none';
+            document.getElementById('continueSession').style.display = 'none';
+            document.getElementById('disciplineMiniCards').style.display = 'flex';
+            document.getElementById('progressBar').style.display = 'block';
+            document.getElementById('quizContainer').style.display = 'block';
+            
+            // Atualizar contadores nos cards
+            updateDisciplineCounts();
+            
+            // Carregar primeira questão
+            loadQuestion();
+        }
+
+        function getDisciplineName(discipline) {
+            const names = {
+                legislacao: 'Legislação e SUS',
+                portugues: 'Língua Portuguesa',
+                informatica: 'Informática Básica',
+                raciocinio: 'Raciocínio Lógico',
+                historia: 'História e Geografia do Tocantins'
+            };
+            return names[discipline];
+        }
+
+        function showSetup() {
+            document.getElementById('setupContainer').style.display = 'block';
+            document.getElementById('disciplineMiniCards').style.display = 'none';
+            document.getElementById('progressBar').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultsContainer').classList.remove('show');
+            
+            checkSavedSession();
+        }
+
+        // Funções de navegação e resposta
         function loadQuestion() {
             const question = quizData[currentQuestion];
             document.getElementById('questionNumber').textContent = `Questão ${currentQuestion + 1} de ${quizData.length}`;
             
-            // Tag de disciplina
             const disciplineTag = document.getElementById('disciplineTag');
             disciplineTag.textContent = question.disciplineName;
             disciplineTag.className = 'discipline-tag';
             
-            // Adicionar classe específica para cor
             if (question.discipline === 'legislacao') {
                 disciplineTag.classList.add('tag-legislacao');
             } else if (question.discipline === 'portugues') {
@@ -1236,7 +1655,7 @@
 
             updateProgressBar();
             updateButtons();
-            updateDisciplinePerformance(); // Atualiza os mini cards
+            updateDisciplinePerformance();
             
             if (confirmed[currentQuestion]) {
                 showExplanation();
@@ -1263,7 +1682,8 @@
         function confirmAnswer() {
             if (answered[currentQuestion]) {
                 confirmed[currentQuestion] = true;
-                updateDisciplinePerformance(); // Atualiza após confirmar resposta
+                updateDisciplinePerformance();
+                saveProgress();
                 loadQuestion();
             }
         }
@@ -1313,17 +1733,70 @@
             }
         }
 
+        function updateDisciplineCounts() {
+            const counts = {
+                legislacao: 0,
+                portugues: 0,
+                informatica: 0,
+                raciocinio: 0,
+                historia: 0
+            };
+            
+            quizData.forEach(q => {
+                counts[q.discipline]++;
+            });
+            
+            document.getElementById('scoreLeg').textContent = `0/${counts.legislacao}`;
+            document.getElementById('scorePort').textContent = `0/${counts.portugues}`;
+            document.getElementById('scoreInf').textContent = `0/${counts.informatica}`;
+            document.getElementById('scoreRac').textContent = `0/${counts.raciocinio}`;
+            document.getElementById('scoreHist').textContent = `0/${counts.historia}`;
+        }
+
+        function updateDisciplinePerformance() {
+            const stats = {
+                legislacao: { total: 0, acertos: 0 },
+                portugues: { total: 0, acertos: 0 },
+                informatica: { total: 0, acertos: 0 },
+                raciocinio: { total: 0, acertos: 0 },
+                historia: { total: 0, acertos: 0 }
+            };
+
+            for (let i = 0; i < quizData.length; i++) {
+                stats[quizData[i].discipline].total++;
+                if (confirmed[i] && answers[i] === quizData[i].correct) {
+                    stats[quizData[i].discipline].acertos++;
+                }
+            }
+
+            document.getElementById('scoreLeg').textContent = `${stats.legislacao.acertos}/${stats.legislacao.total}`;
+            document.getElementById('progressLeg').style.width = stats.legislacao.total > 0 ? `${(stats.legislacao.acertos/stats.legislacao.total)*100}%` : '0%';
+
+            document.getElementById('scorePort').textContent = `${stats.portugues.acertos}/${stats.portugues.total}`;
+            document.getElementById('progressPort').style.width = stats.portugues.total > 0 ? `${(stats.portugues.acertos/stats.portugues.total)*100}%` : '0%';
+
+            document.getElementById('scoreInf').textContent = `${stats.informatica.acertos}/${stats.informatica.total}`;
+            document.getElementById('progressInf').style.width = stats.informatica.total > 0 ? `${(stats.informatica.acertos/stats.informatica.total)*100}%` : '0%';
+
+            document.getElementById('scoreRac').textContent = `${stats.raciocinio.acertos}/${stats.raciocinio.total}`;
+            document.getElementById('progressRac').style.width = stats.raciocinio.total > 0 ? `${(stats.raciocinio.acertos/stats.raciocinio.total)*100}%` : '0%';
+
+            document.getElementById('scoreHist').textContent = `${stats.historia.acertos}/${stats.historia.total}`;
+            document.getElementById('progressHist').style.width = stats.historia.total > 0 ? `${(stats.historia.acertos/stats.historia.total)*100}%` : '0%';
+        }
+
         function showResults() {
             let correctCount = 0;
             let correctByDiscipline = {
-                legislacao: { total: 20, acertos: 0 },
-                portugues: { total: 20, acertos: 0 },
-                informatica: { total: 20, acertos: 0 },
-                raciocinio: { total: 20, acertos: 0 },
-                historia: { total: 20, acertos: 0 }
+                legislacao: { total: 0, acertos: 0 },
+                portugues: { total: 0, acertos: 0 },
+                informatica: { total: 0, acertos: 0 },
+                raciocinio: { total: 0, acertos: 0 },
+                historia: { total: 0, acertos: 0 }
             };
             
             for (let i = 0; i < quizData.length; i++) {
+                correctByDiscipline[quizData[i].discipline].total++;
                 if (answers[i] === quizData[i].correct) {
                     correctCount++;
                     correctByDiscipline[quizData[i].discipline].acertos++;
@@ -1343,62 +1816,60 @@
             document.getElementById('resultsMessage').textContent = message;
             document.getElementById('resultsDetails').textContent = `Total: ${correctCount} de ${quizData.length} questões.`;
             
-            // Resumo por disciplina
             const summaryDiv = document.getElementById('disciplineSummary');
             summaryDiv.innerHTML = `
                 <div class="discipline-card leg">
                     <div class="discipline-name">Legislação</div>
-                    <div class="discipline-score">${correctByDiscipline.legislacao.acertos}/20</div>
-                    <div>${Math.round(correctByDiscipline.legislacao.acertos/20*100)}%</div>
+                    <div class="discipline-score">${correctByDiscipline.legislacao.acertos}/${correctByDiscipline.legislacao.total}</div>
+                    <div>${Math.round(correctByDiscipline.legislacao.acertos/correctByDiscipline.legislacao.total*100) || 0}%</div>
                 </div>
                 <div class="discipline-card port">
                     <div class="discipline-name">Português</div>
-                    <div class="discipline-score">${correctByDiscipline.portugues.acertos}/20</div>
-                    <div>${Math.round(correctByDiscipline.portugues.acertos/20*100)}%</div>
+                    <div class="discipline-score">${correctByDiscipline.portugues.acertos}/${correctByDiscipline.portugues.total}</div>
+                    <div>${Math.round(correctByDiscipline.portugues.acertos/correctByDiscipline.portugues.total*100) || 0}%</div>
                 </div>
                 <div class="discipline-card inf">
                     <div class="discipline-name">Informática</div>
-                    <div class="discipline-score">${correctByDiscipline.informatica.acertos}/20</div>
-                    <div>${Math.round(correctByDiscipline.informatica.acertos/20*100)}%</div>
+                    <div class="discipline-score">${correctByDiscipline.informatica.acertos}/${correctByDiscipline.informatica.total}</div>
+                    <div>${Math.round(correctByDiscipline.informatica.acertos/correctByDiscipline.informatica.total*100) || 0}%</div>
                 </div>
                 <div class="discipline-card rac">
                     <div class="discipline-name">Raciocínio</div>
-                    <div class="discipline-score">${correctByDiscipline.raciocinio.acertos}/20</div>
-                    <div>${Math.round(correctByDiscipline.raciocinio.acertos/20*100)}%</div>
+                    <div class="discipline-score">${correctByDiscipline.raciocinio.acertos}/${correctByDiscipline.raciocinio.total}</div>
+                    <div>${Math.round(correctByDiscipline.raciocinio.acertos/correctByDiscipline.raciocinio.total*100) || 0}%</div>
                 </div>
                 <div class="discipline-card hist">
                     <div class="discipline-name">Tocantins</div>
-                    <div class="discipline-score">${correctByDiscipline.historia.acertos}/20</div>
-                    <div>${Math.round(correctByDiscipline.historia.acertos/20*100)}%</div>
+                    <div class="discipline-score">${correctByDiscipline.historia.acertos}/${correctByDiscipline.historia.total}</div>
+                    <div>${Math.round(correctByDiscipline.historia.acertos/correctByDiscipline.historia.total*100) || 0}%</div>
                 </div>
             `;
             
             document.getElementById('quizContainer').style.display = 'none';
             document.getElementById('resultsContainer').classList.add('show');
+            
+            // Limpar sessão após concluir
+            localStorage.removeItem(SESSION_KEY);
         }
 
-        function restartQuiz() {
-            currentQuestion = 0;
-            answers = new Array(quizData.length).fill(null);
-            answered = new Array(quizData.length).fill(false);
-            confirmed = new Array(quizData.length).fill(false);
-            
-            // Reembaralhar as questões ao reiniciar
-            quizData = shuffleArray([...questionBank.legislacao.map(q => ({ ...q, discipline: 'legislacao', disciplineName: 'Legislação e SUS' })),
-                                     ...questionBank.portugues.map(q => ({ ...q, discipline: 'portugues', disciplineName: 'Língua Portuguesa' })),
-                                     ...questionBank.informatica.map(q => ({ ...q, discipline: 'informatica', disciplineName: 'Informática Básica' })),
-                                     ...questionBank.raciocinio.map(q => ({ ...q, discipline: 'raciocinio', disciplineName: 'Raciocínio Lógico' })),
-                                     ...questionBank.historia.map(q => ({ ...q, discipline: 'historia', disciplineName: 'História e Geografia do Tocantins' }))]);
-            
-            document.getElementById('quizContainer').style.display = 'block';
-            document.getElementById('resultsContainer').classList.remove('show');
-            
-            updateDisciplinePerformance(); // Resetar os mini cards
-            loadQuestion();
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
         }
 
-        // Inicializar quiz
-        loadQuestion();
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar listeners para rádios
+            document.querySelectorAll('input[name="questionCount"]').forEach(radio => {
+                radio.addEventListener('change', updateTotalQuestions);
+            });
+            
+            updateTotalQuestions();
+            checkSavedSession();
+        });
     </script>
 </body>
 </html>
