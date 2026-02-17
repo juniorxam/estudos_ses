@@ -48,6 +48,78 @@
             font-size: 14px;
         }
 
+        /* Mini cards de desempenho por disciplina */
+        .discipline-mini-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .mini-card {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px 5px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .mini-card.leg { border-left-color: #005c9e; }
+        .mini-card.port { border-left-color: #16a34a; }
+        .mini-card.inf { border-left-color: #dc6803; }
+        .mini-card.rac { border-left-color: #7b3fe4; }
+        .mini-card.hist { border-left-color: #b45309; }
+
+        .mini-card .discipline-name {
+            font-weight: 600;
+            font-size: 11px;
+            color: #495057;
+            margin-bottom: 4px;
+        }
+
+        .mini-card .progress {
+            width: 100%;
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 6px 0;
+        }
+
+        .mini-card .progress-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .mini-card.leg .progress-fill { background: #005c9e; }
+        .mini-card.port .progress-fill { background: #16a34a; }
+        .mini-card.inf .progress-fill { background: #dc6803; }
+        .mini-card.rac .progress-fill { background: #7b3fe4; }
+        .mini-card.hist .progress-fill { background: #b45309; }
+
+        .mini-card .score {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .mini-card.leg .score { color: #005c9e; }
+        .mini-card.port .score { color: #16a34a; }
+        .mini-card.inf .score { color: #dc6803; }
+        .mini-card.rac .score { color: #7b3fe4; }
+        .mini-card.hist .score { color: #b45309; }
+
         .discipline-tag {
             display: inline-block;
             padding: 4px 12px;
@@ -343,6 +415,7 @@
             .container { padding: 20px; }
             .buttons { flex-direction: column; }
             .btn-next, .btn-prev, .btn-confirm { max-width: 100%; }
+            .discipline-mini-cards { flex-direction: column; }
         }
     </style>
 </head>
@@ -351,6 +424,35 @@
         <div class="header">
             <h1>🏥 Quiz Completo - Gestor em Saúde</h1>
             <p>100 questões distribuídas em 5 disciplinas | Ordem aleatória</p>
+        </div>
+
+        <!-- Mini cards de desempenho por disciplina -->
+        <div class="discipline-mini-cards" id="disciplineMiniCards">
+            <div class="mini-card leg" id="miniLeg">
+                <div class="discipline-name">LEGISLAÇÃO</div>
+                <div class="progress"><div class="progress-fill" id="progressLeg" style="width: 0%"></div></div>
+                <div class="score" id="scoreLeg">0/20</div>
+            </div>
+            <div class="mini-card port" id="miniPort">
+                <div class="discipline-name">PORTUGUÊS</div>
+                <div class="progress"><div class="progress-fill" id="progressPort" style="width: 0%"></div></div>
+                <div class="score" id="scorePort">0/20</div>
+            </div>
+            <div class="mini-card inf" id="miniInf">
+                <div class="discipline-name">INFORMÁTICA</div>
+                <div class="progress"><div class="progress-fill" id="progressInf" style="width: 0%"></div></div>
+                <div class="score" id="scoreInf">0/20</div>
+            </div>
+            <div class="mini-card rac" id="miniRac">
+                <div class="discipline-name">RACIOCÍNIO</div>
+                <div class="progress"><div class="progress-fill" id="progressRac" style="width: 0%"></div></div>
+                <div class="score" id="scoreRac">0/20</div>
+            </div>
+            <div class="mini-card hist" id="miniHist">
+                <div class="discipline-name">TOCANTINS</div>
+                <div class="progress"><div class="progress-fill" id="progressHist" style="width: 0%"></div></div>
+                <div class="score" id="scoreHist">0/20</div>
+            </div>
         </div>
 
         <div class="progress-bar">
@@ -1043,6 +1145,40 @@
         let answered = new Array(quizData.length).fill(false);
         let confirmed = new Array(quizData.length).fill(false);
 
+        // Função para atualizar os mini cards de desempenho
+        function updateDisciplinePerformance() {
+            const disciplineStats = {
+                legislacao: { total: 20, acertos: 0 },
+                portugues: { total: 20, acertos: 0 },
+                informatica: { total: 20, acertos: 0 },
+                raciocinio: { total: 20, acertos: 0 },
+                historia: { total: 20, acertos: 0 }
+            };
+
+            // Calcular acertos por disciplina
+            for (let i = 0; i < quizData.length; i++) {
+                if (confirmed[i] && answers[i] === quizData[i].correct) {
+                    disciplineStats[quizData[i].discipline].acertos++;
+                }
+            }
+
+            // Atualizar os elementos HTML
+            document.getElementById('scoreLeg').textContent = `${disciplineStats.legislacao.acertos}/20`;
+            document.getElementById('progressLeg').style.width = `${(disciplineStats.legislacao.acertos/20)*100}%`;
+
+            document.getElementById('scorePort').textContent = `${disciplineStats.portugues.acertos}/20`;
+            document.getElementById('progressPort').style.width = `${(disciplineStats.portugues.acertos/20)*100}%`;
+
+            document.getElementById('scoreInf').textContent = `${disciplineStats.informatica.acertos}/20`;
+            document.getElementById('progressInf').style.width = `${(disciplineStats.informatica.acertos/20)*100}%`;
+
+            document.getElementById('scoreRac').textContent = `${disciplineStats.raciocinio.acertos}/20`;
+            document.getElementById('progressRac').style.width = `${(disciplineStats.raciocinio.acertos/20)*100}%`;
+
+            document.getElementById('scoreHist').textContent = `${disciplineStats.historia.acertos}/20`;
+            document.getElementById('progressHist').style.width = `${(disciplineStats.historia.acertos/20)*100}%`;
+        }
+
         function loadQuestion() {
             const question = quizData[currentQuestion];
             document.getElementById('questionNumber').textContent = `Questão ${currentQuestion + 1} de ${quizData.length}`;
@@ -1100,6 +1236,7 @@
 
             updateProgressBar();
             updateButtons();
+            updateDisciplinePerformance(); // Atualiza os mini cards
             
             if (confirmed[currentQuestion]) {
                 showExplanation();
@@ -1126,6 +1263,7 @@
         function confirmAnswer() {
             if (answered[currentQuestion]) {
                 confirmed[currentQuestion] = true;
+                updateDisciplinePerformance(); // Atualiza após confirmar resposta
                 loadQuestion();
             }
         }
@@ -1255,6 +1393,7 @@
             document.getElementById('quizContainer').style.display = 'block';
             document.getElementById('resultsContainer').classList.remove('show');
             
+            updateDisciplinePerformance(); // Resetar os mini cards
             loadQuestion();
         }
 
