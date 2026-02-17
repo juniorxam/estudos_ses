@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz - Gestor em Saúde (SUS)</title>
+    <title>Quiz Completo - Gestor em Saúde (100 Questões)</title>
     <style>
         * {
             margin: 0;
@@ -48,6 +48,22 @@
             font-size: 14px;
         }
 
+        .discipline-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .tag-legislacao { background: #005c9e; }
+        .tag-portugues { background: #16a34a; }
+        .tag-informatica { background: #dc6803; }
+        .tag-raciocinio { background: #7b3fe4; }
+        .tag-historia { background: #b45309; }
+
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -68,7 +84,7 @@
             color: #005c9e;
             font-weight: bold;
             font-size: 14px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .question-text {
@@ -240,6 +256,41 @@
             display: block;
         }
 
+        .results-summary {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .discipline-card {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 150px;
+            text-align: center;
+            border-top: 4px solid #005c9e;
+        }
+
+        .discipline-card.leg { border-color: #005c9e; }
+        .discipline-card.port { border-color: #16a34a; }
+        .discipline-card.inf { border-color: #dc6803; }
+        .discipline-card.rac { border-color: #7b3fe4; }
+        .discipline-card.hist { border-color: #b45309; }
+
+        .discipline-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .discipline-score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
         .score-circle {
             width: 150px;
             height: 150px;
@@ -262,7 +313,7 @@
             color: #333;
             font-size: 24px;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .results-details {
@@ -298,8 +349,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏥 Quiz - Gestor em Saúde (SUS)</h1>
-            <p>30 questões específicas: Legislação, Gestão, Informática, Português e Raciocínio Lógico</p>
+            <h1>🏥 Quiz Completo - Gestor em Saúde</h1>
+            <p>100 questões distribuídas em 5 disciplinas | Ordem aleatória</p>
         </div>
 
         <div class="progress-bar">
@@ -308,6 +359,7 @@
 
         <div id="quizContainer">
             <div class="question-number" id="questionNumber"></div>
+            <div class="discipline-tag" id="disciplineTag">Legislação em Saúde</div>
             <div class="question-text" id="questionText"></div>
             <div class="options" id="optionsContainer"></div>
             <div class="explanation-box" id="explanationBox">
@@ -327,201 +379,665 @@
             </div>
             <div class="results-message" id="resultsMessage"></div>
             <div class="results-details" id="resultsDetails"></div>
+            
+            <div class="results-summary" id="disciplineSummary"></div>
+            
             <button class="btn-restart" onclick="restartQuiz()">Refazer Quiz</button>
         </div>
     </div>
 
     <script>
-        const quizData = [
-            // LEGISLAÇÃO E GESTÃO EM SAÚDE (Questões 1-15)
-            {
-                question: "De acordo com a Lei nº 8.080/90, a iniciativa privada poderá participar do Sistema Único de Saúde (SUS) em caráter:",
-                options: ["Prioritário, com preferência de financiamento público", "Complementar, mediante contrato de direito público ou convênio", "Substitutivo à rede pública, quando esta for insuficiente", "Exclusivo para serviços de alta complexidade", "Filantrópico, sem necessidade de licitação"],
-                correct: 1,
-                explanation: "Art. 24 da Lei 8.080/90: 'Quando as suas disponibilidades forem insuficientes para garantir a cobertura assistencial à população de uma determinada área, o Sistema Único de Saúde (SUS) poderá recorrer aos serviços ofertados pela iniciativa privada' em caráter complementar."
-            },
-            {
-                question: "A Política Nacional de Humanização (PNH), também conhecida como HumanizaSUS, possui como um de seus princípios:",
-                options: ["A centralidade do poder técnico nas decisões de saúde", "A gestão centralizada e hierarquizada dos serviços", "A transversalidade, que aumenta a comunicação entre os sujeitos", "A exclusividade do atendimento médico na atenção básica", "A redução dos custos com pessoal"],
-                correct: 2,
-                explanation: "A transversalidade é um dos princípios da PNH, reconhecendo que as diferentes especialidades e saberes podem se comunicar, ampliando as trocas de conhecimento e experiências. [citation:1]"
-            },
-            {
-                question: "Segundo a Lei nº 8.142/90, o Conselho de Saúde, em cada esfera de governo, é um órgão:",
-                options: ["Consultivo e executivo", "Colegiado de caráter permanente e deliberativo", "Normativo e fiscalizador, sem participação popular", "Temporário e consultivo", "Jurisdicional e normativo"],
-                correct: 1,
-                explanation: "O Conselho de Saúde é um órgão colegiado, permanente e deliberativo, que atua na formulação de estratégias e no controle da execução da política de saúde, incluindo aspectos econômicos e financeiros."
-            },
-            {
-                question: "O Decreto nº 7.508/2011, que regulamenta a Lei nº 8.080/90, define como 'Rede de Atenção à Saúde':",
-                options: ["O conjunto de hospitais privados conveniados ao SUS", "A articulação entre o Ministério da Saúde e as Secretarias Estaduais", "O conjunto de ações e serviços de saúde articulados em níveis de complexidade crescente", "A relação de medicamentos disponibilizados pelo SUS", "O mapa de saúde de cada município"],
-                correct: 2,
-                explanation: "O Decreto define as Redes de Atenção à Saúde como 'conjunto de ações e serviços de saúde articulados em níveis de complexidade crescente, com a finalidade de garantir a integralidade da assistência à saúde'. [citation:5]"
-            },
-            {
-                question: "Em relação ao Controle Social no SUS, é correto afirmar que:",
-                options: ["É exercido exclusivamente pelos gestores municipais", "Acontece apenas nas Conferências de Saúde, a cada 4 anos", "É garantido por meio dos Conselhos e Conferências de Saúde, com participação de usuários, trabalhadores e gestores", "Os usuários têm direito a 50% dos votos, mas não podem propor pautas", "É uma ferramenta de fiscalização sem poder deliberativo"],
-                correct: 2,
-                explanation: "A participação social é uma diretriz do SUS, garantida pela Lei 8.142/90, através dos Conselhos e Conferências de Saúde, com representação paritária de usuários, trabalhadores, gestores e prestadores de serviço. [citation:1]"
-            },
-            {
-                question: "A Comissão Intergestores Tripartite (CIT) é um espaço de articulação e pactuação entre:",
-                options: ["União, Estados e Municípios", "Ministério da Saúde e Conselhos de Secretários Municipais", "Apenas entre os gestores estaduais", "Governo Federal e entidades filantrópicas", "Secretarias Estaduais e Conselhos de Saúde"],
-                correct: 0,
-                explanation: "A CIT é uma instância de negociação e pactuação entre gestores federal (Ministério da Saúde), estadual (CONASS) e municipal (CONASEMS)."
-            },
-            {
-                question: "A regionalização da saúde, conforme a legislação do SUS, deve ser organizada a partir de:",
-                options: ["Divisões puramente geográficas sem critérios sanitários", "Redes hierarquizadas e regiões de saúde", "Demanda espontânea da população", "Interesses políticos locais", "Capacidade financeira isolada de cada município"],
-                correct: 1,
-                explanation: "A regionalização é uma diretriz do SUS que organiza os serviços em redes hierarquizadas e regiões de saúde, com base em critérios epidemiológicos e territoriais, garantindo acesso e integralidade. [citation:1][citation:5]"
-            },
-            {
-                question: "São objetivos da Política Nacional de Educação Permanente em Saúde (PNEPS):",
-                options: ["Promover cursos pontuais e desarticulados da prática", "Transformar as práticas profissionais a partir da reflexão crítica sobre o trabalho", "Centralizar a formação em nível de pós-graduação", "Reduzir os custos com treinamento de pessoal", "Excluir trabalhadores de nível médio dos processos formativos"],
-                correct: 1,
-                explanation: "A Educação Permanente em Saúde propõe a aprendizagem significativa no cotidiano de trabalho, transformando as práticas a partir da análise crítica da realidade."
-            },
-            {
-                question: "De acordo com a Lei nº 1.818/2007 (Estatuto dos Servidores do Tocantins), ao entrar em exercício, o servidor nomeado para cargo de provimento efetivo ficará sujeito a estágio probatório por período de:",
-                options: ["12 meses", "24 meses", "36 meses", "48 meses", "6 meses"],
-                correct: 2,
-                explanation: "O Art. 23 da Lei Estadual nº 1.818/2007 estabelece que o servidor nomeado para cargo de provimento efetivo fica sujeito a estágio probatório por 36 meses (três anos), durante o qual sua aptidão e capacidade serão objeto de avaliação."
-            },
-            {
-                question: "A Constituição Federal de 1988, em seu art. 196, define a saúde como:",
-                options: ["Um serviço a ser concedido à iniciativa privada", "Direito de todos e dever do Estado", "Um privilégio do cidadão contribuinte", "Dever exclusivo dos municípios", "Uma política de governo, não de Estado"],
-                correct: 1,
-                explanation: "Art. 196: 'A saúde é direito de todos e dever do Estado, garantido mediante políticas sociais e econômicas que visem à redução do risco de doença e de outros agravos...'"
-            },
-            {
-                question: "No âmbito da gestão do SUS, o financiamento das ações e serviços de saúde é de competência:",
-                options: ["Exclusiva da União", "Exclusiva dos municípios", "Compartilhada entre União, Estados, DF e Municípios", "Exclusiva dos Estados", "Da iniciativa privada, com repasse público"],
-                correct: 2,
-                explanation: "O SUS é financiado com recursos do orçamento da seguridade social da União, dos Estados, do Distrito Federal e dos Municípios, conforme art. 198 da CF/88."
-            },
-            {
-                question: "A Política Nacional de Atenção Básica (PNAB) estabelece que a Estratégia Saúde da Família (ESF) é:",
-                options: ["Uma opção para municípios com mais de 100 mil habitantes", "A estratégia prioritária para expansão e consolidação da Atenção Básica", "Um programa temporário do Ministério da Saúde", "Focada exclusivamente em ações curativas", "Substituta dos hospitais regionais"],
-                correct: 1,
-                explanation: "A PNAB reconhece a ESF como estratégia prioritária para organização da Atenção Básica, devido à sua capacidade de orientar o modelo assistencial e promover vínculo com a população. [citation:1]"
-            },
-            {
-                question: "De acordo com a Lei nº 8.080/90, está incluída no campo de atuação do Sistema Único de Saúde (SUS):",
-                options: ["A formulação de política de saneamento básico", "A execução de ações de assistência social", "A colaboração na proteção do meio ambiente, nele compreendido o do trabalho", "A administração da previdência social", "A fiscalização de alimentos, exceto quanto ao teor nutricional"],
-                correct: 2,
-                explanation: "Art. 6º, II: 'a participação na formulação da política e na execução de ações de saneamento básico' e 'a colaboração na proteção do meio ambiente, nele compreendido o do trabalho' são campos de atuação do SUS."
-            },
-            {
-                question: "O Apoio Matricial em saúde é uma estratégia de gestão que visa:",
-                options: ["Centralizar as decisões no gestor municipal", "Hierarquizar rigidamente o atendimento", "Garantir retaguarda especializada a equipes e profissionais de referência", "Substituir a atenção básica pela atenção especializada", "Reduzir o número de profissionais na ponta"],
-                correct: 2,
-                explanation: "O apoio matricial é um arranjo organizacional que visa oferecer suporte técnico especializado às equipes de referência, ampliando a capacidade de cuidado e garantindo a integralidade. [citation:8]"
-            },
-            {
-                question: "A 'RAS' (Rede de Atenção à Saúde) tem como um de seus elementos constitutivos:",
-                options: ["A centralização administrativa", "A população e região de saúde definidas", "O financiamento exclusivamente federal", "A eliminação da atenção primária", "A hierarquização sem integração"],
-                correct: 1,
-                explanation: "A estrutura operacional das Redes de Atenção à Saúde é composta por: população/região de saúde definidas, estrutura operacional (pontos de atenção) e sistemas de apoio. [citation:5]"
-            },
+        // Banco de questões por disciplina
+        const questionBank = {
+            legislacao: [
+                {
+                    question: "De acordo com a Lei nº 8.080/90, a iniciativa privada poderá participar do Sistema Único de Saúde (SUS) em caráter:",
+                    options: ["Prioritário, com preferência de financiamento público", "Complementar, mediante contrato de direito público ou convênio", "Substitutivo à rede pública, quando esta for insuficiente", "Exclusivo para serviços de alta complexidade", "Filantrópico, sem necessidade de licitação"],
+                    correct: 1,
+                    explanation: "Art. 24 da Lei 8.080/90: 'Quando as suas disponibilidades forem insuficientes para garantir a cobertura assistencial à população de uma determinada área, o Sistema Único de Saúde (SUS) poderá recorrer aos serviços ofertados pela iniciativa privada' em caráter complementar."
+                },
+                {
+                    question: "Segundo a Lei nº 8.142/90, o Conselho de Saúde, em cada esfera de governo, é um órgão:",
+                    options: ["Consultivo e executivo", "Colegiado de caráter permanente e deliberativo", "Normativo e fiscalizador, sem participação popular", "Temporário e consultivo", "Jurisdicional e normativo"],
+                    correct: 1,
+                    explanation: "O Conselho de Saúde é um órgão colegiado, permanente e deliberativo, que atua na formulação de estratégias e no controle da execução da política de saúde."
+                },
+                {
+                    question: "O Decreto nº 7.508/2011 define como 'Rede de Atenção à Saúde':",
+                    options: ["O conjunto de hospitais privados conveniados ao SUS", "A articulação entre o Ministério da Saúde e as Secretarias Estaduais", "O conjunto de ações e serviços de saúde articulados em níveis de complexidade crescente", "A relação de medicamentos disponibilizados pelo SUS", "O mapa de saúde de cada município"],
+                    correct: 2,
+                    explanation: "O Decreto define as Redes de Atenção à Saúde como 'conjunto de ações e serviços de saúde articulados em níveis de complexidade crescente, com a finalidade de garantir a integralidade da assistência à saúde'."
+                },
+                {
+                    question: "Em relação ao Controle Social no SUS, é correto afirmar que:",
+                    options: ["É exercido exclusivamente pelos gestores municipais", "Acontece apenas nas Conferências de Saúde, a cada 4 anos", "É garantido por meio dos Conselhos e Conferências de Saúde, com participação de usuários, trabalhadores e gestores", "Os usuários têm direito a 50% dos votos, mas não podem propor pautas", "É uma ferramenta de fiscalização sem poder deliberativo"],
+                    correct: 2,
+                    explanation: "A participação social é uma diretriz do SUS, garantida pela Lei 8.142/90, através dos Conselhos e Conferências de Saúde, com representação paritária."
+                },
+                {
+                    question: "A Comissão Intergestores Tripartite (CIT) é um espaço de articulação e pactuação entre:",
+                    options: ["União, Estados e Municípios", "Ministério da Saúde e Conselhos de Secretários Municipais", "Apenas entre os gestores estaduais", "Governo Federal e entidades filantrópicas", "Secretarias Estaduais e Conselhos de Saúde"],
+                    correct: 0,
+                    explanation: "A CIT é uma instância de negociação e pactuação entre gestores federal (Ministério da Saúde), estadual (CONASS) e municipal (CONASEMS)."
+                },
+                {
+                    question: "A Constituição Federal de 1988, em seu art. 196, define a saúde como:",
+                    options: ["Um serviço a ser concedido à iniciativa privada", "Direito de todos e dever do Estado", "Um privilégio do cidadão contribuinte", "Dever exclusivo dos municípios", "Uma política de governo, não de Estado"],
+                    correct: 1,
+                    explanation: "Art. 196: 'A saúde é direito de todos e dever do Estado, garantido mediante políticas sociais e econômicas que visem à redução do risco de doença e de outros agravos...'"
+                },
+                {
+                    question: "No âmbito da gestão do SUS, o financiamento das ações e serviços de saúde é de competência:",
+                    options: ["Exclusiva da União", "Exclusiva dos municípios", "Compartilhada entre União, Estados, DF e Municípios", "Exclusiva dos Estados", "Da iniciativa privada, com repasse público"],
+                    correct: 2,
+                    explanation: "O SUS é financiado com recursos do orçamento da seguridade social da União, dos Estados, do Distrito Federal e dos Municípios, conforme art. 198 da CF/88."
+                },
+                {
+                    question: "De acordo com a Lei nº 1.818/2007 (Estatuto dos Servidores do Tocantins), o estágio probatório tem duração de:",
+                    options: ["12 meses", "24 meses", "36 meses", "48 meses", "6 meses"],
+                    correct: 2,
+                    explanation: "O Art. 23 da Lei Estadual nº 1.818/2007 estabelece que o servidor nomeado para cargo de provimento efetivo fica sujeito a estágio probatório por 36 meses."
+                },
+                {
+                    question: "A Política Nacional de Humanização (PNH) tem como um de seus princípios:",
+                    options: ["Centralidade do poder técnico", "Gestão centralizada", "Transversalidade", "Exclusividade do atendimento médico", "Redução de custos com pessoal"],
+                    correct: 2,
+                    explanation: "A transversalidade é um dos princípios da PNH, reconhecendo que os diferentes saberes podem se comunicar."
+                },
+                {
+                    question: "A regionalização da saúde deve ser organizada a partir de:",
+                    options: ["Divisões puramente geográficas", "Redes hierarquizadas e regiões de saúde", "Demanda espontânea da população", "Interesses políticos locais", "Capacidade financeira isolada de cada município"],
+                    correct: 1,
+                    explanation: "A regionalização organiza os serviços em redes hierarquizadas e regiões de saúde, com base em critérios epidemiológicos."
+                },
+                {
+                    question: "A Política Nacional de Educação Permanente em Saúde (PNEPS) visa:",
+                    options: ["Cursos pontuais e desarticulados", "Transformar as práticas profissionais a partir da reflexão crítica sobre o trabalho", "Centralizar a formação na pós-graduação", "Reduzir custos com treinamento", "Excluir trabalhadores de nível médio"],
+                    correct: 1,
+                    explanation: "A Educação Permanente propõe aprendizagem significativa no cotidiano de trabalho, transformando as práticas."
+                },
+                {
+                    question: "Está incluída no campo de atuação do SUS, segundo a Lei 8.080/90:",
+                    options: ["Formulação de política de saneamento básico", "Execução de ações de assistência social", "Colaboração na proteção do meio ambiente, inclusive do trabalho", "Administração da previdência social", "Fiscalização de alimentos, exceto teor nutricional"],
+                    correct: 2,
+                    explanation: "Art. 6º, II: 'a colaboração na proteção do meio ambiente, nele compreendido o do trabalho' é campo de atuação do SUS."
+                },
+                {
+                    question: "O Apoio Matricial em saúde é uma estratégia que visa:",
+                    options: ["Centralizar decisões no gestor", "Hierarquizar rigidamente o atendimento", "Garantir retaguarda especializada a equipes de referência", "Substituir a atenção básica", "Reduzir o número de profissionais"],
+                    correct: 2,
+                    explanation: "O apoio matricial oferece suporte técnico especializado às equipes de referência, ampliando a capacidade de cuidado."
+                },
+                {
+                    question: "A RAS (Rede de Atenção à Saúde) tem como elemento constitutivo:",
+                    options: ["Centralização administrativa", "População e região de saúde definidas", "Financiamento exclusivamente federal", "Eliminação da atenção primária", "Hierarquização sem integração"],
+                    correct: 1,
+                    explanation: "A estrutura das RAS é composta por população/região de saúde definidas, estrutura operacional e sistemas de apoio."
+                },
+                {
+                    question: "A Estratégia Saúde da Família (ESF) é considerada:",
+                    options: ["Opção para grandes municípios", "Estratégia prioritária para expansão da Atenção Básica", "Programa temporário", "Focada em ações curativas", "Substituta dos hospitais"],
+                    correct: 1,
+                    explanation: "A PNAB reconhece a ESF como estratégia prioritária para organização da Atenção Básica."
+                },
+                {
+                    question: "Os Conselhos de Saúde têm composição:",
+                    options: ["Majoritariamente governamental", "Paritária entre usuários e demais segmentos", "Exclusiva de profissionais de saúde", "Indicada pelo gestor municipal", "Sem participação de usuários"],
+                    correct: 1,
+                    explanation: "Os Conselhos têm composição paritária: 50% de usuários e 50% divididos entre gestores, trabalhadores e prestadores."
+                },
+                {
+                    question: "A cada quantos anos ocorrem as Conferências de Saúde, em regra?",
+                    options: ["1 ano", "2 anos", "4 anos", "5 anos", "8 anos"],
+                    correct: 2,
+                    explanation: "As Conferências de Saúde ocorrem a cada 4 anos, com representação paritária, para avaliar e propor diretrizes."
+                },
+                {
+                    question: "O princípio do SUS que garante atendimento integral é:",
+                    options: ["Universalidade", "Equidade", "Integralidade", "Descentralização", "Participação social"],
+                    correct: 2,
+                    explanation: "Integralidade é o princípio que garante ações de promoção, proteção e recuperação da saúde."
+                },
+                {
+                    question: "A direção do SUS é única, sendo exercida no âmbito dos Municípios pela:",
+                    options: ["Secretaria Estadual de Saúde", "Secretaria Municipal de Saúde", "Ministério da Saúde", "Conselho Municipal de Saúde", "Comissão Intergestores Bipartite"],
+                    correct: 1,
+                    explanation: "Em cada esfera de governo há uma direção única: no Município, é a Secretaria Municipal de Saúde."
+                },
+                {
+                    question: "O Decreto 7.508/2011 estabelece que o acesso universal e igualitário às ações e serviços de saúde será ordenado pela:",
+                    options: ["Atenção terciária", "Atenção primária", "Atenção secundária", "Central de Regulação", "Demanda espontânea"],
+                    correct: 1,
+                    explanation: "O Decreto estabelece que a Atenção Primária é a porta de entrada preferencial e ordenadora do acesso."
+                }
+            ],
+            
+            portugues: [
+                {
+                    question: "Assinale a opção em que todas as palavras estão grafadas corretamente:",
+                    options: ["excessão, ascensão, obsessão", "exceção, ascenção, obceção", "exceção, ascensão, obsessão", "eceção, ascenção, obceção", "excessão, ascensão, obceção"],
+                    correct: 2,
+                    explanation: "As formas corretas são: exceção, ascensão, obsessão. 'Excessão' não existe em português."
+                },
+                {
+                    question: "Em qual alternativa a pontuação está correta?",
+                    options: ["João, o aluno mais dedicado, recebeu o prêmio.", "João o aluno mais dedicado, recebeu o prêmio.", "João o aluno mais dedicado recebeu, o prêmio.", "João, o aluno mais dedicado recebeu o prêmio.", "João o aluno, mais dedicado, recebeu o prêmio."],
+                    correct: 0,
+                    explanation: "O aposto deve vir entre vírgulas. Apenas a alternativa A apresenta essa estrutura corretamente."
+                },
+                {
+                    question: "Assinale a opção em que todas as palavras são paroxítonas:",
+                    options: ["café, pássaro, herói", "árvore, caderno, mesa", "sofá, vovô, cajá", "álbum, hífen, tórax", "automóvel, vírus, fácil"],
+                    correct: 4,
+                    explanation: "Paroxítonas têm acento tônico na penúltima sílaba. 'Automóvel, vírus, fácil' são paroxítonas."
+                },
+                {
+                    question: "Complete: 'Preferia que você _____ agora, mas se quiser _____ depois, tudo bem.'",
+                    options: ["viesse, voltar", "vinhesse, voltar", "viesse, voltasse", "vinha, voltar", "vinhesse, voltasse"],
+                    correct: 0,
+                    explanation: "O verbo 'preferir' no subjuntivo é 'viesse'. O segundo verbo fica no infinitivo: 'voltar'."
+                },
+                {
+                    question: "Assinale a alternativa em que o uso da crase está correto:",
+                    options: ["Fui à praia ontem.", "Ele chegou à tempo.", "Entreguei à ele o documento.", "Refiro-me àquele rapaz.", "À partir de amanhã, não trabalharei."],
+                    correct: 0,
+                    explanation: "A crase é correta em 'à praia' porque 'ir' exige preposição 'a' e 'praia' admite artigo."
+                },
+                {
+                    question: "Qual das frases apresenta concordância verbal correta?",
+                    options: ["Fazem dois anos que não o vejo.", "Haviam muitas pessoas na festa.", "Mais de um aluno faltou à aula.", "Choveram papéis picados.", "Deve existir soluções melhores."],
+                    correct: 2,
+                    explanation: "'Mais de um' pede verbo no singular. O correto: 'Faz dois anos', 'Havia muitas pessoas'."
+                },
+                {
+                    question: "Na frase 'O advogado entregou os documentos para o cliente', o termo 'para o cliente' exerce função de:",
+                    options: ["objeto indireto", "adjunto adverbial", "complemento nominal", "adjunto adnominal", "agente da passiva"],
+                    correct: 0,
+                    explanation: "'Entregar' é VTD + preposição (entregou algo a alguém). 'para o cliente' é objeto indireto."
+                },
+                {
+                    question: "Assinale a alternativa em que há erro de regência:",
+                    options: ["Prefiro mais estudar a trabalhar.", "Assistimos ao filme ontem.", "O remédio custou caro.", "Lembrei-me do que você disse.", "Paguei ao vendedor a mercadoria."],
+                    correct: 0,
+                    explanation: "'Preferir' não admite 'mais' nem 'do que'. O correto é 'Prefiro estudar a trabalhar'."
+                },
+                {
+                    question: "Qual palavra é um exemplo de derivação parassintética?",
+                    options: ["infelizmente", "anoitecer", "enrijecer", "deslealdade", "felizmente"],
+                    correct: 2,
+                    explanation: "Parassíntese: acréscimo simultâneo de prefixo e sufixo. 'Enrijecer' (em + rijo + ecer)."
+                },
+                {
+                    question: "Em 'Ele me disse que não viria', a oração 'que não viria' é:",
+                    options: ["substantiva objetiva direta", "substantiva objetiva indireta", "substantiva subjetiva", "adjetiva", "adverbial"],
+                    correct: 0,
+                    explanation: "'Disse' é VTD, e o 'que' introduz o objeto direto: 'disse isso'."
+                },
+                {
+                    question: "Assinale a opção em que todas as palavras são grafadas com 's' e não 'z':",
+                    options: ["análise, aviso, pesquisa", "realizar, civilizar, analisar", "improviso, paralisia, catalisar", "alisar, precisar, frisar", "catequese, tesoura, deslizar"],
+                    correct: 0,
+                    explanation: "'Análise, aviso, pesquisa' são grafadas com 's'."
+                },
+                {
+                    question: "Assinale a frase em que a colocação pronominal está correta:",
+                    options: ["Me empresta o livro?", "Não me diga isso!", "Tinha falado-me sobre isso.", "Em se tratando de saúde, tudo é importante.", "Falarei-lhe sobre o assunto."],
+                    correct: 1,
+                    explanation: "'Não me diga' está correto (próclise com palavra negativa)."
+                },
+                {
+                    question: "Assinale a alternativa que apresenta um antônimo para 'prolixo':",
+                    options: ["resumido", "extenso", "detalhado", "minucioso", "verboso"],
+                    correct: 0,
+                    explanation: "Prolixo significa excessivamente longo. Antônimo é 'resumido', 'conciso'."
+                },
+                {
+                    question: "Em qual opção a palavra 'porque' está empregada corretamente?",
+                    options: ["Não fui à aula, porque estava doente.", "Explique o motivo por que você não veio.", "Ele não veio, porquê?", "O por que da pergunta é simples.", "Porque você não veio?"],
+                    correct: 0,
+                    explanation: "'porque' junto e sem acento é usado em respostas ou explicações."
+                },
+                {
+                    question: "Assinale a alternativa em que há erro de acentuação gráfica:",
+                    options: ["herói, papéis, chapéu", "pólen, hífen, éter", "rubrica, avaro, ibero", "túnel, fácil, amável", "cajá, sofá, vatapá"],
+                    correct: 2,
+                    explanation: "'Rubrica' é paroxítona e não tem acento. A forma correta é 'rubrica' (sem acento)."
+                },
+                {
+                    question: "Na frase 'Ela mesma fez o bolo', o termo 'mesma' é:",
+                    options: ["pronome pessoal", "pronome possessivo", "pronome demonstrativo", "pronome de tratamento", "pronome reflexivo"],
+                    correct: 2,
+                    explanation: "'Mesma' aqui é pronome demonstrativo, equivalente a 'própria'."
+                },
+                {
+                    question: "Assinale a opção que apresenta um exemplo de discurso indireto:",
+                    options: ["Ele disse: 'Estou cansado'.", "Ela falou que estava feliz.", "Perguntou-me: 'Você vem?'", "'Que horas são?', indagou.", "Ela exclamou: 'Que dia lindo!'"],
+                    correct: 1,
+                    explanation: "Discurso indireto reproduz a fala com conjunção integrante ('que') e mudança de pessoa."
+                },
+                {
+                    question: "Qual é o plural correto de 'cidadão'?",
+                    options: ["cidadãos", "cidadões", "cidadães", "cidadãos e cidadãs", "cidadões e cidadãs"],
+                    correct: 0,
+                    explanation: "O plural de 'cidadão' é 'cidadãos'. É uma exceção."
+                },
+                {
+                    question: "Assinale a alternativa em que a regência nominal está correta:",
+                    options: ["Estou ansioso em viajar.", "Ele é capaz de tudo.", "Ela é apegada com os filhos.", "Estou contente da vida.", "Isto é preferível do que aquilo."],
+                    correct: 1,
+                    explanation: "'Capaz' rege a preposição 'de': capaz de tudo. As formas corretas: 'ansioso por', 'apegada aos'."
+                },
+                {
+                    question: "Na frase 'Houve muitos acidentes naquela estrada', o sujeito é:",
+                    options: ["muitos acidentes", "acidentes", "indeterminado", "inexistente (oração sem sujeito)", "houve (sujeito simples)"],
+                    correct: 3,
+                    explanation: "O verbo 'haver' no sentido de 'existir' é impessoal, formando oração sem sujeito."
+                }
+            ],
+            
+            informatica: [
+                {
+                    question: "No Microsoft Excel, a função que retorna a média aritmética dos argumentos é:",
+                    options: ["SOMA()", "MEDIA()", "CONT.NUM()", "MÉDIA()", "SOMASE()"],
+                    correct: 3,
+                    explanation: "No Excel em português, a função para calcular a média aritmética é '=MÉDIA()'."
+                },
+                {
+                    question: "No contexto da internet, qual é a função principal de um programa antivírus?",
+                    options: ["Acelerar a conexão", "Criar redes Wi-Fi", "Detectar e eliminar softwares maliciosos", "Editar planilhas online", "Gerenciar senhas"],
+                    correct: 2,
+                    explanation: "O antivírus detecta, bloqueia e remove vírus e outros malwares."
+                },
+                {
+                    question: "No Windows, a combinação de teclas 'Ctrl + C' e 'Ctrl + V' é utilizada para:",
+                    options: ["Recortar e Colar", "Copiar e Colar", "Abrir e Fechar", "Salvar e Imprimir", "Desfazer e Refazer"],
+                    correct: 1,
+                    explanation: "Ctrl+C (copiar) e Ctrl+V (colar)."
+                },
+                {
+                    question: "Um 'firewall' é um sistema de segurança que:",
+                    options: ["Aumenta a velocidade", "Controla o tráfego de rede, bloqueando acessos não autorizados", "Edita textos", "Cria backups", "Gerencia energia"],
+                    correct: 1,
+                    explanation: "Firewall monitora e controla o tráfego de rede com base em regras."
+                },
+                {
+                    question: "O prontuário eletrônico do paciente é um exemplo de:",
+                    options: ["Sistema de informação em saúde", "Editor de texto", "Planilha eletrônica", "Navegador", "Sistema operacional"],
+                    correct: 0,
+                    explanation: "Prontuário eletrônico é um Sistema de Informação em Saúde (SIS)."
+                },
+                {
+                    question: "No Microsoft Word, o recurso que verifica ortografia e gramática é acionado pela tecla:",
+                    options: ["F1", "F7", "F12", "Ctrl+B", "Alt+F4"],
+                    correct: 1,
+                    explanation: "F7 é o atalho padrão para verificação ortográfica e gramatical."
+                },
+                {
+                    question: "Qual é a extensão padrão de arquivos do Microsoft Excel?",
+                    options: [".docx", ".xlsx", ".pptx", ".txt", ".pdf"],
+                    correct: 1,
+                    explanation: "Arquivos do Excel têm extensão .xlsx (ou .xls para versões antigas)."
+                },
+                {
+                    question: "Na internet, o protocolo HTTPS indica que:",
+                    options: ["A conexão é insegura", "O site é falso", "A comunicação é criptografada", "O site é mais rápido", "Não há proteção de dados"],
+                    correct: 2,
+                    explanation: "HTTPS (Hyper Text Transfer Protocol Secure) indica conexão segura com criptografia."
+                },
+                {
+                    question: "No Windows, o atalho 'Alt + Tab' serve para:",
+                    options: ["Fechar o programa atual", "Alternar entre programas abertos", "Abrir o gerenciador de tarefas", "Minimizar todas as janelas", "Desligar o computador"],
+                    correct: 1,
+                    explanation: "Alt + Tab alterna entre as janelas e programas em execução."
+                },
+                {
+                    question: "O e-SUS AB é um sistema utilizado para:",
+                    options: ["Gestão hospitalar", "Atenção Básica", "Controle financeiro", "Recursos humanos", "Compras públicas"],
+                    correct: 1,
+                    explanation: "e-SUS AB é o sistema de informação da Atenção Básica."
+                },
+                {
+                    question: "Na planilha eletrônica, a referência '$A$1' é chamada de:",
+                    options: ["Referência relativa", "Referência absoluta", "Referência mista", "Referência circular", "Referência externa"],
+                    correct: 1,
+                    explanation: "O cifrão ($) antes da letra e do número indica referência absoluta, que não muda ao copiar."
+                },
+                {
+                    question: "Um 'backup' é:",
+                    options: ["Um vírus", "Uma cópia de segurança", "Um tipo de firewall", "Um programa de edição", "Uma rede social"],
+                    correct: 1,
+                    explanation: "Backup é uma cópia de segurança dos dados para recuperação em caso de perda."
+                },
+                {
+                    question: "No navegador, o que são 'cookies'?",
+                    options: ["Vírus que roubam dados", "Arquivos que armazenam informações de navegação", "Programas que aceleram a internet", "Extensões de segurança", "Tipos de firewall"],
+                    correct: 1,
+                    explanation: "Cookies são pequenos arquivos que armazenam preferências e dados de navegação do usuário."
+                },
+                {
+                    question: "O Google Chrome, Mozilla Firefox e Microsoft Edge são exemplos de:",
+                    options: ["Sistemas operacionais", "Navegadores (browsers)", "Antivírus", "Editores de texto", "Planilhas eletrônicas"],
+                    correct: 1,
+                    explanation: "São navegadores de internet (browsers)."
+                },
+                {
+                    question: "No Excel, a função PROCV é utilizada para:",
+                    options: ["Somar valores", "Contar células", "Procurar valores em uma tabela", "Calcular média", "Criar gráficos"],
+                    correct: 2,
+                    explanation: "PROCV (procurar na vertical) busca um valor na primeira coluna de uma tabela."
+                },
+                {
+                    question: "O que é 'phishing'?",
+                    options: ["Uma técnica de pesca", "Um tipo de vírus", "Tentativa de obter dados pessoais fraudulentamente", "Um software legítimo", "Um firewall avançado"],
+                    correct: 2,
+                    explanation: "Phishing é uma fraude eletrônica que tenta obter dados pessoais e financeiros do usuário."
+                },
+                {
+                    question: "No Windows, o 'Gerenciador de Tarefas' pode ser aberto com o atalho:",
+                    options: ["Ctrl+Alt+Del", "Alt+F4", "Ctrl+Esc", "Windows+R", "Ctrl+Shift"],
+                    correct: 0,
+                    explanation: "Ctrl+Alt+Del abre opções que incluem o Gerenciador de Tarefas."
+                },
+                {
+                    question: "Qual é a função do comando 'Ctrl+Z' na maioria dos programas?",
+                    options: ["Salvar", "Copiar", "Desfazer a última ação", "Refazer a última ação", "Imprimir"],
+                    correct: 2,
+                    explanation: "Ctrl+Z é o atalho universal para 'desfazer' a última ação."
+                },
+                {
+                    question: "O Microsoft PowerPoint é um software de:",
+                    options: ["Edição de texto", "Planilhas", "Apresentações", "Banco de dados", "Edição de imagens"],
+                    correct: 2,
+                    explanation: "PowerPoint é um editor de apresentações."
+                },
+                {
+                    question: "O sistema operacional Linux é um exemplo de software:",
+                    options: ["Pago", "Proprietário", "Código aberto (open source)", "Aplicativo", "Navegador"],
+                    correct: 2,
+                    explanation: "Linux é um sistema operacional de código aberto (open source)."
+                }
+            ],
+            
+            raciocinio: [
+                {
+                    question: "Uma UBS atende 120 pessoas por dia. Se 30% são atendimentos de demanda espontânea, quantas consultas agendadas ocorrem por dia?",
+                    options: ["36", "40", "80", "84", "90"],
+                    correct: 3,
+                    explanation: "30% de 120 = 36 (demanda espontânea). Agendadas = 120 - 36 = 84."
+                },
+                {
+                    question: "Em um hospital, 5 enfermeiros atendem 20 pacientes em 4 horas. Quantos enfermeiros para atender 30 pacientes em 2 horas?",
+                    options: ["10", "12", "15", "18", "20"],
+                    correct: 2,
+                    explanation: "Regra de três composta: 5/x = (20/30) * (2/4) = (2/3)*(1/2)=1/3 → x = 15 enfermeiros."
+                },
+                {
+                    question: "Uma proposição equivalente a 'Se o gestor é eficiente, então a meta é cumprida' é:",
+                    options: ["Se a meta é cumprida, então o gestor é eficiente", "Gestor eficiente e meta não cumprida", "Gestor não é eficiente ou meta é cumprida", "Se gestor não é eficiente, meta não é cumprida", "Meta não cumprida ou gestor eficiente"],
+                    correct: 2,
+                    explanation: "Equivalência lógica de p → q é ~p ∨ q (não p ou q)."
+                },
+                {
+                    question: "Em uma sala com 10 gestores e 15 técnicos, qual a probabilidade de comissão de 3 pessoas ter exatamente 2 gestores e 1 técnico?",
+                    options: ["(C10,2 * C15,1)/C25,3", "(10*15)/C25,3", "(C10,3+C15,3)/C25,3", "10/25*9/24*15/23", "(10*9*15)/3"],
+                    correct: 0,
+                    explanation: "Total combinações: C25,3. Favoráveis: C10,2 * C15,1. Probabilidade = (C10,2 * C15,1)/C25,3."
+                },
+                {
+                    question: "Considere: 'Todo gestor conhece o SUS. Alguns gestores são médicos.' Conclusão válida:",
+                    options: ["Todo médico conhece o SUS", "Alguns médicos conhecem o SUS", "Nenhum médico conhece o SUS", "Todo gestor é médico", "Alguns médicos não são gestores"],
+                    correct: 1,
+                    explanation: "A interseção gestor-médico existe. Como todo gestor conhece o SUS, esses gestores médicos conhecem o SUS. Logo, alguns médicos conhecem o SUS."
+                },
+                {
+                    question: "Se 8 profissionais levam 6 dias para concluir um relatório, quantos dias levariam 12 profissionais?",
+                    options: ["4", "5", "6", "7", "9"],
+                    correct: 0,
+                    explanation: "Grandezas inversamente proporcionais: 8 * 6 = 12 * x → 48 = 12x → x = 4 dias."
+                },
+                {
+                    question: "Qual é o próximo número da sequência: 3, 6, 11, 18, 27, ?",
+                    options: ["36", "37", "38", "39", "40"],
+                    correct: 2,
+                    explanation: "Diferenças: +3, +5, +7, +9, próxima diferença +11 → 27+11 = 38."
+                },
+                {
+                    question: "Se todo A é B e algum B é C, podemos concluir que:",
+                    options: ["Todo A é C", "Nenhum A é C", "Algum A é C", "Algum A pode ser C", "Todo C é A"],
+                    correct: 3,
+                    explanation: "Não há relação garantida entre A e C. Pode haver interseção, mas não é certa. Portanto, algum A pode ser C."
+                },
+                {
+                    question: "Em uma UBS, há 3 médicos e 5 enfermeiros. De quantas formas podemos formar uma equipe com 2 médicos e 2 enfermeiros?",
+                    options: ["30", "60", "90", "120", "15"],
+                    correct: 0,
+                    explanation: "C(3,2) * C(5,2) = 3 * 10 = 30 formas."
+                },
+                {
+                    question: "Se p é verdadeira e q é falsa, qual o valor de (p ∨ q) → ¬q?",
+                    options: ["Verdadeiro", "Falso", "Inconclusivo", "Depende", "Nenhum"],
+                    correct: 0,
+                    explanation: "p ∨ q = V ∨ F = V. ¬q = V. V → V = Verdadeiro."
+                },
+                {
+                    question: "Um relatório tem 120 páginas. Se já foram lidas 45%, quantas páginas faltam?",
+                    options: ["54", "60", "66", "72", "78"],
+                    correct: 2,
+                    explanation: "45% de 120 = 54 lidas. Faltam = 120 - 54 = 66 páginas."
+                },
+                {
+                    question: "Qual a negação de 'todos os gestores participaram da reunião'?",
+                    options: ["Nenhum gestor participou", "Algum gestor não participou", "Todos não participaram", "Alguns participaram", "A maioria participou"],
+                    correct: 1,
+                    explanation: "A negação de 'todo A é B' é 'algum A não é B'."
+                },
+                {
+                    question: "Em uma progressão aritmética, o 3° termo vale 10 e o 7° vale 22. Qual a razão?",
+                    options: ["2", "3", "4", "5", "6"],
+                    correct: 1,
+                    explanation: "a7 = a3 + 4r → 22 = 10 + 4r → 4r = 12 → r = 3."
+                },
+                {
+                    question: "Quantas comissões de 4 pessoas podem ser formadas com 8 profissionais?",
+                    options: ["70", "56", "28", "35", "42"],
+                    correct: 0,
+                    explanation: "C(8,4) = 8!/(4!4!) = 70."
+                },
+                {
+                    question: "Se 3 impressoras imprimem 300 relatórios em 2 horas, em quanto tempo 2 impressoras imprimirão 200 relatórios?",
+                    options: ["2h", "3h", "4h", "5h", "6h"],
+                    correct: 0,
+                    explanation: "3 * 2 / 300 = 2 * x / 200 → 6/300 = 2x/200 → 0,02 = x/100 → x = 2 horas."
+                },
+                {
+                    question: "Dois dados são lançados. Qual a probabilidade de soma 7?",
+                    options: ["1/6", "1/9", "5/36", "7/36", "1/12"],
+                    correct: 0,
+                    explanation: "Pares que somam 7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) → 6/36 = 1/6."
+                },
+                {
+                    question: "Se um medicamento custa R$ 150,00 e terá aumento de 20%, qual será o novo preço?",
+                    options: ["R$ 160", "R$ 170", "R$ 180", "R$ 190", "R$ 200"],
+                    correct: 2,
+                    explanation: "20% de 150 = 30. Novo preço = 150 + 30 = R$ 180,00."
+                },
+                {
+                    question: "Em uma urna com 4 bolas vermelhas e 6 azuis, retira-se uma bola, qual a probabilidade de ser vermelha?",
+                    options: ["2/5", "3/5", "1/2", "4/5", "1/5"],
+                    correct: 0,
+                    explanation: "Total 10 bolas, 4 vermelhas. Probabilidade = 4/10 = 2/5."
+                },
+                {
+                    question: "Se A = {1,2,3,4}, B = {3,4,5,6}. Quantos elementos tem A ∪ B?",
+                    options: ["4", "5", "6", "7", "8"],
+                    correct: 2,
+                    explanation: "A ∪ B = {1,2,3,4,5,6} → 6 elementos."
+                },
+                {
+                    question: "A contrapositiva de 'se chove, então a rua fica molhada' é:",
+                    options: ["Se a rua fica molhada, então chove", "Se não chove, a rua não fica molhada", "Se a rua não fica molhada, então não chove", "Chove e a rua não fica molhada", "Não chove ou a rua fica molhada"],
+                    correct: 2,
+                    explanation: "A contrapositiva de p→q é ~q→~p: 'Se a rua não fica molhada, então não chove'."
+                }
+            ],
+            
+            historia: [
+                {
+                    question: "O estado do Tocantins foi criado oficialmente em:",
+                    options: ["1985", "1988", "1989", "1990", "1991"],
+                    correct: 1,
+                    explanation: "O Tocantins foi criado pela Constituição de 1988, promulgada em 5 de outubro, e instalado em 1º de janeiro de 1989."
+                },
+                {
+                    question: "O primeiro governador do estado do Tocantins foi:",
+                    options: ["Siqueira Campos", "Moisés Avelino", "José Wilson Siqueira Campos", "Orlando Pessuti", "Raimundo Boi"],
+                    correct: 0,
+                    explanation: "Siqueira Campos foi o primeiro governador do Tocantins, tendo sido eleito em 1988 e governado de 1989 a 1991."
+                },
+                {
+                    question: "A capital do Tocantins, Palmas, foi fundada em:",
+                    options: ["1988", "1989", "1990", "1991", "1992"],
+                    correct: 1,
+                    explanation: "Palmas foi fundada em 20 de maio de 1989, para ser a capital planejada do novo estado."
+                },
+                {
+                    question: "O Tocantins foi desmembrado de qual estado?",
+                    options: ["Goiás", "Maranhão", "Pará", "Mato Grosso", "Bahia"],
+                    correct: 0,
+                    explanation: "O Tocantins foi desmembrado do estado de Goiás, conforme previsto no art. 13 do Ato das Disposições Constitucionais Transitórias da Constituição de 1988."
+                },
+                {
+                    question: "Qual é o principal bioma presente no estado do Tocantins?",
+                    options: ["Amazônia", "Caatinga", "Cerrado", "Mata Atlântica", "Pantanal"],
+                    correct: 2,
+                    explanation: "O Tocantins está inserido predominantemente no bioma Cerrado, com pequenas áreas de transição para a Amazônia."
+                },
+                {
+                    question: "A Bacia Hidrográfica que abrange a maior parte do território tocantinense é a:",
+                    options: ["Bacia Amazônica", "Bacia do Araguaia-Tocantins", "Bacia do São Francisco", "Bacia do Paraná", "Bacia do Parnaíba"],
+                    correct: 1,
+                    explanation: "O estado é banhado pela Bacia do Araguaia-Tocantins, com os rios Tocantins e Araguaia sendo os principais."
+                },
+                {
+                    question: "O principal marco da expansão do povoamento no território tocantinense durante o período colonial foi:",
+                    options: ["A cafeicultura", "A mineração de ouro", "A pecuária extensiva", "O extrativismo da borracha", "A cana-de-açúcar"],
+                    correct: 1,
+                    explanation: "A exploração do ouro no século XVIII, especialmente na região de Natividade e Arraias, foi o principal fator de povoamento inicial."
+                },
+                {
+                    question: "Qual rodovia federal é considerada fundamental para a integração e desenvolvimento do Tocantins?",
+                    options: ["BR-010 (Belém-Brasília)", "BR-153 (Belém-Brasília)", "BR-116", "BR-101", "BR-364"],
+                    correct: 1,
+                    explanation: "A BR-153, também conhecida como Belém-Brasília, foi crucial para a ocupação e desenvolvimento econômico do Tocantins."
+                },
+                {
+                    question: "O Tocantins possui qual região turística conhecida por suas águas cristalinas e cachoeiras?",
+                    options: ["Chapada das Mesas", "Jalapão", "Serra do Cipó", "Chapada dos Veadeiros", "Lençóis Maranhenses"],
+                    correct: 1,
+                    explanation: "O Jalapão é uma das principais regiões turísticas do estado, conhecida por suas paisagens de cerrado, fervedouros e cachoeiras."
+                },
+                {
+                    question: "Quantos municípios compõem o estado do Tocantins aproximadamente?",
+                    options: ["139", "141", "139", "139", "139"],
+                    correct: 0,
+                    explanation: "O Tocantins possui 139 municípios."
+                },
+                {
+                    question: "O movimento separatista que deu origem ao estado do Tocantins ficou conhecido como:",
+                    options: ["Revolução de 1930", "Movimento autonomista do norte goiano", "Inconfidência Mineira", "Revolução Constitucionalista", "Guerra dos Emboabas"],
+                    correct: 1,
+                    explanation: "O movimento pela criação do estado foi liderado por figuras como Siqueira Campos e defendia a autonomia da região norte de Goiás."
+                },
+                {
+                    question: "Qual é o principal rio que banha a capital Palmas?",
+                    options: ["Rio Araguaia", "Rio Tocantins", "Rio Paranã", "Rio Sono", "Rio Manuel Alves"],
+                    correct: 1,
+                    explanation: "Palmas está localizada às margens do Rio Tocantins, que é um dos principais rios do estado."
+                },
+                {
+                    question: "O clima predominante no Tocantins é:",
+                    options: ["Equatorial úmido", "Tropical semiárido", "Tropical com estação seca", "Subtropical", "Tropical de altitude"],
+                    correct: 2,
+                    explanation: "O Tocantins possui clima tropical, com duas estações bem definidas: verão chuvoso e inverno seco."
+                },
+                {
+                    question: "O Parque Estadual do Jalapão é uma unidade de conservação localizada na região:",
+                    options: ["Norte do estado", "Sul do estado", "Leste do estado", "Oeste do estado", "Central do estado"],
+                    correct: 1,
+                    explanation: "O Jalapão está localizado na região leste do Tocantins, fazendo divisa com a Bahia."
+                },
+                {
+                    question: "A principal atividade econômica do Tocantins na atualidade é:",
+                    options: ["Mineração", "Indústria automobilística", "Agropecuária", "Extrativismo vegetal", "Turismo"],
+                    correct: 2,
+                    explanation: "A agropecuária é a base da economia tocantinense, com destaque para a produção de soja, milho e pecuária de corte."
+                },
+                {
+                    question: "Qual é o município tocantinense que se destaca como polo industrial e agroindustrial?",
+                    options: ["Gurupi", "Araguaína", "Porto Nacional", "Paraíso do Tocantins", "Tocantinópolis"],
+                    correct: 1,
+                    explanation: "Araguaína é o segundo maior município do estado e se destaca como polo industrial, agropecuário e comercial."
+                },
+                {
+                    question: "A Ilha do Bananal, localizada no Tocantins, é considerada:",
+                    options: ["A maior ilha fluvial do mundo", "A maior ilha lacustre do Brasil", "A segunda maior ilha do mundo", "Uma ilha oceânica", "Uma reserva indígena exclusiva"],
+                    correct: 0,
+                    explanation: "A Ilha do Bananal, formada pelos rios Araguaia e Javaés, é a maior ilha fluvial do mundo."
+                },
+                {
+                    question: "Os principais povos indígenas presentes no Tocantins são:",
+                    options: ["Guarani e Tupi", "Xavante e Bororo", "Karajá, Xambioá e Javaé", "Yanomami e Tikuna", "Pataxó e Ticuna"],
+                    correct: 2,
+                    explanation: "Os povos Karajá, Xambioá e Javaé são tradicionais na região da Ilha do Bananal e entorno."
+                },
+                {
+                    question: "A vegetação predominante no Tocantins é:",
+                    options: ["Floresta Amazônica", "Cerrado com matas de galeria e campos", "Caatinga arbustiva", "Mata de Araucárias", "Manguezais"],
+                    correct: 1,
+                    explanation: "O Cerrado é o bioma predominante, com vegetação que inclui matas de galeria, campos limpos e cerradão."
+                },
+                {
+                    question: "O primeiro núcleo urbano do atual território tocantinense foi:",
+                    options: ["Palmas", "Natividade", "Porto Nacional", "Arraias", "São João da Palma"],
+                    correct: 1,
+                    explanation: "Natividade é considerada a cidade mais antiga do Tocantins, fundada por bandeirantes no século XVIII durante o ciclo do ouro."
+                }
+            ]
+        };
 
-            // INFORMÁTICA BÁSICA (Questões 16-20)
-            {
-                question: "No Microsoft Excel, a função que retorna a média aritmética dos argumentos é:",
-                options: ["SOMA()", "MEDIA()", "CONT.NUM()", "MÉDIA()", "SOMASE()"],
-                correct: 3,
-                explanation: "No Excel em português, a função para calcular a média aritmética é '=MÉDIA()'. 'MEDIA' sem acento não é reconhecida. [citation:2]"
-            },
-            {
-                question: "No contexto da internet, qual é a função principal de um programa antivírus?",
-                options: ["Acelerar a conexão com a internet", "Criar redes Wi-Fi", "Detectar e eliminar softwares maliciosos", "Editar planilhas online", "Gerenciar senhas do navegador"],
-                correct: 2,
-                explanation: "O antivírus é um software projetado para detectar, bloquear e remover vírus e outros malwares (códigos maliciosos) do computador, protegendo o sistema e os dados."
-            },
-            {
-                question: "No Sistema Operacional Windows, a combinação de teclas 'Ctrl + C' e 'Ctrl + V' é utilizada, respectivamente, para:",
-                options: ["Recortar e Colar", "Copiar e Colar", "Abrir e Fechar arquivo", "Salvar e Imprimir", "Desfazer e Refazer"],
-                correct: 1,
-                explanation: "Os atalhos padrão do Windows são: Ctrl+C (copiar), Ctrl+X (recortar) e Ctrl+V (colar)."
-            },
-            {
-                question: "Um 'firewall' é um sistema de segurança que:",
-                options: ["Aumenta a velocidade de processamento do computador", "Controla o tráfego de rede, bloqueando acessos não autorizados", "Edita textos e planilhas", "Cria backups automáticos", "Gerencia o consumo de energia"],
-                correct: 1,
-                explanation: "Firewall é uma solução de segurança que monitora e controla o tráfego de rede com base em regras predefinidas, criando uma barreira entre redes confiáveis e não confiáveis."
-            },
-            {
-                question: "O prontuário eletrônico do paciente, utilizado em sistemas como o e-SUS AB, é um exemplo de:",
-                options: ["Sistema de informação em saúde", "Editor de texto", "Planilha eletrônica", "Navegador de internet", "Sistema operacional"],
-                correct: 0,
-                explanation: "O prontuário eletrônico é um tipo de Sistema de Informação em Saúde (SIS), essencial para o registro, armazenamento e gestão de dados clínicos e administrativos dos pacientes. [citation:2]"
-            },
-
-            // LÍNGUA PORTUGUESA (Questões 21-25)
-            {
-                question: "Assinale a alternativa em que a concordância verbal está de acordo com a norma culta:",
-                options: ["Fazem cinco anos que trabalho na saúde pública.", "Houveram muitas reclamações sobre o atendimento.", "Mais de um gestor participaram da reunião.", "Precisam-se de técnicos especializados.", "Tratam-se de questões importantes para o SUS."],
-                correct: 4,
-                explanation: "'Tratar-se de' seguido de preposição é invariável quando o 'se' é índice de indeterminação do sujeito. O correto seria 'Trata-se de questões'. Todas as outras estão incorretas: 'Faz cinco anos', 'Houve muitas reclamações', 'Mais de um gestor participou', 'Precisa-se de técnicos'."
-            },
-            {
-                question: "Assinale a opção em que o uso do acento indicativo de crase está correto:",
-                options: ["O projeto foi entregue à todas as secretarias.", "O gestor referiu-se àquela política de saúde.", "A reunião começa à partir das 14h.", "Os recursos serão destinados à entidades privadas.", "Fizemos uma visita à um hospital de referência."],
-                correct: 1,
-                explanation: "A crase é obrigatória na contração da preposição 'a' com o demonstrativo 'aquele(s)' ou 'aquela(s)'. Portanto: 'referiu-se àquela política'."
-            },
-            {
-                question: "Na frase 'O secretário entregou o relatório ao diretor', o termo 'ao diretor' exerce a função sintática de:",
-                options: ["Objeto direto", "Adjunto adnominal", "Objeto indireto", "Complemento nominal", "Adjunto adverbial"],
-                correct: 2,
-                explanation: "O verbo 'entregar' é transitivo direto e indireto (bitransitivo). 'O relatório' é objeto direto (entrega algo). 'Ao diretor' é objeto indireto (entrega a alguém), pois é complemento verbal preposicionado."
-            },
-            {
-                question: "Em relação à tipologia textual, um documento como uma ata de reunião do Conselho de Saúde é predominantemente:",
-                options: ["Narrativo", "Descritivo", "Dissertativo-argumentativo", "Injuntivo", "Narrativo-descritivo"],
-                correct: 1,
-                explanation: "A ata é um texto predominantemente descritivo, pois relata, de forma objetiva e cronológica, os fatos, discussões e decisões ocorridos em uma reunião."
-            },
-            {
-                question: "Assinale a alternativa em que a colocação pronominal está correta segundo a norma padrão:",
-                options: ["Me entregue os documentos agora.", "Não me entregaram o relatório.", "Em se tratando de gestão, ele é expert.", "Falaram-me que a reunião acabou.", "Tudo me disseram sobre o projeto."],
-                correct: 1,
-                explanation: "Com palavras negativas ('não'), a próclise é obrigatória: 'Não me entregaram'. Nas demais: 'Entregue-me' (início de frase), 'Tratando-se' (gerúndio sem preposição), 'Disseram-me' (preferência), 'Disseram-me tudo' (colocação mais adequada)."
-            },
-
-            // RACIOCÍNIO LÓGICO (Questões 26-30)
-            {
-                question: "Uma UBS atende 120 pessoas por dia. Se 30% são atendimentos de demanda espontânea e o restante são consultas agendadas, quantas consultas agendadas ocorrem por dia?",
-                options: ["36", "40", "80", "84", "90"],
-                correct: 4,
-                explanation: "30% de 120 = 36 (demanda espontânea). Agendadas = 120 - 36 = 84. Alternativa correta: 84."
-            },
-            {
-                question: "Em um hospital, 5 enfermeiros conseguem atender 20 pacientes em 4 horas. Quantos enfermeiros seriam necessários para atender 30 pacientes em 2 horas, mantendo o mesmo ritmo de trabalho?",
-                options: ["10", "12", "15", "18", "20"],
-                correct: 2,
-                explanation: "Regra de três composta: (5 enfermeiros / x) = (20 pacientes / 30) * (2 horas / 4) → 5/x = (20/30) * (2/4) = (2/3)*(1/2) = 1/3 → x = 15 enfermeiros."
-            },
-            {
-                question: "Uma proposição logicamente equivalente a 'Se o gestor é eficiente, então a meta é cumprida' é:",
-                options: ["Se a meta é cumprida, então o gestor é eficiente.", "O gestor é eficiente e a meta não é cumprida.", "O gestor não é eficiente ou a meta é cumprida.", "Se o gestor não é eficiente, então a meta não é cumprida.", "A meta não é cumprida ou o gestor é eficiente."],
-                correct: 2,
-                explanation: "A equivalência lógica de p → q é ~p ∨ q (não p ou q). Portanto: 'O gestor não é eficiente ou a meta é cumprida'."
-            },
-            {
-                question: "Em uma sala, há 10 gestores e 15 técnicos. Será formada uma comissão com 3 pessoas. Qual é a probabilidade de a comissão ser composta por exatamente 2 gestores e 1 técnico?",
-                options: ["(C10,2 * C15,1) / C25,3", "(10 * 15) / C25,3", "(C10,3 + C15,3) / C25,3", "10/25 * 9/24 * 15/23", "(10 * 9 * 15) / 3"],
-                correct: 0,
-                explanation: "O número total de combinações é C25,3. O número de formas de escolher 2 gestores entre 10 é C10,2 e 1 técnico entre 15 é C15,1. A probabilidade é o produto dividido pelo total: (C10,2 * C15,1) / C25,3."
-            },
-            {
-                question: "Considere as afirmações: 'Todo gestor conhece o SUS. Alguns gestores são médicos. Logo, podemos concluir que:'",
-                options: ["Todo médico conhece o SUS", "Alguns médicos conhecem o SUS", "Nenhum médico conhece o SUS", "Todo gestor é médico", "Alguns médicos não são gestores"],
-                correct: 1,
-                explanation: "A interseção entre o conjunto de gestores e o conjunto de médicos existe ('alguns gestores são médicos'). Como todo gestor conhece o SUS, esses gestores que são médicos também conhecem o SUS. Portanto, 'alguns médicos conhecem o SUS'."
+        // Embaralhar e combinar questões
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
-        ];
+            return array;
+        }
 
+        // Preparar quizData com questões de todas as disciplinas
+        let quizData = [];
+
+        // Adicionar questões com disciplina identificada
+        questionBank.legislacao.forEach(q => {
+            quizData.push({ ...q, discipline: 'legislacao', disciplineName: 'Legislação e SUS' });
+        });
+        questionBank.portugues.forEach(q => {
+            quizData.push({ ...q, discipline: 'portugues', disciplineName: 'Língua Portuguesa' });
+        });
+        questionBank.informatica.forEach(q => {
+            quizData.push({ ...q, discipline: 'informatica', disciplineName: 'Informática Básica' });
+        });
+        questionBank.raciocinio.forEach(q => {
+            quizData.push({ ...q, discipline: 'raciocinio', disciplineName: 'Raciocínio Lógico' });
+        });
+        questionBank.historia.forEach(q => {
+            quizData.push({ ...q, discipline: 'historia', disciplineName: 'História e Geografia do Tocantins' });
+        });
+
+        // Embaralhar todas as questões
+        quizData = shuffleArray(quizData);
+
+        // Variáveis de controle
         let currentQuestion = 0;
         let answers = new Array(quizData.length).fill(null);
         let answered = new Array(quizData.length).fill(false);
@@ -530,6 +1046,25 @@
         function loadQuestion() {
             const question = quizData[currentQuestion];
             document.getElementById('questionNumber').textContent = `Questão ${currentQuestion + 1} de ${quizData.length}`;
+            
+            // Tag de disciplina
+            const disciplineTag = document.getElementById('disciplineTag');
+            disciplineTag.textContent = question.disciplineName;
+            disciplineTag.className = 'discipline-tag';
+            
+            // Adicionar classe específica para cor
+            if (question.discipline === 'legislacao') {
+                disciplineTag.classList.add('tag-legislacao');
+            } else if (question.discipline === 'portugues') {
+                disciplineTag.classList.add('tag-portugues');
+            } else if (question.discipline === 'informatica') {
+                disciplineTag.classList.add('tag-informatica');
+            } else if (question.discipline === 'raciocinio') {
+                disciplineTag.classList.add('tag-raciocinio');
+            } else if (question.discipline === 'historia') {
+                disciplineTag.classList.add('tag-historia');
+            }
+            
             document.getElementById('questionText').textContent = question.question;
 
             const optionsContainer = document.getElementById('optionsContainer');
@@ -642,8 +1177,19 @@
 
         function showResults() {
             let correctCount = 0;
+            let correctByDiscipline = {
+                legislacao: { total: 20, acertos: 0 },
+                portugues: { total: 20, acertos: 0 },
+                informatica: { total: 20, acertos: 0 },
+                raciocinio: { total: 20, acertos: 0 },
+                historia: { total: 20, acertos: 0 }
+            };
+            
             for (let i = 0; i < quizData.length; i++) {
-                if (answers[i] === quizData[i].correct) correctCount++;
+                if (answers[i] === quizData[i].correct) {
+                    correctCount++;
+                    correctByDiscipline[quizData[i].discipline].acertos++;
+                }
             }
             
             const percentage = Math.round((correctCount / quizData.length) * 100);
@@ -651,13 +1197,43 @@
             document.getElementById('scorePercentage').textContent = percentage + '%';
             
             let message = '';
-            if (percentage >= 90) message = '🌟 Excelente! Você domina a gestão em saúde!';
+            if (percentage >= 90) message = '🌟 Excelente! Você domina todos os conteúdos!';
             else if (percentage >= 70) message = '📚 Muito bem! Continue estudando.';
-            else if (percentage >= 50) message = '✏️ Bom estudo! Reveja as legislações.';
+            else if (percentage >= 50) message = '✏️ Bom estudo! Reveja as disciplinas com menor aproveitamento.';
             else message = '📖 Estude mais e tente novamente!';
             
             document.getElementById('resultsMessage').textContent = message;
-            document.getElementById('resultsDetails').textContent = `Você acertou ${correctCount} de ${quizData.length} questões.`;
+            document.getElementById('resultsDetails').textContent = `Total: ${correctCount} de ${quizData.length} questões.`;
+            
+            // Resumo por disciplina
+            const summaryDiv = document.getElementById('disciplineSummary');
+            summaryDiv.innerHTML = `
+                <div class="discipline-card leg">
+                    <div class="discipline-name">Legislação</div>
+                    <div class="discipline-score">${correctByDiscipline.legislacao.acertos}/20</div>
+                    <div>${Math.round(correctByDiscipline.legislacao.acertos/20*100)}%</div>
+                </div>
+                <div class="discipline-card port">
+                    <div class="discipline-name">Português</div>
+                    <div class="discipline-score">${correctByDiscipline.portugues.acertos}/20</div>
+                    <div>${Math.round(correctByDiscipline.portugues.acertos/20*100)}%</div>
+                </div>
+                <div class="discipline-card inf">
+                    <div class="discipline-name">Informática</div>
+                    <div class="discipline-score">${correctByDiscipline.informatica.acertos}/20</div>
+                    <div>${Math.round(correctByDiscipline.informatica.acertos/20*100)}%</div>
+                </div>
+                <div class="discipline-card rac">
+                    <div class="discipline-name">Raciocínio</div>
+                    <div class="discipline-score">${correctByDiscipline.raciocinio.acertos}/20</div>
+                    <div>${Math.round(correctByDiscipline.raciocinio.acertos/20*100)}%</div>
+                </div>
+                <div class="discipline-card hist">
+                    <div class="discipline-name">Tocantins</div>
+                    <div class="discipline-score">${correctByDiscipline.historia.acertos}/20</div>
+                    <div>${Math.round(correctByDiscipline.historia.acertos/20*100)}%</div>
+                </div>
+            `;
             
             document.getElementById('quizContainer').style.display = 'none';
             document.getElementById('resultsContainer').classList.add('show');
@@ -668,6 +1244,13 @@
             answers = new Array(quizData.length).fill(null);
             answered = new Array(quizData.length).fill(false);
             confirmed = new Array(quizData.length).fill(false);
+            
+            // Reembaralhar as questões ao reiniciar
+            quizData = shuffleArray([...questionBank.legislacao.map(q => ({ ...q, discipline: 'legislacao', disciplineName: 'Legislação e SUS' })),
+                                     ...questionBank.portugues.map(q => ({ ...q, discipline: 'portugues', disciplineName: 'Língua Portuguesa' })),
+                                     ...questionBank.informatica.map(q => ({ ...q, discipline: 'informatica', disciplineName: 'Informática Básica' })),
+                                     ...questionBank.raciocinio.map(q => ({ ...q, discipline: 'raciocinio', disciplineName: 'Raciocínio Lógico' })),
+                                     ...questionBank.historia.map(q => ({ ...q, discipline: 'historia', disciplineName: 'História e Geografia do Tocantins' }))]);
             
             document.getElementById('quizContainer').style.display = 'block';
             document.getElementById('resultsContainer').classList.remove('show');
