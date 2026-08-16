@@ -3,1873 +3,1857 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Personalizável - Gestor em Saúde</title>
+    <title>Treinamento SES-TO 2026 — Gestor em Saúde</title>
     <style>
-        /* (mesmos estilos anteriores, mantidos) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: #f0f4f8;
+            color: #1a2a3a;
             padding: 20px;
         }
-
         .container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             max-width: 900px;
-            width: 100%;
-            padding: 40px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            padding: 30px 35px;
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #005c9e;
-            padding-bottom: 20px;
+        h1 {
+            font-size: 26px;
+            color: #0b3b5a;
+            border-left: 6px solid #1a8c8c;
+            padding-left: 16px;
+            margin-bottom: 8px;
         }
-
-        .header h1 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        /* Tela de configuração inicial */
-        .setup-container {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 20px;
-            border: 1px solid #e9ecef;
-        }
-
-        .setup-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #005c9e;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .setup-section {
-            margin-bottom: 25px;
-        }
-
-        .setup-label {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .setup-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-
-        .setup-option {
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .setup-option input[type="radio"],
-        .setup-option input[type="checkbox"] {
-            margin-right: 8px;
-            transform: scale(1.2);
-        }
-
-        .setup-option label {
-            color: #333;
+        .subtitle {
+            color: #3a5a6a;
             font-size: 15px;
-        }
-
-        .discipline-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .discipline-item {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .discipline-item:hover {
-            border-color: #005c9e;
-            background: #e6f0fa;
-        }
-
-        .discipline-item.selected {
-            border-color: #005c9e;
-            background: #e6f0fa;
-        }
-
-        .discipline-item input[type="checkbox"] {
-            display: none;
-        }
-
-        .discipline-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .discipline-count {
-            font-size: 12px;
-            color: #666;
-        }
-
-        .total-questions {
-            background: #005c9e;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .btn-start {
-            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
-            color: white;
-            padding: 15px 40px;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .btn-start:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 92, 158, 0.4);
-        }
-
-        .btn-start:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .continue-session {
-            background: #e6f0fa;
-            border-left: 4px solid #005c9e;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
+            margin-bottom: 25px;
+            display: flex;
             justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
         }
-
-        .continue-session.show {
-            display: flex;
+        .subtitle span {
+            background: #e8edf2;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 13px;
         }
-
-        .continue-info {
-            color: #333;
-        }
-
-        .continue-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-continue {
-            background: #005c9e;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .btn-new {
-            background: #e0e0e0;
-            color: #333;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        /* Mini cards de desempenho */
-        .discipline-mini-cards {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 20px;
-            background: #f8f9fa;
-            padding: 15px;
+        .question-box {
+            background: #fafcff;
+            border: 1px solid #dde5ed;
             border-radius: 12px;
-            border: 1px solid #e9ecef;
+            padding: 24px 28px;
+            margin: 18px 0 20px;
         }
-
-        .mini-card {
-            flex: 1;
-            min-width: 100px;
-            padding: 10px 5px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 500;
-            background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-left: 3px solid transparent;
-            transition: all 0.2s ease;
-        }
-
-        .mini-card.leg { border-left-color: #005c9e; }
-        .mini-card.port { border-left-color: #16a34a; }
-        .mini-card.inf { border-left-color: #dc6803; }
-        .mini-card.rac { border-left-color: #7b3fe4; }
-        .mini-card.hist { border-left-color: #b45309; }
-
-        .mini-card .discipline-name {
+        .question-header {
             font-weight: 600;
+            font-size: 15px;
+            color: #0b4b6b;
+            margin-bottom: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        .badge {
+            background: #1a6b8a;
+            color: #fff;
             font-size: 11px;
-            color: #495057;
-            margin-bottom: 4px;
-        }
-
-        .mini-card .progress {
-            width: 100%;
-            height: 4px;
-            background: #e9ecef;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 6px 0;
-        }
-
-        .mini-card .progress-fill {
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .mini-card.leg .progress-fill { background: #005c9e; }
-        .mini-card.port .progress-fill { background: #16a34a; }
-        .mini-card.inf .progress-fill { background: #dc6803; }
-        .mini-card.rac .progress-fill { background: #7b3fe4; }
-        .mini-card.hist .progress-fill { background: #b45309; }
-
-        .mini-card .score {
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .mini-card.leg .score { color: #005c9e; }
-        .mini-card.port .score { color: #16a34a; }
-        .mini-card.inf .score { color: #dc6803; }
-        .mini-card.rac .score { color: #7b3fe4; }
-        .mini-card.hist .score { color: #b45309; }
-
-        .discipline-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: white;
-        }
-
-        .tag-legislacao { background: #005c9e; }
-        .tag-portugues { background: #16a34a; }
-        .tag-informatica { background: #dc6803; }
-        .tag-raciocinio { background: #7b3fe4; }
-        .tag-historia { background: #b45309; }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #005c9e 0%, #003f6b 100%);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .question-number {
-            color: #005c9e;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .question-text {
-            color: #333;
-            font-size: 16px;
+            padding: 3px 12px;
+            border-radius: 40px;
             font-weight: 500;
-            margin-bottom: 20px;
-            line-height: 1.6;
         }
-
-        .options {
+        .badge.easy { background: #2a8c5a; }
+        .badge.medium { background: #c97d2b; }
+        .badge.hard { background: #b13e3e; }
+        .question-text {
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+        .alternatives {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
         }
-
-        .option {
+        .alt {
             display: flex;
             align-items: flex-start;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid #e2e9f0;
+            background: #fff;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: #f9f9f9;
+            transition: 0.15s;
         }
-
-        .option:hover:not(.answered) {
-            border-color: #005c9e;
-            background: #e6f0fa;
+        .alt:hover {
+            background: #f2f7fe;
+            border-color: #7f9fbf;
         }
-
-        .option input[type="radio"] {
-            margin-right: 15px;
-            margin-top: 3px;
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
+        .alt.selected {
+            background: #dceaff;
+            border-color: #1a6b8a;
         }
-
-        .option label {
-            cursor: pointer;
-            flex: 1;
-            color: #333;
-            font-size: 15px;
+        .alt.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        .alt.wrong {
+            background: #f8dddd;
+            border-color: #dc3545;
+        }
+        .alt-letter {
+            font-weight: 700;
+            color: #1a4b6a;
+            min-width: 24px;
+        }
+        .alt-text {
+            font-size: 15.5px;
             line-height: 1.5;
         }
-
-        .option.selected {
-            border-color: #005c9e;
-            background: #e6f0fa;
-        }
-
-        .option.correct {
-            border-color: #4caf50;
-            background: #e8f5e9;
-            cursor: not-allowed;
-        }
-
-        .option.correct label {
-            color: #2e7d32;
-            font-weight: 600;
-        }
-
-        .option.incorrect {
-            border-color: #f44336;
-            background: #ffebee;
-            cursor: not-allowed;
-        }
-
-        .option.incorrect label {
-            color: #c62828;
-            font-weight: 600;
-        }
-
-        .option.answered {
-            cursor: not-allowed;
-        }
-
-        .explanation-box {
-            background: #e6f0fa;
-            border-left: 4px solid #005c9e;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .explanation-box.show {
-            display: block;
-        }
-
-        .explanation-title {
-            font-weight: 600;
-            color: #005c9e;
-            margin-bottom: 8px;
-        }
-
-        .explanation-text {
-            color: #5d4037;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            justify-content: center;
-        }
-
-        button {
-            padding: 12px 30px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .btn-confirm {
-            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
-            color: white;
-            flex: 1;
-            max-width: 200px;
-        }
-
-        .btn-confirm:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 92, 158, 0.4);
-        }
-
-        .btn-confirm:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-next {
-            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
-            color: white;
-            flex: 1;
-            max-width: 200px;
-        }
-
-        .btn-next:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 92, 158, 0.4);
-        }
-
-        .btn-prev {
-            background: #e0e0e0;
-            color: #333;
-            flex: 1;
-            max-width: 200px;
-        }
-
-        .btn-prev:hover:not(:disabled) {
-            background: #d0d0d0;
-        }
-
-        .btn-save {
-            background: #4caf50;
-            color: white;
-            flex: 1;
-            max-width: 200px;
-        }
-
-        .btn-save:hover {
-            background: #43a047;
-        }
-
-        .results-container {
-            text-align: center;
-            display: none;
-        }
-
-        .results-container.show {
-            display: block;
-        }
-
-        .results-summary {
+        .actions {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin: 30px 0;
+            gap: 12px;
+            margin: 22px 0 18px;
         }
-
-        .discipline-card {
-            background: #f5f5f5;
-            border-radius: 10px;
-            padding: 15px;
-            min-width: 150px;
-            text-align: center;
-            border-top: 4px solid #005c9e;
-        }
-
-        .discipline-card.leg { border-color: #005c9e; }
-        .discipline-card.port { border-color: #16a34a; }
-        .discipline-card.inf { border-color: #dc6803; }
-        .discipline-card.rac { border-color: #7b3fe4; }
-        .discipline-card.hist { border-color: #b45309; }
-
-        .discipline-name {
-            font-weight: 600;
+        button {
+            background: #fff;
+            border: 1px solid #b0c8dd;
+            padding: 10px 24px;
+            border-radius: 40px;
             font-size: 14px;
+            font-weight: 500;
+            color: #1a3a4a;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        button:hover {
+            background: #e6edf6;
+            border-color: #6f8fa8;
+        }
+        button.primary {
+            background: #1a6b8a;
+            border-color: #1a6b8a;
+            color: #fff;
+        }
+        button.primary:hover {
+            background: #0e4b66;
+        }
+        button.secondary {
+            background: #eef4fa;
+        }
+        button:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .feedback {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 18px 0 10px;
+            border-left: 5px solid #1a8c8c;
+            display: none;
+        }
+        .feedback.show {
+            display: block;
+        }
+        .feedback .result {
+            font-weight: 700;
+            font-size: 17px;
             margin-bottom: 8px;
         }
-
-        .discipline-score {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
+        .feedback .result.correct { color: #1a7a3a; }
+        .feedback .result.incorrect { color: #b13e3e; }
+        .feedback .explanation {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-top: 8px;
         }
-
-        .score-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
+        .feedback .explanation strong {
+            color: #0b4b6b;
+        }
+        .feedback .analysis {
+            margin-top: 12px;
+            font-size: 14px;
+            background: #f0f4fa;
+            padding: 12px 16px;
+            border-radius: 8px;
+        }
+        .feedback .analysis p {
+            margin: 4px 0;
+        }
+        .painel-resumo {
+            background: #f4f7fc;
+            border-radius: 12px;
+            padding: 16px 22px;
+            margin: 20px 0 8px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            box-shadow: 0 10px 30px rgba(0, 92, 158, 0.3);
+            flex-wrap: wrap;
+            gap: 20px 35px;
+            font-size: 14px;
+            border: 1px solid #dde5ed;
         }
-
-        .score-text {
-            color: white;
-            font-size: 48px;
-            font-weight: bold;
+        .painel-resumo .item {
+            display: flex;
+            gap: 6px;
         }
-
-        .results-message {
-            color: #333;
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 10px;
+        .painel-resumo .label {
+            color: #3a5a6a;
         }
-
-        .results-details {
-            color: #666;
-            font-size: 18px;
-            margin-bottom: 30px;
+        .painel-resumo .value {
+            font-weight: 700;
+            color: #0b3b5a;
         }
-
-        .btn-restart {
-            background: linear-gradient(135deg, #005c9e 0%, #003f6b 100%);
-            color: white;
-            padding: 15px 40px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
+        .painel-resumo .value.green { color: #1a8c4a; }
+        .painel-resumo .value.red { color: #b13e3e; }
+        .comandos {
+            font-size: 13px;
+            color: #4a6a7a;
+            background: #f4f8fc;
+            padding: 12px 18px;
+            border-radius: 40px;
+            margin-top: 16px;
+            border: 1px dashed #b8ccdd;
         }
-
-        .btn-restart:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 92, 158, 0.4);
+        .comandos strong {
+            color: #0b4b6b;
         }
-
-        .btn-config {
-            background: #6c757d;
-            color: white;
-            padding: 15px 40px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 15px;
+        .footer {
+            margin-top: 28px;
+            font-size: 13px;
+            color: #5a7a8a;
+            text-align: center;
+            border-top: 1px solid #e2e9f0;
+            padding-top: 20px;
         }
-
         @media (max-width: 600px) {
-            .container { padding: 20px; }
-            .buttons { flex-direction: column; }
-            .btn-next, .btn-prev, .btn-confirm, .btn-save { max-width: 100%; }
-            .discipline-mini-cards { flex-direction: column; }
-            .discipline-grid { grid-template-columns: 1fr; }
-            .continue-session { flex-direction: column; text-align: center; }
+            .container { padding: 18px; }
+            .question-box { padding: 16px; }
+            .question-text { font-size: 15px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🏥 Quiz Personalizável - Gestor em Saúde</h1>
-            <p>Escolha as disciplinas e a quantidade de questões | Progresso salvo automaticamente</p>
+
+<div class="container" id="app">
+    <h1>🏥 SES-TO 2026 — Gestor em Saúde</h1>
+    <div class="subtitle">
+        <span>📋 50 questões — Estilo FGV</span>
+        <span id="progresso-label">0 / 50 respondidas</span>
+    </div>
+
+    <!-- PAINEL RESUMO -->
+    <div class="painel-resumo" id="painelResumo">
+        <div class="item"><span class="label">✅ Acertos:</span><span class="value" id="acertosDisplay">0</span></div>
+        <div class="item"><span class="label">❌ Erros:</span><span class="value" id="errosDisplay">0</span></div>
+        <div class="item"><span class="label">📊 Aproveitamento:</span><span class="value" id="aproveitamentoDisplay">0%</span></div>
+        <div class="item"><span class="label">📍 Questão atual:</span><span class="value" id="questaoAtualDisplay">1</span></div>
+    </div>
+
+    <!-- QUESTÃO -->
+    <div class="question-box" id="questionBox">
+        <div class="question-header">
+            <span id="qNumero">Questão 1</span>
+            <span class="badge" id="qEixo">Eixo 1</span>
+            <span class="badge medium" id="qDificuldade">Média</span>
         </div>
-
-        <!-- Aviso de sessão salva -->
-        <div class="continue-session" id="continueSession">
-            <div class="continue-info">
-                <strong>📌 Sessão anterior encontrada!</strong><br>
-                <span id="sessionInfo"></span>
-            </div>
-            <div class="continue-buttons">
-                <button class="btn-continue" onclick="loadSavedSession()">Continuar de onde parou</button>
-                <button class="btn-new" onclick="startNewSession()">Iniciar novo quiz</button>
-            </div>
+        <div class="question-text" id="qTexto">
+            Carregando questão...
         </div>
-
-        <!-- Tela de configuração inicial -->
-        <div id="setupContainer" class="setup-container">
-            <div class="setup-title">⚙️ Configurar seu Quiz</div>
-            
-            <div class="setup-section">
-                <span class="setup-label">📊 Escolha as disciplinas:</span>
-                <div class="discipline-grid" id="disciplineGrid">
-                    <div class="discipline-item selected" data-discipline="legislacao" onclick="toggleDiscipline('legislacao')">
-                        <input type="checkbox" id="discLeg" checked>
-                        <div class="discipline-name">📋 Legislação</div>
-                        <div class="discipline-count">20 questões</div>
-                    </div>
-                    <div class="discipline-item selected" data-discipline="portugues" onclick="toggleDiscipline('portugues')">
-                        <input type="checkbox" id="discPort" checked>
-                        <div class="discipline-name">📝 Português</div>
-                        <div class="discipline-count">20 questões</div>
-                    </div>
-                    <div class="discipline-item selected" data-discipline="informatica" onclick="toggleDiscipline('informatica')">
-                        <input type="checkbox" id="discInf" checked>
-                        <div class="discipline-name">💻 Informática</div>
-                        <div class="discipline-count">20 questões</div>
-                    </div>
-                    <div class="discipline-item selected" data-discipline="raciocinio" onclick="toggleDiscipline('raciocinio')">
-                        <input type="checkbox" id="discRac" checked>
-                        <div class="discipline-name">🧮 Raciocínio</div>
-                        <div class="discipline-count">20 questões</div>
-                    </div>
-                    <div class="discipline-item selected" data-discipline="historia" onclick="toggleDiscipline('historia')">
-                        <input type="checkbox" id="discHist" checked>
-                        <div class="discipline-name">🌍 Tocantins</div>
-                        <div class="discipline-count">20 questões</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="setup-section">
-                <span class="setup-label">🔢 Número de questões:</span>
-                <div class="setup-options">
-                    <div class="setup-option">
-                        <input type="radio" name="questionCount" id="q20" value="20" checked>
-                        <label for="q20">20 questões</label>
-                    </div>
-                    <div class="setup-option">
-                        <input type="radio" name="questionCount" id="q50" value="50">
-                        <label for="q50">50 questões</label>
-                    </div>
-                    <div class="setup-option">
-                        <input type="radio" name="questionCount" id="q100" value="100">
-                        <label for="q100">100 questões (todas)</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="total-questions" id="totalQuestions">
-                Total: 100 questões
-            </div>
-
-            <button class="btn-start" id="btnStart" onclick="startQuiz()">🚀 Iniciar Quiz</button>
+        <div class="alternatives" id="alternativasContainer">
+            <!-- gerado por JS -->
         </div>
-
-        <!-- Mini cards de desempenho (aparecem durante o quiz) -->
-        <div class="discipline-mini-cards" id="disciplineMiniCards" style="display: none;">
-            <div class="mini-card leg" id="miniLeg">
-                <div class="discipline-name">LEGISLAÇÃO</div>
-                <div class="progress"><div class="progress-fill" id="progressLeg" style="width: 0%"></div></div>
-                <div class="score" id="scoreLeg">0/0</div>
-            </div>
-            <div class="mini-card port" id="miniPort">
-                <div class="discipline-name">PORTUGUÊS</div>
-                <div class="progress"><div class="progress-fill" id="progressPort" style="width: 0%"></div></div>
-                <div class="score" id="scorePort">0/0</div>
-            </div>
-            <div class="mini-card inf" id="miniInf">
-                <div class="discipline-name">INFORMÁTICA</div>
-                <div class="progress"><div class="progress-fill" id="progressInf" style="width: 0%"></div></div>
-                <div class="score" id="scoreInf">0/0</div>
-            </div>
-            <div class="mini-card rac" id="miniRac">
-                <div class="discipline-name">RACIOCÍNIO</div>
-                <div class="progress"><div class="progress-fill" id="progressRac" style="width: 0%"></div></div>
-                <div class="score" id="scoreRac">0/0</div>
-            </div>
-            <div class="mini-card hist" id="miniHist">
-                <div class="discipline-name">TOCANTINS</div>
-                <div class="progress"><div class="progress-fill" id="progressHist" style="width: 0%"></div></div>
-                <div class="score" id="scoreHist">0/0</div>
-            </div>
-        </div>
-
-        <div class="progress-bar" id="progressBar" style="display: none;">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-
-        <div id="quizContainer" style="display: none;">
-            <div class="question-number" id="questionNumber"></div>
-            <div class="discipline-tag" id="disciplineTag">Legislação em Saúde</div>
-            <div class="question-text" id="questionText"></div>
-            <div class="options" id="optionsContainer"></div>
-            <div class="explanation-box" id="explanationBox">
-                <div class="explanation-title" id="explanationTitle"></div>
-                <div class="explanation-text" id="explanationText"></div>
-            </div>
-            <div class="buttons">
-                <button class="btn-prev" id="btnPrev" onclick="previousQuestion()">← Anterior</button>
-                <button class="btn-confirm" id="btnConfirm" onclick="confirmAnswer()">Confirmar Resposta</button>
-                <button class="btn-next" id="btnNext" onclick="nextQuestion()" style="display: none;">Próxima →</button>
-                <button class="btn-save" id="btnSave" onclick="saveProgress()">💾 Salvar</button>
-            </div>
-        </div>
-
-        <div class="results-container" id="resultsContainer">
-            <div class="score-circle">
-                <div class="score-text" id="scorePercentage"></div>
-            </div>
-            <div class="results-message" id="resultsMessage"></div>
-            <div class="results-details" id="resultsDetails"></div>
-            
-            <div class="results-summary" id="disciplineSummary"></div>
-            
-            <button class="btn-restart" onclick="showSetup()">⚙️ Configurar Novo Quiz</button>
-            <button class="btn-config" onclick="showSetup()">← Voltar à Configuração</button>
+        <div class="actions">
+            <button class="primary" id="btnResponder" disabled>Responder</button>
+            <button class="secondary" id="btnProxima" disabled>Próxima ➜</button>
+            <button class="secondary" id="btnPainel">📊 PAINEL</button>
+            <button class="secondary" id="btnRevisao">📖 REVISÃO</button>
         </div>
     </div>
 
-    <script>
-        // Banco de questões por disciplina (corrigido)
-        const questionBank = {
-            legislacao: [
-                {
-                    question: "De acordo com a Lei nº 8.080/90, a iniciativa privada poderá participar do Sistema Único de Saúde (SUS) em caráter:",
-                    options: ["Prioritário, com preferência de financiamento público", "Complementar, mediante contrato de direito público ou convênio", "Substitutivo à rede pública, quando esta for insuficiente", "Exclusivo para serviços de alta complexidade", "Filantrópico, sem necessidade de licitação"],
-                    correct: 1,
-                    explanation: "Art. 24 da Lei 8.080/90: 'Quando as suas disponibilidades forem insuficientes para garantir a cobertura assistencial à população de uma determinada área, o Sistema Único de Saúde (SUS) poderá recorrer aos serviços ofertados pela iniciativa privada' em caráter complementar."
-                },
-                {
-                    question: "Segundo a Lei nº 8.142/90, o Conselho de Saúde, em cada esfera de governo, é um órgão:",
-                    options: ["Consultivo e executivo", "Colegiado de caráter permanente e deliberativo", "Normativo e fiscalizador, sem participação popular", "Temporário e consultivo", "Jurisdicional e normativo"],
-                    correct: 1,
-                    explanation: "O Conselho de Saúde é um órgão colegiado, permanente e deliberativo, que atua na formulação de estratégias e no controle da execução da política de saúde."
-                },
-                {
-                    question: "O Decreto nº 7.508/2011 define como 'Rede de Atenção à Saúde':",
-                    options: ["O conjunto de hospitais privados conveniados ao SUS", "A articulação entre o Ministério da Saúde e as Secretarias Estaduais", "O conjunto de ações e serviços de saúde articulados em níveis de complexidade crescente", "A relação de medicamentos disponibilizados pelo SUS", "O mapa de saúde de cada município"],
-                    correct: 2,
-                    explanation: "O Decreto define as Redes de Atenção à Saúde como 'conjunto de ações e serviços de saúde articulados em níveis de complexidade crescente, com a finalidade de garantir a integralidade da assistência à saúde'."
-                },
-                {
-                    question: "Em relação ao Controle Social no SUS, é correto afirmar que:",
-                    options: ["É exercido exclusivamente pelos gestores municipais", "Acontece apenas nas Conferências de Saúde, a cada 4 anos", "É garantido por meio dos Conselhos e Conferências de Saúde, com participação de usuários, trabalhadores e gestores", "Os usuários têm direito a 50% dos votos, mas não podem propor pautas", "É uma ferramenta de fiscalização sem poder deliberativo"],
-                    correct: 2,
-                    explanation: "A participação social é uma diretriz do SUS, garantida pela Lei 8.142/90, através dos Conselhos e Conferências de Saúde, com representação paritária."
-                },
-                {
-                    question: "A Comissão Intergestores Tripartite (CIT) é um espaço de articulação e pactuação entre:",
-                    options: ["União, Estados e Municípios", "Ministério da Saúde e Conselhos de Secretários Municipais", "Apenas entre os gestores estaduais", "Governo Federal e entidades filantrópicas", "Secretarias Estaduais e Conselhos de Saúde"],
-                    correct: 0,
-                    explanation: "A CIT é uma instância de negociação e pactuação entre gestores federal (Ministério da Saúde), estadual (CONASS) e municipal (CONASEMS)."
-                },
-                {
-                    question: "A Constituição Federal de 1988, em seu art. 196, define a saúde como:",
-                    options: ["Um serviço a ser concedido à iniciativa privada", "Direito de todos e dever do Estado", "Um privilégio do cidadão contribuinte", "Dever exclusivo dos municípios", "Uma política de governo, não de Estado"],
-                    correct: 1,
-                    explanation: "Art. 196: 'A saúde é direito de todos e dever do Estado, garantido mediante políticas sociais e econômicas que visem à redução do risco de doença e de outros agravos...'"
-                },
-                {
-                    question: "No âmbito da gestão do SUS, o financiamento das ações e serviços de saúde é de competência:",
-                    options: ["Exclusiva da União", "Exclusiva dos municípios", "Compartilhada entre União, Estados, DF e Municípios", "Exclusiva dos Estados", "Da iniciativa privada, com repasse público"],
-                    correct: 2,
-                    explanation: "O SUS é financiado com recursos do orçamento da seguridade social da União, dos Estados, do Distrito Federal e dos Municípios, conforme art. 198 da CF/88."
-                },
-                {
-                    question: "De acordo com a Lei nº 1.818/2007 (Estatuto dos Servidores do Tocantins), o estágio probatório tem duração de:",
-                    options: ["12 meses", "24 meses", "36 meses", "48 meses", "6 meses"],
-                    correct: 2,
-                    explanation: "O Art. 23 da Lei Estadual nº 1.818/2007 estabelece que o servidor nomeado para cargo de provimento efetivo fica sujeito a estágio probatório por 36 meses."
-                },
-                {
-                    question: "A Política Nacional de Humanização (PNH) tem como um de seus princípios:",
-                    options: ["Centralidade do poder técnico", "Gestão centralizada", "Transversalidade", "Exclusividade do atendimento médico", "Redução de custos com pessoal"],
-                    correct: 2,
-                    explanation: "A transversalidade é um dos princípios da PNH, reconhecendo que os diferentes saberes podem se comunicar."
-                },
-                {
-                    question: "A regionalização da saúde deve ser organizada a partir de:",
-                    options: ["Divisões puramente geográficas", "Redes hierarquizadas e regiões de saúde", "Demanda espontânea da população", "Interesses políticos locais", "Capacidade financeira isolada de cada município"],
-                    correct: 1,
-                    explanation: "A regionalização organiza os serviços em redes hierarquizadas e regiões de saúde, com base em critérios epidemiológicos."
-                },
-                {
-                    question: "A Política Nacional de Educação Permanente em Saúde (PNEPS) visa:",
-                    options: ["Cursos pontuais e desarticulados", "Transformar as práticas profissionais a partir da reflexão crítica sobre o trabalho", "Centralizar a formação na pós-graduação", "Reduzir custos com treinamento", "Excluir trabalhadores de nível médio"],
-                    correct: 1,
-                    explanation: "A Educação Permanente propõe aprendizagem significativa no cotidiano de trabalho, transformando as práticas."
-                },
-                {
-                    question: "Está incluída no campo de atuação do SUS, segundo a Lei 8.080/90:",
-                    options: ["Formulação de política de saneamento básico", "Execução de ações de assistência social", "Colaboração na proteção do meio ambiente, inclusive do trabalho", "Administração da previdência social", "Fiscalização de alimentos, exceto teor nutricional"],
-                    correct: 2,
-                    explanation: "Art. 6º, II: 'a colaboração na proteção do meio ambiente, nele compreendido o do trabalho' é campo de atuação do SUS."
-                },
-                {
-                    question: "O Apoio Matricial em saúde é uma estratégia que visa:",
-                    options: ["Centralizar decisões no gestor", "Hierarquizar rigidamente o atendimento", "Garantir retaguarda especializada a equipes de referência", "Substituir a atenção básica", "Reduzir o número de profissionais"],
-                    correct: 2,
-                    explanation: "O apoio matricial oferece suporte técnico especializado às equipes de referência, ampliando a capacidade de cuidado."
-                },
-                {
-                    question: "A RAS (Rede de Atenção à Saúde) tem como elemento constitutivo:",
-                    options: ["Centralização administrativa", "População e região de saúde definidas", "Financiamento exclusivamente federal", "Eliminação da atenção primária", "Hierarquização sem integração"],
-                    correct: 1,
-                    explanation: "A estrutura das RAS é composta por população/região de saúde definidas, estrutura operacional e sistemas de apoio."
-                },
-                {
-                    question: "A Estratégia Saúde da Família (ESF) é considerada:",
-                    options: ["Opção para grandes municípios", "Estratégia prioritária para expansão da Atenção Básica", "Programa temporário", "Focada em ações curativas", "Substituta dos hospitais"],
-                    correct: 1,
-                    explanation: "A PNAB reconhece a ESF como estratégia prioritária para organização da Atenção Básica."
-                },
-                {
-                    question: "Os Conselhos de Saúde têm composição:",
-                    options: ["Majoritariamente governamental", "Paritária entre usuários e demais segmentos", "Exclusiva de profissionais de saúde", "Indicada pelo gestor municipal", "Sem participação de usuários"],
-                    correct: 1,
-                    explanation: "Os Conselhos têm composição paritária: 50% de usuários e 50% divididos entre gestores, trabalhadores e prestadores."
-                },
-                {
-                    question: "A cada quantos anos ocorrem as Conferências de Saúde, em regra?",
-                    options: ["1 ano", "2 anos", "4 anos", "5 anos", "8 anos"],
-                    correct: 2,
-                    explanation: "As Conferências de Saúde ocorrem a cada 4 anos, com representação paritária, para avaliar e propor diretrizes."
-                },
-                {
-                    question: "O princípio do SUS que garante atendimento integral é:",
-                    options: ["Universalidade", "Equidade", "Integralidade", "Descentralização", "Participação social"],
-                    correct: 2,
-                    explanation: "Integralidade é o princípio que garante ações de promoção, proteção e recuperação da saúde."
-                },
-                {
-                    question: "A direção do SUS é única, sendo exercida no âmbito dos Municípios pela:",
-                    options: ["Secretaria Estadual de Saúde", "Secretaria Municipal de Saúde", "Ministério da Saúde", "Conselho Municipal de Saúde", "Comissão Intergestores Bipartite"],
-                    correct: 1,
-                    explanation: "Em cada esfera de governo há uma direção única: no Município, é a Secretaria Municipal de Saúde."
-                },
-                {
-                    question: "O Decreto 7.508/2011 estabelece que o acesso universal e igualitário às ações e serviços de saúde será ordenado pela:",
-                    options: ["Atenção terciária", "Atenção primária", "Atenção secundária", "Central de Regulação", "Demanda espontânea"],
-                    correct: 1,
-                    explanation: "O Decreto estabelece que a Atenção Primária é a porta de entrada preferencial e ordenadora do acesso."
-                }
-            ],
-            
-            portugues: [
-                {
-                    question: "Assinale a opção em que todas as palavras estão grafadas corretamente:",
-                    options: ["excessão, ascensão, obsessão", "exceção, ascenção, obceção", "exceção, ascensão, obsessão", "eceção, ascenção, obceção", "excessão, ascensão, obceção"],
-                    correct: 2,
-                    explanation: "As formas corretas são: exceção, ascensão, obsessão. 'Excessão' não existe em português."
-                },
-                {
-                    question: "Em qual alternativa a pontuação está correta?",
-                    options: ["João, o aluno mais dedicado, recebeu o prêmio.", "João o aluno mais dedicado, recebeu o prêmio.", "João o aluno mais dedicado recebeu, o prêmio.", "João, o aluno mais dedicado recebeu o prêmio.", "João o aluno, mais dedicado, recebeu o prêmio."],
-                    correct: 0,
-                    explanation: "O aposto deve vir entre vírgulas. Apenas a alternativa A apresenta essa estrutura corretamente."
-                },
-                {
-                    question: "Assinale a opção em que todas as palavras são paroxítonas:",
-                    options: ["café, pássaro, herói", "árvore, caderno, mesa", "sofá, vovô, cajá", "álbum, hífen, tórax", "automóvel, vírus, fácil"],
-                    correct: 4,
-                    explanation: "Paroxítonas têm acento tônico na penúltima sílaba. 'Automóvel, vírus, fácil' são paroxítonas."
-                },
-                {
-                    question: "Complete: 'Preferia que você _____ agora, mas se quiser _____ depois, tudo bem.'",
-                    options: ["viesse, voltar", "vinhesse, voltar", "viesse, voltasse", "vinha, voltar", "vinhesse, voltasse"],
-                    correct: 0,
-                    explanation: "O verbo 'preferir' no subjuntivo é 'viesse'. O segundo verbo fica no infinitivo: 'voltar'."
-                },
-                {
-                    question: "Assinale a alternativa em que o uso da crase está correto:",
-                    options: ["Fui à praia ontem.", "Ele chegou à tempo.", "Entreguei à ele o documento.", "Refiro-me àquele rapaz.", "À partir de amanhã, não trabalharei."],
-                    correct: 0,
-                    explanation: "A crase é correta em 'à praia' porque 'ir' exige preposição 'a' e 'praia' admite artigo."
-                },
-                {
-                    question: "Qual das frases apresenta concordância verbal correta?",
-                    options: ["Fazem dois anos que não o vejo.", "Haviam muitas pessoas na festa.", "Mais de um aluno faltou à aula.", "Choveram papéis picados.", "Deve existir soluções melhores."],
-                    correct: 2,
-                    explanation: "'Mais de um' pede verbo no singular. O correto: 'Faz dois anos', 'Havia muitas pessoas'."
-                },
-                {
-                    question: "Na frase 'O advogado entregou os documentos para o cliente', o termo 'para o cliente' exerce função de:",
-                    options: ["objeto indireto", "adjunto adverbial", "complemento nominal", "adjunto adnominal", "agente da passiva"],
-                    correct: 0,
-                    explanation: "'Entregar' é VTD + preposição (entregou algo a alguém). 'para o cliente' é objeto indireto."
-                },
-                {
-                    question: "Assinale a alternativa em que há erro de regência:",
-                    options: ["Prefiro mais estudar a trabalhar.", "Assistimos ao filme ontem.", "O remédio custou caro.", "Lembrei-me do que você disse.", "Paguei ao vendedor a mercadoria."],
-                    correct: 0,
-                    explanation: "'Preferir' não admite 'mais' nem 'do que'. O correto é 'Prefiro estudar a trabalhar'."
-                },
-                {
-                    question: "Qual palavra é um exemplo de derivação parassintética?",
-                    options: ["infelizmente", "anoitecer", "enrijecer", "deslealdade", "felizmente"],
-                    correct: 2,
-                    explanation: "Parassíntese: acréscimo simultâneo de prefixo e sufixo. 'Enrijecer' (em + rijo + ecer)."
-                },
-                {
-                    question: "Em 'Ele me disse que não viria', a oração 'que não viria' é:",
-                    options: ["substantiva objetiva direta", "substantiva objetiva indireta", "substantiva subjetiva", "adjetiva", "adverbial"],
-                    correct: 0,
-                    explanation: "'Disse' é VTD, e o 'que' introduz o objeto direto: 'disse isso'."
-                },
-                {
-                    question: "Assinale a opção em que todas as palavras são grafadas com 's' e não 'z':",
-                    options: ["análise, aviso, pesquisa", "realizar, civilizar, analisar", "improviso, paralisia, catalisar", "alisar, precisar, frisar", "catequese, tesoura, deslizar"],
-                    correct: 0,
-                    explanation: "'Análise, aviso, pesquisa' são grafadas com 's'."
-                },
-                {
-                    question: "Assinale a frase em que a colocação pronominal está correta:",
-                    options: ["Me empresta o livro?", "Não me diga isso!", "Tinha falado-me sobre isso.", "Em se tratando de saúde, tudo é importante.", "Falarei-lhe sobre o assunto."],
-                    correct: 1,
-                    explanation: "'Não me diga' está correto (próclise com palavra negativa)."
-                },
-                {
-                    question: "Assinale a alternativa que apresenta um antônimo para 'prolixo':",
-                    options: ["resumido", "extenso", "detalhado", "minucioso", "verboso"],
-                    correct: 0,
-                    explanation: "Prolixo significa excessivamente longo. Antônimo é 'resumido', 'conciso'."
-                },
-                {
-                    question: "Em qual opção a palavra 'porque' está empregada corretamente?",
-                    options: ["Não fui à aula, porque estava doente.", "Explique o motivo por que você não veio.", "Ele não veio, porquê?", "O por que da pergunta é simples.", "Porque você não veio?"],
-                    correct: 0,
-                    explanation: "'porque' junto e sem acento é usado em respostas ou explicações."
-                },
-                {
-                    question: "Assinale a alternativa em que há erro de acentuação gráfica:",
-                    options: ["herói, papéis, chapéu", "pólen, hífen, éter", "rubrica, avaro, ibero", "túnel, fácil, amável", "cajá, sofá, vatapá"],
-                    correct: 2,
-                    explanation: "'Rubrica' é paroxítona e não tem acento. A forma correta é 'rubrica' (sem acento)."
-                },
-                {
-                    question: "Na frase 'Ela mesma fez o bolo', o termo 'mesma' é:",
-                    options: ["pronome pessoal", "pronome possessivo", "pronome demonstrativo", "pronome de tratamento", "pronome reflexivo"],
-                    correct: 2,
-                    explanation: "'Mesma' aqui é pronome demonstrativo, equivalente a 'própria'."
-                },
-                {
-                    question: "Assinale a opção que apresenta um exemplo de discurso indireto:",
-                    options: ["Ele disse: 'Estou cansado'.", "Ela falou que estava feliz.", "Perguntou-me: 'Você vem?'", "'Que horas são?', indagou.", "Ela exclamou: 'Que dia lindo!'"],
-                    correct: 1,
-                    explanation: "Discurso indireto reproduz a fala com conjunção integrante ('que') e mudança de pessoa."
-                },
-                {
-                    question: "Qual é o plural correto de 'cidadão'?",
-                    options: ["cidadãos", "cidadões", "cidadães", "cidadãos e cidadãs", "cidadões e cidadãs"],
-                    correct: 0,
-                    explanation: "O plural de 'cidadão' é 'cidadãos'. É uma exceção."
-                },
-                {
-                    question: "Assinale a alternativa em que a regência nominal está correta:",
-                    options: ["Estou ansioso em viajar.", "Ele é capaz de tudo.", "Ela é apegada com os filhos.", "Estou contente da vida.", "Isto é preferível do que aquilo."],
-                    correct: 1,
-                    explanation: "'Capaz' rege a preposição 'de': capaz de tudo. As formas corretas: 'ansioso por', 'apegada aos'."
-                },
-                {
-                    question: "Na frase 'Houve muitos acidentes naquela estrada', o sujeito é:",
-                    options: ["muitos acidentes", "acidentes", "indeterminado", "inexistente (oração sem sujeito)", "houve (sujeito simples)"],
-                    correct: 3,
-                    explanation: "O verbo 'haver' no sentido de 'existir' é impessoal, formando oração sem sujeito."
-                }
-            ],
-            
-            informatica: [
-                {
-                    question: "No Microsoft Excel, a função que retorna a média aritmética dos argumentos é:",
-                    options: ["SOMA()", "MEDIA()", "CONT.NUM()", "MÉDIA()", "SOMASE()"],
-                    correct: 3,
-                    explanation: "No Excel em português, a função para calcular a média aritmética é '=MÉDIA()'."
-                },
-                {
-                    question: "No contexto da internet, qual é a função principal de um programa antivírus?",
-                    options: ["Acelerar a conexão", "Criar redes Wi-Fi", "Detectar e eliminar softwares maliciosos", "Editar planilhas online", "Gerenciar senhas"],
-                    correct: 2,
-                    explanation: "O antivírus detecta, bloqueia e remove vírus e outros malwares."
-                },
-                {
-                    question: "No Windows, a combinação de teclas 'Ctrl + C' e 'Ctrl + V' é utilizada para:",
-                    options: ["Recortar e Colar", "Copiar e Colar", "Abrir e Fechar", "Salvar e Imprimir", "Desfazer e Refazer"],
-                    correct: 1,
-                    explanation: "Ctrl+C (copiar) e Ctrl+V (colar)."
-                },
-                {
-                    question: "Um 'firewall' é um sistema de segurança que:",
-                    options: ["Aumenta a velocidade", "Controla o tráfego de rede, bloqueando acessos não autorizados", "Edita textos", "Cria backups", "Gerencia energia"],
-                    correct: 1,
-                    explanation: "Firewall monitora e controla o tráfego de rede com base em regras."
-                },
-                {
-                    question: "O prontuário eletrônico do paciente é um exemplo de:",
-                    options: ["Sistema de informação em saúde", "Editor de texto", "Planilha eletrônica", "Navegador", "Sistema operacional"],
-                    correct: 0,
-                    explanation: "Prontuário eletrônico é um Sistema de Informação em Saúde (SIS)."
-                },
-                {
-                    question: "No Microsoft Word, o recurso que verifica ortografia e gramática é acionado pela tecla:",
-                    options: ["F1", "F7", "F12", "Ctrl+B", "Alt+F4"],
-                    correct: 1,
-                    explanation: "F7 é o atalho padrão para verificação ortográfica e gramatical."
-                },
-                {
-                    question: "Qual é a extensão padrão de arquivos do Microsoft Excel?",
-                    options: [".docx", ".xlsx", ".pptx", ".txt", ".pdf"],
-                    correct: 1,
-                    explanation: "Arquivos do Excel têm extensão .xlsx (ou .xls para versões antigas)."
-                },
-                {
-                    question: "Na internet, o protocolo HTTPS indica que:",
-                    options: ["A conexão é insegura", "O site é falso", "A comunicação é criptografada", "O site é mais rápido", "Não há proteção de dados"],
-                    correct: 2,
-                    explanation: "HTTPS (Hyper Text Transfer Protocol Secure) indica conexão segura com criptografia."
-                },
-                {
-                    question: "No Windows, o atalho 'Alt + Tab' serve para:",
-                    options: ["Fechar o programa atual", "Alternar entre programas abertos", "Abrir o gerenciador de tarefas", "Minimizar todas as janelas", "Desligar o computador"],
-                    correct: 1,
-                    explanation: "Alt + Tab alterna entre as janelas e programas em execução."
-                },
-                {
-                    question: "O e-SUS AB é um sistema utilizado para:",
-                    options: ["Gestão hospitalar", "Atenção Básica", "Controle financeiro", "Recursos humanos", "Compras públicas"],
-                    correct: 1,
-                    explanation: "e-SUS AB é o sistema de informação da Atenção Básica."
-                },
-                {
-                    question: "Na planilha eletrônica, a referência '$A$1' é chamada de:",
-                    options: ["Referência relativa", "Referência absoluta", "Referência mista", "Referência circular", "Referência externa"],
-                    correct: 1,
-                    explanation: "O cifrão ($) antes da letra e do número indica referência absoluta, que não muda ao copiar."
-                },
-                {
-                    question: "Um 'backup' é:",
-                    options: ["Um vírus", "Uma cópia de segurança", "Um tipo de firewall", "Um programa de edição", "Uma rede social"],
-                    correct: 1,
-                    explanation: "Backup é uma cópia de segurança dos dados para recuperação em caso de perda."
-                },
-                {
-                    question: "No navegador, o que são 'cookies'?",
-                    options: ["Vírus que roubam dados", "Arquivos que armazenam informações de navegação", "Programas que aceleram a internet", "Extensões de segurança", "Tipos de firewall"],
-                    correct: 1,
-                    explanation: "Cookies são pequenos arquivos que armazenam preferências e dados de navegação do usuário."
-                },
-                {
-                    question: "O Google Chrome, Mozilla Firefox e Microsoft Edge são exemplos de:",
-                    options: ["Sistemas operacionais", "Navegadores (browsers)", "Antivírus", "Editores de texto", "Planilhas eletrônicas"],
-                    correct: 1,
-                    explanation: "São navegadores de internet (browsers)."
-                },
-                {
-                    question: "No Excel, a função PROCV é utilizada para:",
-                    options: ["Somar valores", "Contar células", "Procurar valores em uma tabela", "Calcular média", "Criar gráficos"],
-                    correct: 2,
-                    explanation: "PROCV (procurar na vertical) busca um valor na primeira coluna de uma tabela."
-                },
-                {
-                    question: "O que é 'phishing'?",
-                    options: ["Uma técnica de pesca", "Um tipo de vírus", "Tentativa de obter dados pessoais fraudulentamente", "Um software legítimo", "Um firewall avançado"],
-                    correct: 2,
-                    explanation: "Phishing é uma fraude eletrônica que tenta obter dados pessoais e financeiros do usuário."
-                },
-                {
-                    question: "No Windows, o 'Gerenciador de Tarefas' pode ser aberto com o atalho:",
-                    options: ["Ctrl+Alt+Del", "Alt+F4", "Ctrl+Esc", "Windows+R", "Ctrl+Shift"],
-                    correct: 0,
-                    explanation: "Ctrl+Alt+Del abre opções que incluem o Gerenciador de Tarefas."
-                },
-                {
-                    question: "Qual é a função do comando 'Ctrl+Z' na maioria dos programas?",
-                    options: ["Salvar", "Copiar", "Desfazer a última ação", "Refazer a última ação", "Imprimir"],
-                    correct: 2,
-                    explanation: "Ctrl+Z é o atalho universal para 'desfazer' a última ação."
-                },
-                {
-                    question: "O Microsoft PowerPoint é um software de:",
-                    options: ["Edição de texto", "Planilhas", "Apresentações", "Banco de dados", "Edição de imagens"],
-                    correct: 2,
-                    explanation: "PowerPoint é um editor de apresentações."
-                },
-                {
-                    question: "O sistema operacional Linux é um exemplo de software:",
-                    options: ["Pago", "Proprietário", "Código aberto (open source)", "Aplicativo", "Navegador"],
-                    correct: 2,
-                    explanation: "Linux é um sistema operacional de código aberto (open source)."
-                }
-            ],
-            
-            raciocinio: [
-                {
-                    question: "Uma UBS atende 120 pessoas por dia. Se 30% são atendimentos de demanda espontânea, quantas consultas agendadas ocorrem por dia?",
-                    options: ["36", "40", "80", "84", "90"],
-                    correct: 3,
-                    explanation: "30% de 120 = 36 (demanda espontânea). Agendadas = 120 - 36 = 84."
-                },
-                {
-                    question: "Em um hospital, 5 enfermeiros atendem 20 pacientes em 4 horas. Quantos enfermeiros para atender 30 pacientes em 2 horas?",
-                    options: ["10", "12", "15", "18", "20"],
-                    correct: 2,
-                    explanation: "Regra de três composta: 5/x = (20/30) * (2/4) = (2/3)*(1/2)=1/3 → x = 15 enfermeiros."
-                },
-                {
-                    question: "Uma proposição equivalente a 'Se o gestor é eficiente, então a meta é cumprida' é:",
-                    options: ["Se a meta é cumprida, então o gestor é eficiente", "Gestor eficiente e meta não cumprida", "Gestor não é eficiente ou meta é cumprida", "Se gestor não é eficiente, meta não é cumprida", "Meta não cumprida ou gestor eficiente"],
-                    correct: 2,
-                    explanation: "Equivalência lógica de p → q é ~p ∨ q (não p ou q)."
-                },
-                {
-                    question: "Em uma sala com 10 gestores e 15 técnicos, qual a probabilidade de comissão de 3 pessoas ter exatamente 2 gestores e 1 técnico?",
-                    options: ["(C10,2 * C15,1)/C25,3", "(10*15)/C25,3", "(C10,3+C15,3)/C25,3", "10/25*9/24*15/23", "(10*9*15)/3"],
-                    correct: 0,
-                    explanation: "Total combinações: C25,3. Favoráveis: C10,2 * C15,1. Probabilidade = (C10,2 * C15,1)/C25,3."
-                },
-                {
-                    question: "Considere: 'Todo gestor conhece o SUS. Alguns gestores são médicos.' Conclusão válida:",
-                    options: ["Todo médico conhece o SUS", "Alguns médicos conhecem o SUS", "Nenhum médico conhece o SUS", "Todo gestor é médico", "Alguns médicos não são gestores"],
-                    correct: 1,
-                    explanation: "A interseção gestor-médico existe. Como todo gestor conhece o SUS, esses gestores médicos conhecem o SUS. Logo, alguns médicos conhecem o SUS."
-                },
-                {
-                    question: "Se 8 profissionais levam 6 dias para concluir um relatório, quantos dias levariam 12 profissionais?",
-                    options: ["4", "5", "6", "7", "9"],
-                    correct: 0,
-                    explanation: "Grandezas inversamente proporcionais: 8 * 6 = 12 * x → 48 = 12x → x = 4 dias."
-                },
-                {
-                    question: "Qual é o próximo número da sequência: 3, 6, 11, 18, 27, ?",
-                    options: ["36", "37", "38", "39", "40"],
-                    correct: 2,
-                    explanation: "Diferenças: +3, +5, +7, +9, próxima diferença +11 → 27+11 = 38."
-                },
-                {
-                    question: "Se todo A é B e algum B é C, podemos concluir que:",
-                    options: ["Todo A é C", "Nenhum A é C", "Algum A é C", "Algum A pode ser C", "Todo C é A"],
-                    correct: 3,
-                    explanation: "Não há relação garantida entre A e C. Pode haver interseção, mas não é certa. Portanto, algum A pode ser C."
-                },
-                {
-                    question: "Em uma UBS, há 3 médicos e 5 enfermeiros. De quantas formas podemos formar uma equipe com 2 médicos e 2 enfermeiros?",
-                    options: ["30", "60", "90", "120", "15"],
-                    correct: 0,
-                    explanation: "C(3,2) * C(5,2) = 3 * 10 = 30 formas."
-                },
-                {
-                    question: "Se p é verdadeira e q é falsa, qual o valor de (p ∨ q) → ¬q?",
-                    options: ["Verdadeiro", "Falso", "Inconclusivo", "Depende", "Nenhum"],
-                    correct: 0,
-                    explanation: "p ∨ q = V ∨ F = V. ¬q = V. V → V = Verdadeiro."
-                },
-                {
-                    question: "Um relatório tem 120 páginas. Se já foram lidas 45%, quantas páginas faltam?",
-                    options: ["54", "60", "66", "72", "78"],
-                    correct: 2,
-                    explanation: "45% de 120 = 54 lidas. Faltam = 120 - 54 = 66 páginas."
-                },
-                {
-                    question: "Qual a negação de 'todos os gestores participaram da reunião'?",
-                    options: ["Nenhum gestor participou", "Algum gestor não participou", "Todos não participaram", "Alguns participaram", "A maioria participou"],
-                    correct: 1,
-                    explanation: "A negação de 'todo A é B' é 'algum A não é B'."
-                },
-                {
-                    question: "Em uma progressão aritmética, o 3° termo vale 10 e o 7° vale 22. Qual a razão?",
-                    options: ["2", "3", "4", "5", "6"],
-                    correct: 1,
-                    explanation: "a7 = a3 + 4r → 22 = 10 + 4r → 4r = 12 → r = 3."
-                },
-                {
-                    question: "Quantas comissões de 4 pessoas podem ser formadas com 8 profissionais?",
-                    options: ["70", "56", "28", "35", "42"],
-                    correct: 0,
-                    explanation: "C(8,4) = 8!/(4!4!) = 70."
-                },
-                {
-                    question: "Se 3 impressoras imprimem 300 relatórios em 2 horas, em quanto tempo 2 impressoras imprimirão 200 relatórios?",
-                    options: ["2h", "3h", "4h", "5h", "6h"],
-                    correct: 0,
-                    explanation: "3 * 2 / 300 = 2 * x / 200 → 6/300 = 2x/200 → 0,02 = x/100 → x = 2 horas."
-                },
-                {
-                    question: "Dois dados são lançados. Qual a probabilidade de soma 7?",
-                    options: ["1/6", "1/9", "5/36", "7/36", "1/12"],
-                    correct: 0,
-                    explanation: "Pares que somam 7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) → 6/36 = 1/6."
-                },
-                {
-                    question: "Se um medicamento custa R$ 150,00 e terá aumento de 20%, qual será o novo preço?",
-                    options: ["R$ 160", "R$ 170", "R$ 180", "R$ 190", "R$ 200"],
-                    correct: 2,
-                    explanation: "20% de 150 = 30. Novo preço = 150 + 30 = R$ 180,00."
-                },
-                {
-                    question: "Em uma urna com 4 bolas vermelhas e 6 azuis, retira-se uma bola, qual a probabilidade de ser vermelha?",
-                    options: ["2/5", "3/5", "1/2", "4/5", "1/5"],
-                    correct: 0,
-                    explanation: "Total 10 bolas, 4 vermelhas. Probabilidade = 4/10 = 2/5."
-                },
-                {
-                    question: "Se A = {1,2,3,4}, B = {3,4,5,6}. Quantos elementos tem A ∪ B?",
-                    options: ["4", "5", "6", "7", "8"],
-                    correct: 2,
-                    explanation: "A ∪ B = {1,2,3,4,5,6} → 6 elementos."
-                },
-                {
-                    question: "A contrapositiva de 'se chove, então a rua fica molhada' é:",
-                    options: ["Se a rua fica molhada, então chove", "Se não chove, a rua não fica molhada", "Se a rua não fica molhada, então não chove", "Chove e a rua não fica molhada", "Não chove ou a rua fica molhada"],
-                    correct: 2,
-                    explanation: "A contrapositiva de p→q é ~q→~p: 'Se a rua não fica molhada, então não chove'."
-                }
-            ],
-            
-            historia: [
-                {
-                    question: "O estado do Tocantins foi criado oficialmente em:",
-                    options: ["1985", "1988", "1989", "1990", "1991"],
-                    correct: 1,
-                    explanation: "O Tocantins foi criado pela Constituição de 1988, promulgada em 5 de outubro, e instalado em 1º de janeiro de 1989."
-                },
-                {
-                    question: "O primeiro governador do estado do Tocantins foi:",
-                    options: ["Siqueira Campos", "Moisés Avelino", "José Sarney", "Orlando Pessuti", "Raimundo Boi"],
-                    correct: 0,
-                    explanation: "Siqueira Campos foi o primeiro governador do Tocantins, tendo sido eleito em 1988 e governado de 1989 a 1991."
-                },
-                {
-                    question: "A capital do Tocantins, Palmas, foi fundada em:",
-                    options: ["1988", "1989", "1990", "1991", "1992"],
-                    correct: 1,
-                    explanation: "Palmas foi fundada em 20 de maio de 1989, para ser a capital planejada do novo estado."
-                },
-                {
-                    question: "O Tocantins foi desmembrado de qual estado?",
-                    options: ["Goiás", "Maranhão", "Pará", "Mato Grosso", "Bahia"],
-                    correct: 0,
-                    explanation: "O Tocantins foi desmembrado do estado de Goiás, conforme previsto no art. 13 do Ato das Disposições Constitucionais Transitórias da Constituição de 1988."
-                },
-                {
-                    question: "Qual é o principal bioma presente no estado do Tocantins?",
-                    options: ["Amazônia", "Caatinga", "Cerrado", "Mata Atlântica", "Pantanal"],
-                    correct: 2,
-                    explanation: "O Tocantins está inserido predominantemente no bioma Cerrado, com pequenas áreas de transição para a Amazônia."
-                },
-                {
-                    question: "A Bacia Hidrográfica que abrange a maior parte do território tocantinense é a:",
-                    options: ["Bacia Amazônica", "Bacia do Araguaia-Tocantins", "Bacia do São Francisco", "Bacia do Paraná", "Bacia do Parnaíba"],
-                    correct: 1,
-                    explanation: "O estado é banhado pela Bacia do Araguaia-Tocantins, com os rios Tocantins e Araguaia sendo os principais."
-                },
-                {
-                    question: "O principal marco da expansão do povoamento no território tocantinense durante o período colonial foi:",
-                    options: ["A cafeicultura", "A mineração de ouro", "A pecuária extensiva", "O extrativismo da borracha", "A cana-de-açúcar"],
-                    correct: 1,
-                    explanation: "A exploração do ouro no século XVIII, especialmente na região de Natividade e Arraias, foi o principal fator de povoamento inicial."
-                },
-                {
-                    question: "Qual rodovia federal é considerada fundamental para a integração e desenvolvimento do Tocantins?",
-                    options: ["BR-010 (Belém-Brasília)", "BR-153 (Belém-Brasília)", "BR-116", "BR-101", "BR-364"],
-                    correct: 1,
-                    explanation: "A BR-153, também conhecida como Belém-Brasília, foi crucial para a ocupação e desenvolvimento econômico do Tocantins."
-                },
-                {
-                    question: "O Tocantins possui qual região turística conhecida por suas águas cristalinas e cachoeiras?",
-                    options: ["Chapada das Mesas", "Jalapão", "Serra do Cipó", "Chapada dos Veadeiros", "Lençóis Maranhenses"],
-                    correct: 1,
-                    explanation: "O Jalapão é uma das principais regiões turísticas do estado, conhecida por suas paisagens de cerrado, fervedouros e cachoeiras."
-                },
-                {
-                    question: "Quantos municípios compõem o estado do Tocantins aproximadamente?",
-                    options: ["139", "141", "140", "142", "138"],
-                    correct: 0,
-                    explanation: "O Tocantins possui 139 municípios."
-                },
-                {
-                    question: "O movimento separatista que deu origem ao estado do Tocantins ficou conhecido como:",
-                    options: ["Revolução de 1930", "Movimento autonomista do norte goiano", "Inconfidência Mineira", "Revolução Constitucionalista", "Guerra dos Emboabas"],
-                    correct: 1,
-                    explanation: "O movimento pela criação do estado foi liderado por figuras como Siqueira Campos e defendia a autonomia da região norte de Goiás."
-                },
-                {
-                    question: "Qual é o principal rio que banha a capital Palmas?",
-                    options: ["Rio Araguaia", "Rio Tocantins", "Rio Paranã", "Rio Sono", "Rio Manuel Alves"],
-                    correct: 1,
-                    explanation: "Palmas está localizada às margens do Rio Tocantins, que é um dos principais rios do estado."
-                },
-                {
-                    question: "O clima predominante no Tocantins é:",
-                    options: ["Equatorial úmido", "Tropical semiárido", "Tropical com estação seca", "Subtropical", "Tropical de altitude"],
-                    correct: 2,
-                    explanation: "O Tocantins possui clima tropical, com duas estações bem definidas: verão chuvoso e inverno seco."
-                },
-                {
-                    question: "O Parque Estadual do Jalapão é uma unidade de conservação localizada na região:",
-                    options: ["Norte do estado", "Sul do estado", "Leste do estado", "Oeste do estado", "Central do estado"],
-                    correct: 1,
-                    explanation: "O Jalapão está localizado na região leste do Tocantins, fazendo divisa com a Bahia."
-                },
-                {
-                    question: "A principal atividade econômica do Tocantins na atualidade é:",
-                    options: ["Mineração", "Indústria automobilística", "Agropecuária", "Extrativismo vegetal", "Turismo"],
-                    correct: 2,
-                    explanation: "A agropecuária é a base da economia tocantinense, com destaque para a produção de soja, milho e pecuária de corte."
-                },
-                {
-                    question: "Qual é o município tocantinense que se destaca como polo industrial e agroindustrial?",
-                    options: ["Gurupi", "Araguaína", "Porto Nacional", "Paraíso do Tocantins", "Tocantinópolis"],
-                    correct: 1,
-                    explanation: "Araguaína é o segundo maior município do estado e se destaca como polo industrial, agropecuário e comercial."
-                },
-                {
-                    question: "A Ilha do Bananal, localizada no Tocantins, é considerada:",
-                    options: ["A maior ilha fluvial do mundo", "A maior ilha lacustre do Brasil", "A segunda maior ilha do mundo", "Uma ilha oceânica", "Uma reserva indígena exclusiva"],
-                    correct: 0,
-                    explanation: "A Ilha do Bananal, formada pelos rios Araguaia e Javaés, é a maior ilha fluvial do mundo."
-                },
-                {
-                    question: "Os principais povos indígenas presentes no Tocantins são:",
-                    options: ["Guarani e Tupi", "Xavante e Bororo", "Karajá, Xambioá e Javaé", "Yanomami e Tikuna", "Pataxó e Ticuna"],
-                    correct: 2,
-                    explanation: "Os povos Karajá, Xambioá e Javaé são tradicionais na região da Ilha do Bananal e entorno."
-                },
-                {
-                    question: "A vegetação predominante no Tocantins é:",
-                    options: ["Floresta Amazônica", "Cerrado com matas de galeria e campos", "Caatinga arbustiva", "Mata de Araucárias", "Manguezais"],
-                    correct: 1,
-                    explanation: "O Cerrado é o bioma predominante, com vegetação que inclui matas de galeria, campos limpos e cerradão."
-                },
-                {
-                    question: "O primeiro núcleo urbano do atual território tocantinense foi:",
-                    options: ["Palmas", "Natividade", "Porto Nacional", "Arraias", "São João da Palma"],
-                    correct: 1,
-                    explanation: "Natividade é considerada a cidade mais antiga do Tocantins, fundada por bandeirantes no século XVIII durante o ciclo do ouro."
-                }
-            ]
-        };
+    <!-- FEEDBACK -->
+    <div class="feedback" id="feedback">
+        <div class="result" id="resultadoFeedback">✅ Correta!</div>
+        <div class="explanation" id="explicacaoFeedback">
+            <strong>Comentário:</strong> ...
+        </div>
+        <div class="analysis" id="analiseFeedback">
+            <p><strong>Análise das alternativas:</strong></p>
+            <div id="analiseDetalhada"></div>
+        </div>
+        <div style="margin-top:12px; font-size:14px; color:#2a5a6a;" id="classificacaoFeedback"></div>
+    </div>
 
-        // Variáveis globais
-        let quizData = [];
-        let currentQuestion = 0;
-        let answers = [];
-        let answered = [];
-        let confirmed = [];
-        let selectedDisciplines = ['legislacao', 'portugues', 'informatica', 'raciocinio', 'historia'];
-        let totalQuestions = 100;
-        let disciplineCounts = {
-            legislacao: 20,
-            portugues: 20,
-            informatica: 20,
-            raciocinio: 20,
-            historia: 20
-        };
+    <!-- COMANDOS -->
+    <div class="comandos">
+        <strong>Comandos:</strong> PAINEL · REVISÃO · REFAZER · SIMULADO · PAUSA · CONTINUAR · ANULAR · DICAS · FONTES · FINALIZAR
+    </div>
+    <div class="footer">
+        Treinamento interativo — 50 questões inéditas · SES-TO 2026
+    </div>
+</div>
 
-        // Chaves do localStorage
-        const SESSION_KEY = 'quiz_session';
-        const CONFIG_KEY = 'quiz_config';
+<script>
+// ============================================================
+// BANCO DE DADOS DAS 50 QUESTÕES (em formato compacto)
+// ============================================================
+const questoes = [
+    // ========== EIXO 1 — Gestão pública e estratégia (18) ==========
+    {
+        id: 1,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Média",
+        texto: "A Lei nº 14.133/2021, ao tratar da fase preparatória da licitação na Administração Pública, estabeleceu um conjunto de requisitos para o planejamento da contratação. Nesse contexto, o estudo técnico preliminar deve conter, entre outros elementos, a descrição da necessidade da contratação, a estimativa de preços, a justificativa para o parcelamento ou não do objeto e:",
+        alternativas: [
+            "análise de riscos, que deverá considerar os riscos capazes de comprometer o sucesso da contratação e as respectivas medidas de mitigação.",
+            "definição do regime de execução contratual, que deverá ser necessariamente o de empreitada por preço unitário para serviços de engenharia.",
+            "indicação do orçamento sigiloso, que será divulgado apenas após a assinatura do contrato para preservar o interesse público.",
+            "escolha do tipo de licitação, que deverá ser obrigatoriamente o menor preço para qualquer objeto, salvo exceções legais."
+        ],
+        correta: 0,
+        explicacao: "Art. 18 da Lei 14.133/2021: o estudo técnico preliminar deve conter, entre outros, a análise de riscos e as respectivas medidas de mitigação. As demais alternativas trazem exigências inexistentes ou distorcidas (regime obrigatório, orçamento sigiloso, tipo de licitação fixo).",
+        analise: [
+            "A) Correta — conforme o art. 18, inciso VI, da Lei 14.133/2021.",
+            "B) Incorreta — o regime de execução não é fixo; pode ser empreitada por preço global, unitário, tarefa ou contratação integrada.",
+            "C) Incorreta — o orçamento é público e divulgado no edital, não sigiloso até a assinatura.",
+            "D) Incorreta — o tipo de licitação não é obrigatoriamente menor preço; há ainda melhor técnica, técnica e preço, etc."
+        ],
+        fonte: "Lei 14.133/2021, art. 18"
+    },
+    {
+        id: 2,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Média",
+        texto: "No âmbito da gestão pública por resultados, o Balanced Scorecard (BSC) é uma ferramenta que traduz a missão e a estratégia da organização em objetivos e indicadores. No setor público, uma das adaptações necessárias do BSC é:",
+        alternativas: [
+            "substituir a perspectiva financeira pela perspectiva de valor público ou de resultados para a sociedade.",
+            "eliminar a perspectiva de processos internos, pois não se aplica à administração pública.",
+            "adotar exclusivamente indicadores financeiros, já que o orçamento público é a principal restrição.",
+            "centralizar todas as decisões na perspectiva de aprendizado e crescimento."
+        ],
+        correta: 0,
+        explicacao: "No setor público, a perspectiva financeira é substituída ou complementada pela perspectiva de valor público ou de resultados para a sociedade, já que o lucro não é o fim último. As demais alternativas são incorretas: processos internos são relevantes, não se usa só indicadores financeiros e não há centralização exclusiva.",
+        analise: [
+            "A) Correta — adaptação clássica do BSC para o setor público (Kaplan & Norton).",
+            "B) Incorreta — processos internos são fundamentais para eficiência e qualidade.",
+            "C) Incorreta — a gestão pública não se restringe a indicadores financeiros.",
+            "D) Incorreta — aprendizado e crescimento é uma das perspectivas, não a única."
+        ],
+        fonte: "Kaplan & Norton; adaptação para setor público"
+    },
+    {
+        id: 3,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Difícil",
+        texto: "Sobre o controle social e a transparência na gestão pública, a Lei de Acesso à Informação (Lei nº 12.527/2011) estabelece que os órgãos públicos devem disponibilizar informações de interesse coletivo. Em relação à transparência ativa, é correto afirmar que:",
+        alternativas: [
+            "os sítios oficiais devem divulgar, entre outros, registros de repasses de recursos públicos e respectivas prestações de contas, independentemente de solicitação.",
+            "a transparência ativa é facultativa para os municípios com menos de 20 mil habitantes, que podem optar por fornecer informações apenas mediante requerimento.",
+            "a divulgação proativa de informações só é exigida para atos normativos, não para dados orçamentários ou de execução financeira.",
+            "a Lei de Acesso à Informação não se aplica a empresas públicas e sociedades de economia mista, pois estas seguem regime de direito privado."
+        ],
+        correta: 0,
+        explicacao: "A transparência ativa exige a divulgação espontânea de informações, inclusive repasses de recursos, na internet (art. 8º da LAI). As demais são falsas: não há exceção para municípios pequenos, não se limita a atos normativos, e a LAI aplica-se a empresas estatais.",
+        analise: [
+            "A) Correta — art. 8º, §1º, inciso V, da Lei 12.527/2011.",
+            "B) Incorreta — não há essa exceção; a transparência ativa é obrigatória para todos.",
+            "C) Incorreta — abrange também execução orçamentária e financeira.",
+            "D) Incorreta — a LAI se aplica a todas as entidades que recebem recursos públicos."
+        ],
+        fonte: "Lei 12.527/2011, art. 8º"
+    },
+    {
+        id: 4,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Média",
+        texto: "A gestão por resultados na administração pública busca aumentar a eficiência, eficácia e efetividade das ações governamentais. Nesse contexto, o modelo de gestão que se baseia na definição de metas claras, na medição de desempenho e na autonomia gerencial, com foco em resultados previamente acordados, é conhecido como:",
+        alternativas: [
+            "contrato de gestão ou acordo de resultados.",
+            "orçamento participativo.",
+            "planejamento estratégico situacional.",
+            "reengenharia de processos."
+        ],
+        correta: 0,
+        explicacao: "O contrato de gestão (ou acordo de resultados) é o instrumento típico da gestão por resultados, com metas, indicadores e autonomia. As demais opções são ferramentas ou modelos, mas não correspondem exatamente a essa descrição (orçamento participativo foca na participação; PES é planejamento; reengenharia é redesenho de processos).",
+        analise: [
+            "A) Correta — conceito clássico de contrato de gestão.",
+            "B) Incorreta — orçamento participativo é mecanismo de participação social, não de gestão por resultados.",
+            "C) Incorreta — planejamento estratégico situacional é um método de planejamento, não um contrato.",
+            "D) Incorreta — reengenharia é redesenho radical de processos."
+        ],
+        fonte: "ENAP; conceitos de gestão por resultados"
+    },
+    {
+        id: 5,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Fácil",
+        texto: "O empreendedorismo governamental, como abordagem na gestão pública, caracteriza-se por:",
+        alternativas: [
+            "introdução de inovações e novas lideranças que buscam soluções criativas para problemas públicos, com foco em eficiência e impacto social.",
+            "transferência integral das atividades do Estado para a iniciativa privada, com eliminação da regulação estatal.",
+            "adoção de práticas empresariais privadas sem qualquer consideração às especificidades do setor público.",
+            "redução do tamanho do Estado e extinção de programas sociais."
+        ],
+        correta: 0,
+        explicacao: "Empreendedorismo governamental significa inovar na gestão pública, com novas lideranças, criatividade e foco em resultados para a sociedade. As demais alternativas distorcem o conceito, confundindo com privatização, aplicação irrestrita de práticas privadas ou redução do Estado.",
+        analise: [
+            "A) Correta — definição alinhada à literatura de empreendedorismo público.",
+            "B) Incorreta — não significa privatização, mas sim inovação na gestão.",
+            "C) Incorreta — há adaptação, não aplicação mecânica.",
+            "D) Incorreta — não se confunde com redução de Estado ou extinção de programas."
+        ],
+        fonte: "ENAP; empreendedorismo governamental"
+    },
+    {
+        id: 6,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Difícil",
+        texto: "Sobre a cultura organizacional no setor público e os processos de mudança, é correto afirmar que:",
+        alternativas: [
+            "a mudança cultural requer a atuação em múltiplas dimensões, como valores, ritos, símbolos e práticas, sendo um processo de médio e longo prazo.",
+            "a cultura organizacional é imutável, pois está enraizada na tradição do serviço público e na legislação.",
+            "a mudança cultural pode ser implementada apenas por meio de alterações na estrutura organizacional, independentemente do comportamento das pessoas.",
+            "a cultura organizacional no setor público é homogênea em todos os órgãos, o que facilita processos de mudança em larga escala."
+        ],
+        correta: 0,
+        explicacao: "A cultura organizacional é mutável, mas requer ações em várias frentes (valores, ritos, práticas) e tempo. As demais são falsas: cultura não é imutável, mudança não se restringe a estrutura, e não há homogeneidade entre órgãos.",
+        analise: [
+            "A) Correta — abordagem multidimensional e de longo prazo é a mais adequada.",
+            "B) Incorreta — cultura é dinâmica e pode ser transformada.",
+            "C) Incorreta — mudança cultural envolve comportamentos e crenças, não só estrutura.",
+            "D) Incorreta — há grande diversidade cultural entre órgãos públicos."
+        ],
+        fonte: "Teoria organizacional; ENAP"
+    },
+    {
+        id: 7,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Média",
+        texto: "O governo eletrônico (e-gov) tem como um de seus pilares a oferta de serviços públicos digitais. Nessa perspectiva, a interoperabilidade entre sistemas governamentais é essencial para:",
+        alternativas: [
+            "permitir a troca de informações e a integração de dados entre diferentes órgãos, reduzindo a burocracia e melhorando o atendimento ao cidadão.",
+            "garantir que todos os órgãos utilizem o mesmo sistema operacional e o mesmo software de gestão.",
+            "substituir completamente o atendimento presencial, sem necessidade de canais alternativos.",
+            "restringir o acesso a dados sensíveis, dificultando a transparência ativa."
+        ],
+        correta: 0,
+        explicacao: "Interoperabilidade é a capacidade de sistemas trocarem e usarem informações, fundamental para integração e eficiência. As demais são incorretas: não exige mesmo software, não substitui totalmente o presencial (nem é objetivo) e não restringe transparência.",
+        analise: [
+            "A) Correta — definição de interoperabilidade no e-gov.",
+            "B) Incorreta — interoperabilidade é sobre comunicação, não padronização de software.",
+            "C) Incorreta — e-gov amplia canais, não elimina o presencial.",
+            "D) Incorreta — interoperabilidade pode melhorar a transparência."
+        ],
+        fonte: "ENAP; conceitos de governo eletrônico"
+    },
+    {
+        id: 8,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Difícil",
+        texto: "No planejamento estratégico aplicado ao setor público, a análise SWOT (Forças, Fraquezas, Oportunidades e Ameaças) é frequentemente utilizada. Em uma unidade de saúde pública, a escassez de profissionais especializados em uma determinada região deve ser classificada, na análise SWOT, como:",
+        alternativas: [
+            "ameaça, se considerada em relação à capacidade de atendimento e à concorrência com outros serviços, ou fraqueza, se analisada sob a ótica interna da organização.",
+            "força, pois demonstra a necessidade de contratação e gera pressão política para investimentos.",
+            "oportunidade, porque pode justificar a criação de novos programas de residência e parcerias.",
+            "oportunidade e ameaça simultaneamente, sendo impossível determinar sem o contexto do planejamento."
+        ],
+        correta: 0,
+        explicacao: "Na SWOT, a escassez de profissionais é uma fraqueza interna (se a unidade não tem esses profissionais) e também uma ameaça externa (se outras unidades os disputam). A alternativa correta capta essa dualidade. As demais classificações são equivocadas.",
+        analise: [
+            "A) Correta — distinção entre ambiente interno (fraqueza) e externo (ameaça).",
+            "B) Incorreta — escassez não é uma força.",
+            "C) Incorreta — oportunidade seria algo externo favorável, não uma carência.",
+            "D) Incorreta — é possível classificar, sim, com base na perspectiva."
+        ],
+        fonte: "Planejamento estratégico; análise SWOT"
+    },
+    {
+        id: 9,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Média",
+        texto: "O orçamento participativo é um mecanismo que aproxima a gestão pública da sociedade. Sobre esse instrumento, é correto afirmar que:",
+        alternativas: [
+            "permite que a população decida, direta ou indiretamente, sobre a alocação de parte dos recursos públicos em prioridades definidas democraticamente.",
+            "é um processo exclusivamente consultivo, sem qualquer vinculação com a execução orçamentária.",
+            "substitui integralmente o orçamento anual elaborado pelo Poder Executivo, conferindo autonomia absoluta à comunidade.",
+            "aplica-se apenas a municípios, sendo vedado em âmbito estadual e federal."
+        ],
+        correta: 0,
+        explicacao: "O orçamento participativo envolve a população na definição de prioridades de investimento. As demais são falsas: não é meramente consultivo (em muitos casos é deliberativo), não substitui o orçamento formal e pode ser aplicado em todas as esferas.",
+        analise: [
+            "A) Correta — conceito de orçamento participativo.",
+            "B) Incorreta — pode ter caráter deliberativo e vinculante.",
+            "C) Incorreta — não substitui o orçamento institucional.",
+            "D) Incorreta — existem experiências em estados e na União."
+        ],
+        fonte: "ENAP; orçamento participativo"
+    },
+    {
+        id: 10,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Média",
+        texto: "A excelência nos serviços públicos está associada à qualidade do atendimento e à satisfação do cidadão. Nesse contexto, o paradigma do cliente na gestão pública:",
+        alternativas: [
+            "reconhece o cidadão como usuário e parte interessada, buscando atender suas necessidades com eficiência e qualidade, sem perder o caráter público e o princípio da impessoalidade.",
+            "trata o cidadão como um consumidor comum, aplicando as mesmas regras de mercado e priorizando o lucro nas decisões.",
+            "dispensa o controle social, uma vez que a satisfação do cliente é medida exclusivamente por pesquisas de opinião.",
+            "impõe que todos os serviços públicos sejam cobrados, para que o cidadão exerça seu poder de escolha."
+        ],
+        correta: 0,
+        explicacao: "O paradigma do cliente na gestão pública coloca o cidadão no centro, com qualidade e eficiência, mas respeitando os princípios públicos (impessoalidade, continuidade, universalidade). As demais distorcem o conceito, confundindo com lógica de mercado, eliminando controle social ou cobrança generalizada.",
+        analise: [
+            "A) Correta — abordagem equilibrada entre foco no cidadão e princípios públicos.",
+            "B) Incorreta — não se trata de consumidor comum nem de lucro.",
+            "C) Incorreta — controle social é fundamental.",
+            "D) Incorreta — serviços públicos essenciais são gratuitos e universais."
+        ],
+        fonte: "ENAP; gestão pública orientada ao cidadão"
+    },
+    {
+        id: 11,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Difícil",
+        texto: "A Lei nº 14.133/2021 (Nova Lei de Licitações) introduziu o princípio do planejamento como diretriz da administração pública. Nesse sentido, o plano de contratações anual (PCA) tem a finalidade de:",
+        alternativas: [
+            "organizar e planejar as contratações da administração para o exercício seguinte, com base nas prioridades da gestão e nos recursos disponíveis.",
+            "substituir o processo licitatório, autorizando a contratação direta de todos os serviços listados no plano.",
+            "ser elaborado exclusivamente para contratos de obras, não se aplicando a serviços ou compras.",
+            "vincular a administração à execução integral de todas as contratações nele previstas, sob pena de responsabilidade do gestor."
+        ],
+        correta: 0,
+        explicacao: "O PCA é um instrumento de planejamento das contratações, organizando prioridades e recursos (art. 12 da Lei 14.133/2021). Não substitui licitação, não é só para obras e não tem caráter absolutamente vinculativo.",
+        analise: [
+            "A) Correta — descrição do PCA conforme a lei.",
+            "B) Incorreta — o PCA não substitui a licitação.",
+            "C) Incorreta — aplica-se a todas as contratações, não só obras.",
+            "D) Incorreta — não é integralmente vinculativo; é planejamento, não compromisso executório."
+        ],
+        fonte: "Lei 14.133/2021, art. 12"
+    },
+    {
+        id: 12,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Fácil",
+        texto: "A transparência na gestão pública é um princípio que se materializa por meio de canais de acesso à informação e prestação de contas. O instrumento que permite ao cidadão acompanhar a execução orçamentária e financeira do governo em tempo real, por meio da internet, é denominado:",
+        alternativas: [
+            "portal da transparência.",
+            "plano plurianual.",
+            "lei de diretrizes orçamentárias.",
+            "relatório de gestão fiscal."
+        ],
+        correta: 0,
+        explicacao: "O Portal da Transparência é a principal ferramenta de transparência ativa na internet, com dados de execução orçamentária e financeira. As demais são instrumentos de planejamento ou prestação de contas, mas não com essa finalidade de tempo real.",
+        analise: [
+            "A) Correta — Portal da Transparência.",
+            "B) Incorreta — PPA é planejamento de médio prazo.",
+            "C) Incorreta — LDO é planejamento anual de metas.",
+            "D) Incorreta — RGF é relatório de gestão fiscal."
+        ],
+        fonte: "Lei de Acesso à Informação; Portal da Transparência"
+    },
+    {
+        id: 13,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Média",
+        texto: "A reengenharia de processos, como técnica de gestão, propõe:",
+        alternativas: [
+            "o redesenho radical e fundamental dos processos organizacionais, com o objetivo de alcançar melhorias drásticas em custos, qualidade, serviço e velocidade.",
+            "a melhoria incremental e contínua de pequenos ajustes nos processos, mantendo a estrutura organizacional existente.",
+            "a automação de todos os processos sem revisão de sua lógica de funcionamento.",
+            "a eliminação de processos administrativos, com foco exclusivo em atividades operacionais."
+        ],
+        correta: 0,
+        explicacao: "Reengenharia é redesenho radical de processos, não incremental (diferente de melhoria contínua). As demais opções não correspondem ao conceito: melhoria incremental é outra abordagem (Kaizen), automação sem revisão não é reengenharia, e eliminação de processos não é o foco.",
+        analise: [
+            "A) Correta — definição de Hammer & Champy.",
+            "B) Incorreta — isso é melhoria contínua (Kaizen), não reengenharia.",
+            "C) Incorreta — reengenharia requer revisão, não só automação.",
+            "D) Incorreta — reengenharia redesenha, não elimina."
+        ],
+        fonte: "Hammer & Champy; reengenharia"
+    },
+    {
+        id: 14,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Difícil",
+        texto: "Sobre as parcerias entre governo e sociedade, é correto afirmar que as organizações da sociedade civil podem celebrar termos de colaboração ou fomento com a administração pública, de acordo com o Marco Regulatório das Organizações da Sociedade Civil (Lei nº 13.019/2014). Nesse contexto, o termo de colaboração:",
+        alternativas: [
+            "é o instrumento firmado com a administração pública para a realização de parcerias quando envolver o compartilhamento de recursos humanos, materiais ou financeiros, com coparticipação da sociedade civil.",
+            "destina-se exclusivamente a contratos com entidades sem fins lucrativos que atuam na área da saúde.",
+            "dispensa a prestação de contas, uma vez que a sociedade civil é fiscalizada apenas internamente.",
+            "é vedado para entidades que recebam recursos públicos, devendo ser usado apenas o convênio."
+        ],
+        correta: 0,
+        explicacao: "O termo de colaboração é o instrumento de parceria com coparticipação de recursos, conforme Lei 13.019/2014. As demais são incorretas: não é exclusivo de saúde, exige prestação de contas, e não é vedado — convênios também são possíveis, mas com distinções.",
+        analise: [
+            "A) Correta — definição do termo de colaboração no MROSC.",
+            "B) Incorreta — aplica-se a diversas áreas.",
+            "C) Incorreta — a prestação de contas é obrigatória.",
+            "D) Incorreta — o termo de colaboração é previsto legalmente."
+        ],
+        fonte: "Lei 13.019/2014 (MROSC)"
+    },
+    {
+        id: 15,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Média",
+        texto: "No contexto da qualidade e excelência nos serviços públicos, o Programa Nacional de Gestão Pública e Desburocratização (GesPública) foi uma iniciativa que:",
+        alternativas: [
+            "propôs um modelo de gestão baseado em critérios de excelência, com foco em resultados, cidadania e controle social.",
+            "recomendou a extinção de todos os órgãos da administração direta, substituindo-os por agências reguladoras.",
+            "estabeleceu a terceirização integral de todos os serviços públicos como meta principal.",
+            "concentrou-se exclusivamente na informatização dos processos, sem abordar aspectos de gestão."
+        ],
+        correta: 0,
+        explicacao: "O GesPública foi um programa que promoveu a excelência na gestão pública com base em critérios como liderança, estratégia, cidadãos, etc. As demais alternativas não correspondem ao programa.",
+        analise: [
+            "A) Correta — alinhado com os objetivos do GesPública.",
+            "B) Incorreta — não propôs extinção de órgãos.",
+            "C) Incorreta — não tinha como meta a terceirização integral.",
+            "D) Incorreta — abordava vários aspectos da gestão, não só informática."
+        ],
+        fonte: "ENAP; GesPública"
+    },
+    {
+        id: 16,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Fácil",
+        texto: "O controle social na gestão pública pode ser exercido por meio de conselhos de gestão, que são instâncias:",
+        alternativas: [
+            "colegiadas, com participação de representantes do governo e da sociedade, para acompanhar e fiscalizar políticas públicas.",
+            "exclusivas do Poder Legislativo, sem participação da sociedade civil.",
+            "consultivas apenas, sem qualquer poder de deliberação ou fiscalização.",
+            "subordinadas ao Ministério Público, que detém o controle social por excelência."
+        ],
+        correta: 0,
+        explicacao: "Conselhos de gestão são colegiados com participação social e governamental, com funções de acompanhamento e fiscalização. As demais são falsas: não são exclusivos do Legislativo, têm poder (alguns deliberativos) e não são subordinados ao MP.",
+        analise: [
+            "A) Correta — definição de conselho de gestão.",
+            "B) Incorreta — há participação social.",
+            "C) Incorreta — podem ser deliberativos e fiscalizadores.",
+            "D) Incorreta — são instâncias autônomas, não subordinadas."
+        ],
+        fonte: "Controle social; conselhos de gestão"
+    },
+    {
+        id: 17,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Difícil",
+        texto: "A tecnologia da informação e comunicação (TIC) aplicada à gestão pública não se limita à automação de processos. Um dos seus papéis mais estratégicos é:",
+        alternativas: [
+            "viabilizar a gestão do conhecimento, a integração entre políticas e a tomada de decisão baseada em dados (data-driven decision).",
+            "substituir totalmente os servidores públicos por sistemas automatizados, reduzindo custos.",
+            "restringir o acesso do cidadão a informações, para evitar questionamentos judiciais.",
+            "padronizar todos os serviços públicos em uma única plataforma, sem exceções."
+        ],
+        correta: 0,
+        explicacao: "As TICs têm papel estratégico na gestão do conhecimento, integração de políticas e decisão baseada em dados. As demais alternativas exageram ou distorcem o papel das TICs (substituição, restrição de acesso, padronização sem exceções).",
+        analise: [
+            "A) Correta — papel estratégico das TICs na gestão pública.",
+            "B) Incorreta — TIC complementa, não substitui servidores.",
+            "C) Incorreta — TIC amplia transparência, não restringe.",
+            "D) Incorreta — nem sempre há uma única plataforma; há interoperabilidade."
+        ],
+        fonte: "ENAP; TIC na gestão pública"
+    },
+    {
+        id: 18,
+        eixo: "Eixo 1 — Gestão pública e estratégia",
+        dificuldade: "Média",
+        texto: "O planejamento estratégico em uma organização pública deve considerar o alinhamento com o plano plurianual (PPA), a lei de diretrizes orçamentárias (LDO) e a lei orçamentária anual (LOA). Esse conjunto de instrumentos forma o:",
+        alternativas: [
+            "sistema de planejamento e orçamento público, que integra as dimensões estratégica, tática e operacional.",
+            "plano de contratações anual, que substitui o orçamento para fins de compras.",
+            "orçamento participativo, que define as prioridades da sociedade.",
+            "programa de gestão de resultados, focado exclusivamente em indicadores de desempenho."
+        ],
+        correta: 0,
+        explicacao: "PPA, LDO e LOA compõem o sistema de planejamento e orçamento, que integra estratégia, tática e operação. As demais opções confundem com outros instrumentos (PCA, orçamento participativo, programa de resultados).",
+        analise: [
+            "A) Correta — sistema de planejamento e orçamento.",
+            "B) Incorreta — PCA é instrumento de licitação, não do sistema orçamentário.",
+            "C) Incorreta — orçamento participativo é uma ferramenta, não o sistema completo.",
+            "D) Incorreta — gestão por resultados é um modelo, não o sistema orçamentário."
+        ],
+        fonte: "CF/88; Lei 4.320/64; PPA, LDO, LOA"
+    },
+    // ========== EIXO 2 — Gestão de pessoas e redes (12) ==========
+    {
+        id: 19,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Média",
+        texto: "A gestão de pessoas por competências, no setor público, busca alinhar o desenvolvimento dos servidores com os objetivos estratégicos da organização. Nesse modelo, a competência pode ser definida como:",
+        alternativas: [
+            "um conjunto de conhecimentos, habilidades e atitudes (CHA) que geram desempenho superior e agregam valor à organização.",
+            "apenas a qualificação formal, medida por diplomas e certificados de cursos.",
+            "a capacidade de executar tarefas operacionais, sem necessidade de alinhamento estratégico.",
+            "a experiência profissional acumulada ao longo da carreira, desconsiderando conhecimentos teóricos."
+        ],
+        correta: 0,
+        explicacao: "O conceito de competência (CHA) é amplamente aceito: conhecimentos, habilidades e atitudes que geram desempenho superior. As demais são reducionistas (só diploma, só tarefas, só experiência).",
+        analise: [
+            "A) Correta — definição consagrada de competência.",
+            "B) Incorreta — competência vai além do diploma.",
+            "C) Incorreta — inclui alinhamento estratégico e valores.",
+            "D) Incorreta — experiência é importante, mas não é o único elemento."
+        ],
+        fonte: "ENAP; gestão por competências"
+    },
+    {
+        id: 20,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Difícil",
+        texto: "Sobre o modelo integrado de gestão por competências, é correto afirmar que ele engloba:",
+        alternativas: [
+            "a identificação, o mapeamento, o desenvolvimento e a avaliação de competências, integrando as dimensões individual, grupal e organizacional.",
+            "apenas o recrutamento e seleção de profissionais, baseado em testes de competências técnicas.",
+            "a gestão de desempenho exclusivamente, sem considerar o desenvolvimento de competências.",
+            "a definição de competências apenas para cargos de liderança, desconsiderando os demais servidores."
+        ],
+        correta: 0,
+        explicacao: "O modelo integrado envolve identificação, mapeamento, desenvolvimento e avaliação, em múltiplos níveis (individual, equipe, organização). As demais são parciais ou incorretas.",
+        analise: [
+            "A) Correta — modelo integrado de gestão por competências.",
+            "B) Incorreta — vai além de recrutamento e seleção.",
+            "C) Incorreta — inclui desenvolvimento, não só avaliação.",
+            "D) Incorreta — aplica-se a todos os níveis."
+        ],
+        fonte: "ENAP; modelo integrado de competências"
+    },
+    {
+        id: 21,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Média",
+        texto: "Na gestão estratégica de pessoas, a gestão do desempenho é um processo contínuo que deve estar alinhado com a missão e os objetivos da organização. Uma das ferramentas utilizadas para avaliar o desempenho dos servidores é a avaliação de desempenho individual, que deve:",
+        alternativas: [
+            "ser baseada em critérios objetivos e previamente definidos, com feedback regular e planos de desenvolvimento.",
+            "servir apenas para subsidiar a demissão de servidores com baixo desempenho.",
+            "ser realizada anualmente, sem necessidade de feedback ao longo do ano.",
+            "considerar exclusivamente a opinião do gestor imediato, sem participação do avaliado."
+        ],
+        correta: 0,
+        explicacao: "A avaliação de desempenho deve ter critérios objetivos, feedback e planos de desenvolvimento. As demais são incorretas: não é só para demissão, deve ser contínua e não deve ser unilateral.",
+        analise: [
+            "A) Correta — avaliação de desempenho com critérios objetivos e feedback.",
+            "B) Incorreta — não é apenas para demissão.",
+            "C) Incorreta — deve ser contínua, não só anual.",
+            "D) Incorreta — deve envolver o avaliado (autoavaliação, etc.)."
+        ],
+        fonte: "ENAP; gestão de desempenho"
+    },
+    {
+        id: 22,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Fácil",
+        texto: "A comunicação na gestão pública é um fator crítico para o alinhamento e a eficácia organizacional. Sobre a comunicação interna, é correto afirmar que ela deve:",
+        alternativas: [
+            "ser planejada e estratégica, utilizando canais adequados para disseminar informações relevantes e promover o diálogo.",
+            "ser evitada, pois gera ruídos e atrasos nos processos decisórios.",
+            "ser restrita aos níveis hierárquicos superiores, que detêm o conhecimento necessário.",
+            "basear-se exclusivamente em comunicados oficiais e memorandos, sem interação."
+        ],
+        correta: 0,
+        explicacao: "A comunicação interna deve ser planejada, estratégica e usar canais adequados para diálogo. As demais são incorretas: não deve ser evitada, não é restrita a chefias e não se baseia só em comunicados unilaterais.",
+        analise: [
+            "A) Correta — comunicação interna planejada e dialógica.",
+            "B) Incorreta — comunicação é essencial.",
+            "C) Incorreta — deve envolver todos os níveis.",
+            "D) Incorreta — deve ser interativa, não só unidirecional."
+        ],
+        fonte: "ENAP; comunicação na gestão pública"
+    },
+    {
+        id: 23,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Difícil",
+        texto: "As redes organizacionais na gestão pública são estruturas que conectam atores públicos e privados para a coprodução de serviços e políticas. Uma característica fundamental das redes organizacionais é:",
+        alternativas: [
+            "a interdependência entre os atores e a coordenação baseada em confiança e objetivos comuns.",
+            "a subordinação hierárquica a uma única entidade centralizadora.",
+            "a competição acirrada entre os participantes, com foco em resultados individuais.",
+            "a formalização excessiva, com contratos detalhados para cada interação."
+        ],
+        correta: 0,
+        explicacao: "As redes se caracterizam por interdependência, coordenação e confiança, não por hierarquia rígida ou competição. A formalização excessiva é típica de hierarquias, não de redes.",
+        analise: [
+            "A) Correta — características de redes organizacionais.",
+            "B) Incorreta — redes são horizontais, não hierárquicas.",
+            "C) Incorreta — a lógica é colaborativa, não competitiva.",
+            "D) Incorreta — redes tendem a ser mais flexíveis."
+        ],
+        fonte: "Teoria de redes; ENAP"
+    },
+    {
+        id: 24,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Média",
+        texto: "Na gestão de pessoas no setor público, um dos desafios é a complexidade da atividade, que envolve múltiplos atores, interesses e normas. Sobre a complexidade, é correto afirmar que:",
+        alternativas: [
+            "exige uma abordagem sistêmica, que considere as interações entre os diferentes subsistemas e o ambiente externo.",
+            "pode ser simplificada pela aplicação de modelos privados de gestão, sem adaptação.",
+            "é um obstáculo intransponível, que inviabiliza a gestão estratégica de pessoas.",
+            "deve ser ignorada, pois a legislação já prevê todas as situações possíveis."
+        ],
+        correta: 0,
+        explicacao: "A complexidade da gestão pública exige abordagem sistêmica, considerando interações e ambiente. As demais são incorretas: modelos privados precisam ser adaptados, não é intransponível, e a legislação não cobre todas as situações.",
+        analise: [
+            "A) Correta — abordagem sistêmica para complexidade.",
+            "B) Incorreta — adaptação é necessária.",
+            "C) Incorreta — não inviabiliza a gestão estratégica.",
+            "D) Incorreta — a legislação não cobre todas as situações."
+        ],
+        fonte: "ENAP; complexidade na gestão pública"
+    },
+    {
+        id: 25,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Média",
+        texto: "O espaço ocupacional é um conceito que, na gestão de pessoas, refere-se:",
+        alternativas: [
+            "à posição que o indivíduo ocupa na estrutura organizacional, considerando suas responsabilidades, autonomia e possibilidade de desenvolvimento.",
+            "ao local físico onde o servidor exerce suas atividades, incluindo mobiliário e equipamentos.",
+            "à área geográfica de atuação do órgão público, que define o raio de atendimento à população.",
+            "ao cargo público em si, independente das características do ocupante."
+        ],
+        correta: 0,
+        explicacao: "Espaço ocupacional é a posição do indivíduo na organização, com suas responsabilidades e autonomia. As demais confundem com espaço físico, área geográfica ou cargo em abstrato.",
+        analise: [
+            "A) Correta — definição de espaço ocupacional.",
+            "B) Incorreta — é sobre posição organizacional, não físico.",
+            "C) Incorreta — não é geográfico.",
+            "D) Incorreta — não é só o cargo, mas a posição do ocupante."
+        ],
+        fonte: "ENAP; espaço ocupacional"
+    },
+    {
+        id: 26,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Difícil",
+        texto: "A gestão de pessoas por competências, como elo entre indivíduo e organização, pressupõe que:",
+        alternativas: [
+            "as competências individuais devem ser alinhadas às competências organizacionais e às estratégias da instituição.",
+            "as competências são estáveis ao longo do tempo, não necessitando de desenvolvimento contínuo.",
+            "o foco deve ser nas competências técnicas, desconsiderando as comportamentais.",
+            "a organização deve se adaptar às competências dos indivíduos, sem definir prioridades estratégicas."
+        ],
+        correta: 0,
+        explicacao: "A gestão por competências busca o alinhamento entre competências individuais e organizacionais. As demais são incorretas: competências se desenvolvem, incluem competências comportamentais e a organização define prioridades.",
+        analise: [
+            "A) Correta — alinhamento entre indivíduo e organização.",
+            "B) Incorreta — competências são dinâmicas.",
+            "C) Incorreta — competências comportamentais também são importantes.",
+            "D) Incorreta — a organização também tem suas estratégias."
+        ],
+        fonte: "ENAP; gestão por competências"
+    },
+    {
+        id: 27,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Fácil",
+        texto: "Na gestão de redes organizacionais, a cooperação entre os atores é essencial. O conceito de governança de redes refere-se:",
+        alternativas: [
+            "ao conjunto de mecanismos de coordenação, tomada de decisão e prestação de contas que orientam as interações na rede.",
+            "à imposição de regras por um ator central que controla todos os recursos.",
+            "à ausência de regras, onde cada ator age de forma independente.",
+            "à formalização de contratos individuais com cada membro da rede."
+        ],
+        correta: 0,
+        explicacao: "Governança de redes são os mecanismos de coordenação e prestação de contas. As demais são incorretas: não é centralização impositiva, nem ausência de regras, nem contratos individuais.",
+        analise: [
+            "A) Correta — conceito de governança de redes.",
+            "B) Incorreta — governança é mais horizontal.",
+            "C) Incorreta — há regras e coordenação.",
+            "D) Incorreta — não se baseia em contratos individuais."
+        ],
+        fonte: "Teoria de redes; governança"
+    },
+    {
+        id: 28,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Média",
+        texto: "No setor público, a gestão de pessoas tem como diferencial competitivo, entre outros fatores:",
+        alternativas: [
+            "a capacidade de atrair, desenvolver e reter talentos, alinhada ao interesse público e à eficiência.",
+            "a isonomia salarial, que impede qualquer diferenciação por desempenho.",
+            "a estabilidade do servidor, que garante segurança mas limita a competitividade.",
+            "a rigidez normativa, que elimina a necessidade de gestão estratégica."
+        ],
+        correta: 0,
+        explicacao: "A gestão de pessoas pode ser um diferencial competitivo se atrair e desenvolver talentos, alinhada ao interesse público. As demais são limitantes ou incorretas: isonomia não impede diferenciação por desempenho, estabilidade não é só limitante, e rigidez normativa não elimina a necessidade de gestão.",
+        analise: [
+            "A) Correta — atração e desenvolvimento de talentos como diferencial.",
+            "B) Incorreta — há possibilidade de diferenciação por desempenho.",
+            "C) Incorreta — a estabilidade pode ser compatível com competitividade.",
+            "D) Incorreta — a gestão estratégica é necessária mesmo com normas."
+        ],
+        fonte: "ENAP; gestão de pessoas no setor público"
+    },
+    {
+        id: 29,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Difícil",
+        texto: "A comunicação na gestão pública deve ser transparente e acessível. Sobre a comunicação externa, é correto afirmar que:",
+        alternativas: [
+            "deve considerar as diferentes linguagens e canais para alcançar os diversos públicos, incluindo pessoas com deficiência.",
+            "deve ser padronizada e técnica, mesmo que isso limite o alcance para leigos.",
+            "pode ser restrita a veículos oficiais, como o Diário Oficial, dispensando outros meios.",
+            "deve priorizar a comunicação de massa, em detrimento da comunicação direta com grupos específicos."
+        ],
+        correta: 0,
+        explicacao: "A comunicação externa deve ser inclusiva, com linguagens e canais diversos. As demais são incorretas: não deve ser apenas técnica, não deve se restringir a veículos oficiais e deve considerar públicos específicos.",
+        analise: [
+            "A) Correta — comunicação inclusiva e multicanal.",
+            "B) Incorreta — deve ser acessível, não só técnica.",
+            "C) Incorreta — deve usar diversos canais.",
+            "D) Incorreta — deve considerar grupos específicos."
+        ],
+        fonte: "ENAP; comunicação externa"
+    },
+    {
+        id: 30,
+        eixo: "Eixo 2 — Gestão de pessoas e redes",
+        dificuldade: "Média",
+        texto: "As possibilidades e limites da gestão de pessoas como diferencial competitivo no setor público incluem, como limitação:",
+        alternativas: [
+            "a rigidez da legislação e a limitação orçamentária, que restringem a autonomia do gestor para políticas de remuneração e desenvolvimento.",
+            "a inexistência de qualquer norma ou legislação, o que gera insegurança jurídica.",
+            "a ausência de interesse dos servidores, que não buscam desenvolvimento profissional.",
+            "a total ausência de recursos financeiros para qualquer ação de desenvolvimento de pessoas."
+        ],
+        correta: 0,
+        explicacao: "A rigidez legal e orçamentária são limites reais para a gestão de pessoas no setor público. As demais são incorretas: há legislação, os servidores geralmente têm interesse, e há recursos (embora limitados).",
+        analise: [
+            "A) Correta — rigidez legal e orçamentária como limites.",
+            "B) Incorreta — há muitas normas.",
+            "C) Incorreta — há interesse na maioria dos casos.",
+            "D) Incorreta — há recursos, embora limitados."
+        ],
+        fonte: "ENAP; gestão de pessoas no setor público"
+    },
+    // ========== EIXO 3 — Políticas públicas e gestão do SUS (8) ==========
+    {
+        id: 31,
+        eixo: "Eixo 3 — Políticas públicas e gestão do SUS",
+        dificuldade: "Média",
+        texto: "No Sistema Único de Saúde (SUS), o Planejamento em Saúde é um processo contínuo que se materializa em instrumentos de gestão. O Plano de Saúde, instrumento central do planejamento, deve:",
+        alternativas: [
+            "ser elaborado para o período de quatro anos, em consonância com o plano plurianual (PPA), e conter diretrizes, objetivos e metas para a saúde.",
+            "ser atualizado anualmente, sem necessidade de alinhamento com o PPA.",
+            "ser elaborado exclusivamente pela esfera federal, com execução padronizada para estados e municípios.",
+            "dispensar a participação social, uma vez que é um documento técnico."
+        ],
+        correta: 0,
+        explicacao: "O Plano de Saúde é elaborado para 4 anos, alinhado ao PPA, com diretrizes, objetivos e metas. As demais são incorretas: não é atualizado anualmente (embora haja revisões), não é exclusivo da União, e requer participação social.",
+        analise: [
+            "A) Correta — conforme Lei 8.080/90 e Resolução CNS.",
+            "B) Incorreta — o Plano de Saúde é plurianual (4 anos).",
+            "C) Incorreta — é elaborado por cada ente federativo.",
+            "D) Incorreta — a participação social é obrigatória."
+        ],
+        fonte: "Lei 8.080/90; Planejamento no SUS"
+    },
+    {
+        id: 32,
+        eixo: "Eixo 3 — Políticas públicas e gestão do SUS",
+        dificuldade: "Difícil",
+        texto: "A Programação Anual de Saúde (PAS) é um instrumento de planejamento do SUS que:",
+        alternativas: [
+            "detalha as ações e metas do Plano de Saúde para o exercício anual, incluindo a alocação de recursos orçamentários.",
+            "substitui o Plano de Saúde, tendo validade de quatro anos.",
+            "é elaborada apenas pelo Ministério da Saúde, sem participação dos gestores estaduais e municipais.",
+            "dispensa a aprovação do Conselho de Saúde, sendo apenas um documento administrativo."
+        ],
+        correta: 0,
+        explicacao: "A PAS detalha as ações anuais do Plano de Saúde, com alocação de recursos. As demais são incorretas: não substitui o Plano, é elaborada por todos os entes e exige aprovação do Conselho de Saúde.",
+        analise: [
+            "A) Correta — definição da PAS.",
+            "B) Incorreta — é anual, não substitui o Plano de Saúde.",
+            "C) Incorreta — cada ente elabora sua PAS.",
+            "D) Incorreta — o Conselho de Saúde deve aprovar."
+        ],
+        fonte: "Resolução CNS nº 333/2003; PAS"
+    },
+    {
+        id: 33,
+        eixo: "Eixo 3 — Políticas públicas e gestão do SUS",
+        dificuldade: "Média",
+        texto: "O Relatório de Gestão (RG) no SUS é um instrumento de prestação de contas que deve ser elaborado anualmente. Sobre o RG, é correto afirmar que:",
+        alternativas: [
+            "deve demonstrar os resultados alcançados, as dificuldades e as recomendações para a melhoria da gestão, sendo submetido ao Conselho de Saúde.",
+            "é um documento interno, sem necessidade de publicidade.",
+            "substitui a prestação de contas financeira, que é feita separadamente.",
+            "deve ser enviado apenas ao Ministério da Saúde, sem apreciação do Conselho."
+        ],
+        correta: 0,
+        explicacao: "O Relatório de Gestão deve conter resultados, dificuldades e recomendações, com submissão ao Conselho de Saúde. As demais são incorretas: deve ser público, não substitui a prestação de contas financeira e deve ser apreciado pelo Conselho.",
+        analise: [
+            "A) Correta — conteúdo e destinação do RG.",
+            "B) Incorreta — deve ser público e acessível.",
+            "C) Incorreta — é complementar à prestação de contas.",
+            "D) Incorreta — deve ser apreciado pelo Conselho de Saúde."
+        ],
+        fonte: "Resolução CNS nº 333/2003; Relatório de Gestão"
+    },
+    {
+        id: 34,
+        eixo: "Eixo 3 — Políticas públicas e gestão do SUS",
+        dificuldade: "Fácil",
+        texto: "O Relatório Quadrimestral de Prestação de Contas, previsto na Lei Complementar nº 141/2012, tem a finalidade de:",
+        alternativas: [
+            "apresentar, a cada quatro meses, a execução orçamentária e financeira da saúde, com a demonstração dos recursos aplicados.",
+            "substituir a prestação de contas anual, simplificando o processo.",
+            "ser elaborado exclusivamente pela área financeira, sem conteúdo sobre a execução das ações de saúde.",
+            "ser enviado apenas ao Tribunal de Contas, sem divulgação pública."
+        ],
+        correta: 0,
+        explicacao: "O Relatório Quadrimestral demonstra a execução orçamentária da saúde, conforme LC 141/2012. As demais são incorretas: não substitui a prestação anual, deve conter execução de ações e deve ser público.",
+        analise: [
+            "A) Correta — finalidade do relatório quadrimestral.",
+            "B) Incorreta — não substitui a prestação anual.",
+            "C) Incorreta — deve conter informações sobre ações de saúde.",
+            "D) Incorreta — deve ser divulgado publicamente."
+        ],
+        fonte: "LC 141/2012, art. 37"
+    },
+    {
+        id: 35,
+        eixo: "Eixo 3 — Políticas públicas e gestão do SUS",
+        dificuldade: "Difícil",
+        texto: "Em relação à articulação interfederativa no SUS, o Decreto nº 7.508/2011 estabelece que a gestão compartilhada entre os entes federativos deve ser orientada por:",
+        alternativas: [
+            "um mapa da saúde e por regiões de saúde, com a definição de portas de entrada e da rede de atenção à saúde.",
+            "um contrato único entre os entes, que centraliza toda a gestão no Ministério da Saúde.",
+            "a desobrigação dos municípios em organizar suas redes, ficando a cargo do Estado.",
+            "a participação exclusiva dos gestores, sem envolvimento dos Conselhos de Saúde."
+        ],
+        correta: 0,
+        explicacao: "O Decreto 7.508/2011 prevê o mapa da saúde e as regiões de saúde para a gestão compartilhada. As demais são incorretas: não há contrato único centralizado, municípios têm responsabilidades, e a participação social é obrigatória.",
+        analise: [
+            "A) Correta — conforme Decreto 7.508/2011.",
+            "B) Incorreta — a gestão é compartilhada, não centralizada.",
+            "C) Incorreta — os municípios têm suas responsabilidades.",
+            "D) Incorreta — os Conselhos de Saúde são fundamentais."
+        ],
+        fonte: "Decreto 7.508/2011"
+    },
+    {
+        id: 36,
+        eixo: "Eixo 3 — Políticas públicas e gestão do SUS",
+        dificuldade: "Média",
+        texto: "Os indicadores de saúde são ferramentas essenciais para o monitoramento e avaliação. Um indicador de efetividade, por exemplo, mede:",
+        alternativas: [
+            "o impacto da ação de saúde na melhoria das condições de vida da população, como a redução da mortalidade infantil.",
+            "a relação entre o custo do serviço e o número de procedimentos realizados.",
+            "a produção de serviços, como o número de consultas realizadas.",
+            "a satisfação do usuário com o atendimento recebido."
+        ],
+        correta: 0,
+        explicacao: "Efetividade mede o impacto da intervenção na saúde da população (ex.: redução de mortalidade). Eficiência mede custo-benefício; eficácia mede produção; satisfação é outra dimensão.",
+        analise: [
+            "A) Correta — conceito de efetividade.",
+            "B) Incorreta — isso é eficiência.",
+            "C) Incorreta — isso é eficácia ou produção.",
+            "D) Incorreta — isso é satisfação do usuário."
+        ],
+        fonte: "Avaliação em saúde; indicadores"
+    },
+    {
+        id: 37,
+        eixo: "Eixo 3 — Políticas públicas e gestão do SUS",
+        dificuldade: "Fácil",
+        texto: "A participação social no SUS é institucionalizada por meio de instâncias colegiadas. São exemplos dessas instâncias:",
+        alternativas: [
+            "a Conferência de Saúde e o Conselho de Saúde, em cada esfera de governo.",
+            "a Secretaria de Saúde e o Ministério da Saúde.",
+            "o Tribunal de Contas e o Ministério Público.",
+            "a Auditoria do SUS e a Ouvidoria."
+        ],
+        correta: 0,
+        explicacao: "As Conferências e os Conselhos de Saúde são as instâncias colegiadas de participação social no SUS. As demais são órgãos de gestão, controle ou auditoria, não instâncias de participação social.",
+        analise: [
+            "A) Correta — Conferências e Conselhos.",
+            "B) Incorreta — são órgãos executivos.",
+            "C) Incorreta — são órgãos de controle externo.",
+            "D) Incorreta — são órgãos de auditoria/ouvidoria."
+        ],
+        fonte: "Lei 8.142/90"
+    },
+    {
+        id: 38,
+        eixo: "Eixo 3 — Políticas públicas e gestão do SUS",
+        dificuldade: "Difícil",
+        texto: "A avaliação de políticas públicas em saúde pode ser classificada em relação à sua função. A avaliação que ocorre durante a implementação, para ajustar o curso das ações, é chamada de:",
+        alternativas: [
+            "avaliação de processo ou formativa.",
+            "avaliação ex-ante.",
+            "avaliação de impacto ou resultado.",
+            "avaliação de eficiência."
+        ],
+        correta: 0,
+        explicacao: "A avaliação formativa (ou de processo) ocorre durante a implementação, com caráter de monitoramento e ajuste. Avaliação ex-ante é antes, impacto é depois, eficiência mede custos.",
+        analise: [
+            "A) Correta — avaliação formativa/processo.",
+            "B) Incorreta — ex-ante é antes da implementação.",
+            "C) Incorreta — impacto/resultado ocorre ao final ou após.",
+            "D) Incorreta — eficiência é uma dimensão, não uma função."
+        ],
+        fonte: "Políticas públicas; avaliação de programas"
+    },
+    // ========== EIXO 4 — Auditoria e legislação aplicada (12) ==========
+    {
+        id: 39,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Média",
+        texto: "Na auditoria em serviços de saúde, a auditoria preventiva é realizada:",
+        alternativas: [
+            "antes da ocorrência do evento ou da realização do serviço, com o objetivo de identificar riscos e evitar irregularidades.",
+            "durante a realização do serviço, para corrigir falhas imediatamente.",
+            "após a conclusão do serviço, para verificar a conformidade e os resultados.",
+            "exclusivamente para avaliar a eficiência financeira, sem considerar aspectos técnicos."
+        ],
+        correta: 0,
+        explicacao: "Auditoria preventiva ocorre antes do fato, para prevenir riscos. Concorrente é durante, retrospectiva é após. A opção D é incorreta, pois a auditoria preventiva abrange aspectos técnicos e financeiros.",
+        analise: [
+            "A) Correta — definição de auditoria preventiva.",
+            "B) Incorreta — isso é auditoria concorrente.",
+            "C) Incorreta — isso é auditoria retrospectiva.",
+            "D) Incorreta — auditoria preventiva abrange vários aspectos."
+        ],
+        fonte: "Auditoria em saúde; conceitos"
+    },
+    {
+        id: 40,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Difícil",
+        texto: "A auditoria operativa, diferentemente da auditoria analítica, tem como foco principal:",
+        alternativas: [
+            "a análise dos processos e procedimentos operacionais, verificando a eficiência, eficácia e efetividade das ações.",
+            "a verificação de registros e documentos financeiros, com ênfase na conformidade numérica.",
+            "a análise de notas fiscais e comprovantes de pagamento.",
+            "a conferência de dados cadastrais dos usuários."
+        ],
+        correta: 0,
+        explicacao: "Auditoria operativa analisa processos e procedimentos, incluindo dimensões de eficiência, eficácia e efetividade. A analítica foca em dados/documentos. As demais são incorretas.",
+        analise: [
+            "A) Correta — definição de auditoria operativa.",
+            "B) Incorreta — isso é auditoria analítica.",
+            "C) Incorreta — foco muito restrito.",
+            "D) Incorreta — não é o foco principal."
+        ],
+        fonte: "Auditoria em saúde; tipos"
+    },
+    {
+        id: 41,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Média",
+        texto: "Em um processo de auditoria, os 'achados de auditoria' referem-se a:",
+        alternativas: [
+            "fatos, evidências ou situações identificadas durante o trabalho, que podem indicar conformidade ou não conformidade com os critérios estabelecidos.",
+            "apenas as irregularidades e fraudes encontradas.",
+            "as recomendações finais feitas pelo auditor.",
+            "os documentos analisados, sem interpretação dos fatos."
+        ],
+        correta: 0,
+        explicacao: "Achados são fatos ou evidências encontradas, incluindo conformidades e não conformidades. Não se limitam a irregularidades, não são recomendações, e não são só documentos, mas incluem interpretação.",
+        analise: [
+            "A) Correta — definição de achados de auditoria.",
+            "B) Incorreta — inclui também conformidades.",
+            "C) Incorreta — achados são constatações, não recomendações.",
+            "D) Incorreta — incluem interpretação das evidências."
+        ],
+        fonte: "Normas de auditoria; ISSAI"
+    },
+    {
+        id: 42,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Fácil",
+        texto: "O relatório de auditoria, documento formal que consolida os resultados do trabalho, deve conter, entre outros elementos:",
+        alternativas: [
+            "os objetivos, o escopo, os achados, as conclusões e as recomendações.",
+            "apenas a lista de irregularidades encontradas.",
+            "os dados financeiros, desconsiderando aspectos de gestão.",
+            "a opinião exclusiva do auditor, sem fundamentação."
+        ],
+        correta: 0,
+        explicacao: "O relatório de auditoria deve ser completo, com objetivos, escopo, achados, conclusões e recomendações. As demais são parciais ou incorretas (só irregularidades, só dados financeiros, opinião sem fundamentação).",
+        analise: [
+            "A) Correta — elementos do relatório de auditoria.",
+            "B) Incorreta — relatório é mais abrangente.",
+            "C) Incorreta — abrange aspectos de gestão também.",
+            "D) Incorreta — deve ser fundamentado."
+        ],
+        fonte: "Normas de auditoria; relatórios"
+    },
+    {
+        id: 43,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Difícil",
+        texto: "A Lei nº 14.133/2021, ao dispor sobre o regime diferenciado de contratações, permite a utilização de contrato integrado. Nessa modalidade, a responsabilidade pelo desenvolvimento do projeto básico e pela execução da obra é:",
+        alternativas: [
+            "do contratado, que elabora o projeto básico e executivo, ficando a administração responsável pela fiscalização.",
+            "exclusiva da administração pública, que elabora todo o projeto antes da licitação.",
+            "compartilhada, com a administração elaborando o projeto básico e o contratado o executivo.",
+            "do contratado, mas a administração elabora o projeto básico obrigatoriamente."
+        ],
+        correta: 0,
+        explicacao: "No contrato integrado, o contratado elabora o projeto básico e executivo (art. 46 da Lei 14.133). A administração fiscaliza. As demais são incorretas: a administração não elabora o projeto básico nesse caso.",
+        analise: [
+            "A) Correta — conforme art. 46 da Lei 14.133/2021.",
+            "B) Incorreta — no integrado, o contratado elabora o projeto.",
+            "C) Incorreta — não é compartilhado nesse sentido.",
+            "D) Incorreta — a administração não elabora o projeto básico."
+        ],
+        fonte: "Lei 14.133/2021, art. 46"
+    },
+    {
+        id: 44,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Média",
+        texto: "A Portaria de Consolidação GM/MS nº 1, de 28 de setembro de 2017, consolida as normas sobre:",
+        alternativas: [
+            "os direitos e deveres dos usuários da saúde, a organização do SUS e a gestão do sistema.",
+            "a gestão de recursos humanos no SUS.",
+            "a política de saúde mental e atenção psicossocial.",
+            "a vigilância em saúde e o controle de doenças."
+        ],
+        correta: 0,
+        explicacao: "A Portaria de Consolidação nº 1/GM/MS consolida normas sobre direitos dos usuários, organização e gestão do SUS. As demais portarias consolidadas tratam de outros temas específicos (RH, saúde mental, vigilância).",
+        analise: [
+            "A) Correta — conteúdo da Portaria de Consolidação nº 1.",
+            "B) Incorreta — é a Portaria de Consolidação nº 2.",
+            "C) Incorreta — é a Portaria de Consolidação nº 3.",
+            "D) Incorreta — é a Portaria de Consolidação nº 4."
+        ],
+        fonte: "Portaria de Consolidação GM/MS nº 1/2017"
+    },
+    {
+        id: 45,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Difícil",
+        texto: "A auditoria retrospectiva na saúde, quando comparada à concorrente, caracteriza-se por:",
+        alternativas: [
+            "ser realizada após a conclusão do serviço ou evento, analisando a conformidade e os resultados já produzidos.",
+            "ser realizada durante o serviço, com capacidade de correção imediata.",
+            "ser realizada antes do serviço, para prevenir riscos.",
+            "ter caráter exclusivamente financeiro, sem análise clínica."
+        ],
+        correta: 0,
+        explicacao: "Auditoria retrospectiva ocorre após o evento, analisando conformidade e resultados. A concorrente é durante, a preventiva é antes, e a retrospectiva não é exclusivamente financeira.",
+        analise: [
+            "A) Correta — definição de auditoria retrospectiva.",
+            "B) Incorreta — isso é auditoria concorrente.",
+            "C) Incorreta — isso é auditoria preventiva.",
+            "D) Incorreta — aborda aspectos clínicos e de gestão também."
+        ],
+        fonte: "Auditoria em saúde; tipos"
+    },
+    {
+        id: 46,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Média",
+        texto: "Na auditoria analítica, o foco principal está em:",
+        alternativas: [
+            "dados, registros, documentos e informações gerenciais, com ênfase na análise de conformidade e consistência.",
+            "processos operacionais e fluxos de trabalho.",
+            "entrevistas com os profissionais envolvidos.",
+            "observação direta das atividades em campo."
+        ],
+        correta: 0,
+        explicacao: "Auditoria analítica foca em dados e documentos (análise de registros). Operativa foca em processos e fluxos. Entrevistas e observação podem fazer parte, mas não são o foco principal da analítica.",
+        analise: [
+            "A) Correta — foco da auditoria analítica.",
+            "B) Incorreta — isso é auditoria operativa.",
+            "C) Incorreta — são técnicas, não foco principal.",
+            "D) Incorreta — são técnicas, não foco principal."
+        ],
+        fonte: "Auditoria em saúde; tipos"
+    },
+    {
+        id: 47,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Fácil",
+        texto: "Sobre a Lei nº 14.133/2021, é correto afirmar que ela estabelece, como princípio fundamental, a:",
+        alternativas: [
+            "isonomia e a competitividade, com a busca pela proposta mais vantajosa para a administração.",
+            "dispensa do planejamento prévio, priorizando a contratação direta.",
+            "exclusividade de julgamento pelo menor preço.",
+            "não aplicação a contratos de serviços de saúde."
+        ],
+        correta: 0,
+        explicacao: "A Nova Lei de Licitações tem como princípios a isonomia, competitividade e busca pela proposta mais vantajosa. As demais são incorretas: exige planejamento, não é só menor preço, e aplica-se à saúde.",
+        analise: [
+            "A) Correta — princípios da Lei 14.133/2021.",
+            "B) Incorreta — o planejamento é obrigatório.",
+            "C) Incorreta — há outros critérios de julgamento.",
+            "D) Incorreta — aplica-se aos serviços de saúde."
+        ],
+        fonte: "Lei 14.133/2021, art. 5º"
+    },
+    {
+        id: 48,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Média",
+        texto: "Na gestão de contratos administrativos, a fiscalização do contrato é uma atribuição do gestor do contrato. A lei 14.133/2021 estabelece que:",
+        alternativas: [
+            "o gestor do contrato deve acompanhar e fiscalizar a execução, registrando ocorrências e promovendo a correção de falhas.",
+            "a fiscalização é de responsabilidade exclusiva do setor jurídico.",
+            "o gestor pode delegar toda a fiscalização ao contratado, por meio de autoregulação.",
+            "a fiscalização se limita à conferência de prazos, sem verificação de qualidade."
+        ],
+        correta: 0,
+        explicacao: "O gestor do contrato é responsável pela fiscalização, registrando ocorrências e corrigindo falhas. As demais são incorretas: não é exclusiva do jurídico, não pode delegar totalmente ao contratado, e não se limita a prazos.",
+        analise: [
+            "A) Correta — atribuições do gestor do contrato.",
+            "B) Incorreta — o gestor é a autoridade designada para fiscalização.",
+            "C) Incorreta — não pode delegar a fiscalização.",
+            "D) Incorreta — inclui qualidade e conformidade."
+        ],
+        fonte: "Lei 14.133/2021, art. 117"
+    },
+    {
+        id: 49,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Difícil",
+        texto: "A Portaria de Consolidação GM/MS nº 4, de 28 de setembro de 2017, consolida normas sobre:",
+        alternativas: [
+            "a vigilância em saúde, abrangendo vigilância epidemiológica, sanitária e ambiental.",
+            "a gestão de recursos humanos no SUS.",
+            "os direitos e deveres dos usuários da saúde.",
+            "a política de saúde mental e atenção psicossocial."
+        ],
+        correta: 0,
+        explicacao: "A Portaria de Consolidação nº 4/GM/MS consolida normas de vigilância em saúde. As demais são de outras portarias: RH (nº 2), direitos dos usuários (nº 1) e saúde mental (nº 3).",
+        analise: [
+            "A) Correta — conteúdo da Portaria de Consolidação nº 4.",
+            "B) Incorreta — é a Portaria de Consolidação nº 2.",
+            "C) Incorreta — é a Portaria de Consolidação nº 1.",
+            "D) Incorreta — é a Portaria de Consolidação nº 3."
+        ],
+        fonte: "Portaria de Consolidação GM/MS nº 4/2017"
+    },
+    {
+        id: 50,
+        eixo: "Eixo 4 — Auditoria e legislação aplicada",
+        dificuldade: "Média",
+        texto: "As evidências em auditoria são classificadas quanto à sua natureza. Uma evidência física, por exemplo, é:",
+        alternativas: [
+            "um objeto, material ou documento original que pode ser examinado diretamente (ex.: prontuário, equipamento, nota fiscal).",
+            "um depoimento de pessoa que presenciou um fato.",
+            "uma análise matemática de dados.",
+            "uma constatação inferida, sem confirmação material."
+        ],
+        correta: 0,
+        explicacao: "Evidência física é material ou documental, passível de exame direto. Depoimento é evidência testemunhal, análise matemática é evidência analítica, e constatação inferida não é evidência física.",
+        analise: [
+            "A) Correta — definição de evidência física.",
+            "B) Incorreta — isso é evidência testemunhal.",
+            "C) Incorreta — isso é evidência analítica.",
+            "D) Incorreta — evidência não é inferida sem confirmação."
+        ],
+        fonte: "Auditoria; tipos de evidência"
+    }
+];
 
-        // Funções de configuração
-        function toggleDiscipline(discipline) {
-            const item = document.querySelector(`[data-discipline="${discipline}"]`);
-            const checkbox = document.getElementById(`disc${discipline.charAt(0).toUpperCase() + discipline.slice(1)}`);
-            
-            if (selectedDisciplines.includes(discipline)) {
-                selectedDisciplines = selectedDisciplines.filter(d => d !== discipline);
-                item.classList.remove('selected');
-                checkbox.checked = false;
-            } else {
-                selectedDisciplines.push(discipline);
-                item.classList.add('selected');
-                checkbox.checked = true;
-            }
-            
-            updateTotalQuestions();
-            saveConfig();
-        }
+// ============================================================
+// ESTADO DO APLICATIVO
+// ============================================================
+let estado = {
+    indiceAtual: 0,
+    respostas: [],            // guarda o índice da alternativa escolhida ou -1
+    mostrouFeedback: false,
+    acertos: 0,
+    erros: 0,
+    respondidas: 0,
+    // acumuladores por eixo
+    acertosPorEixo: { "Eixo 1": 0, "Eixo 2": 0, "Eixo 3": 0, "Eixo 4": 0 },
+    errosPorEixo: { "Eixo 1": 0, "Eixo 2": 0, "Eixo 3": 0, "Eixo 4": 0 },
+    questoesPorEixo: { "Eixo 1": 0, "Eixo 2": 0, "Eixo 3": 0, "Eixo 4": 0 },
+    // por dificuldade
+    acertosPorDificuldade: { "Fácil": 0, "Média": 0, "Difícil": 0 },
+    errosPorDificuldade: { "Fácil": 0, "Média": 0, "Difícil": 0 },
+    questoesPorDificuldade: { "Fácil": 0, "Média": 0, "Difícil": 0 },
+    // tipos de erro
+    errosPorCausa: { desconhecimento: 0, confusao: 0, interpretacao: 0, distracao: 0, tempo: 0 },
+    // histórico de erros para revisão
+    historicoErros: [],       // { id, eixo, dificuldade, topico, alternativas, correta, suaResposta, explicacao }
+    // simulado ativo?
+    simuladoAtivo: false,
+    // pausa
+    pausa: false,
+    // questões anuladas (substituídas)
+    anuladas: [],
+    // dica ativa
+    dicaAtiva: false,
+};
 
-        function updateTotalQuestions() {
-            const qtyRadios = document.getElementsByName('questionCount');
-            let selectedQty = 100;
-            for (let radio of qtyRadios) {
-                if (radio.checked) {
-                    selectedQty = parseInt(radio.value);
-                    break;
-                }
-            }
-            
-            const availableQuestions = selectedDisciplines.reduce((sum, disc) => sum + disciplineCounts[disc], 0);
-            totalQuestions = Math.min(selectedQty, availableQuestions);
-            
-            document.getElementById('totalQuestions').textContent = `Total: ${totalQuestions} questões (${availableQuestions} disponíveis)`;
-            
-            document.getElementById('btnStart').disabled = selectedDisciplines.length === 0;
-        }
+// ============================================================
+// FUNÇÕES PRINCIPAIS
+// ============================================================
 
-        // Funções de salvamento
-        function saveConfig() {
-            const config = {
-                disciplines: selectedDisciplines,
-                totalQuestions: totalQuestions,
-                timestamp: new Date().getTime()
-            };
-            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
-        }
+function getQuestaoAtual() {
+    return questoes[estado.indiceAtual];
+}
 
-        function saveProgress() {
-            if (!quizData.length) return;
-            
-            const session = {
-                quizData: quizData.map(q => ({
-                    ...q,
-                    // Não salvar as questões inteiras para economizar espaço
-                    question: q.question,
-                    options: q.options,
-                    correct: q.correct,
-                    explanation: q.explanation,
-                    discipline: q.discipline,
-                    disciplineName: q.disciplineName
-                })),
-                currentQuestion: currentQuestion,
-                answers: answers,
-                answered: answered,
-                confirmed: confirmed,
-                timestamp: new Date().getTime()
-            };
-            
-            localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-            
-            // Feedback visual
-            const btn = document.getElementById('btnSave');
-            const originalText = btn.textContent;
-            btn.textContent = '✓ Salvo!';
-            btn.style.background = '#4caf50';
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = '';
-            }, 2000);
-        }
+function renderizarQuestao() {
+    if (estado.indiceAtual >= questoes.length) {
+        document.getElementById('questionBox').style.display = 'none';
+        document.getElementById('feedback').classList.remove('show');
+        document.getElementById('painelResumo').innerHTML = '<div style="text-align:center;padding:20px;">🏁 Todas as questões respondidas! Use FINALIZAR para ver o relatório completo.</div>';
+        return;
+    }
+    const q = getQuestaoAtual();
+    document.getElementById('qNumero').textContent = `Questão ${q.id}`;
+    document.getElementById('qEixo').textContent = q.eixo;
+    const badgeDificuldade = document.getElementById('qDificuldade');
+    badgeDificuldade.textContent = q.dificuldade;
+    badgeDificuldade.className = 'badge ' + (q.dificuldade === 'Fácil' ? 'easy' : q.dificuldade === 'Média' ? 'medium' : 'hard');
+    document.getElementById('qTexto').textContent = q.texto;
 
-        function checkSavedSession() {
-            const session = localStorage.getItem(SESSION_KEY);
-            const config = localStorage.getItem(CONFIG_KEY);
-            
-            if (session && config) {
-                try {
-                    const sessionData = JSON.parse(session);
-                    const configData = JSON.parse(config);
-                    
-                    const sessionDate = new Date(sessionData.timestamp);
-                    const now = new Date();
-                    const hoursDiff = Math.round((now - sessionDate) / (1000 * 60 * 60));
-                    
-                    const answeredCount = sessionData.confirmed.filter(c => c).length;
-                    const totalCount = sessionData.quizData.length;
-                    
-                    document.getElementById('sessionInfo').innerHTML = 
-                        `Você fez ${answeredCount} de ${totalCount} questões há ${hoursDiff} horas.`;
-                    
-                    document.getElementById('continueSession').classList.add('show');
-                } catch (e) {
-                    console.error('Erro ao carregar sessão:', e);
-                }
-            }
-        }
+    const container = document.getElementById('alternativasContainer');
+    container.innerHTML = '';
+    const letras = ['A', 'B', 'C', 'D'];
+    q.alternativas.forEach((texto, idx) => {
+        const div = document.createElement('div');
+        div.className = 'alt';
+        div.dataset.idx = idx;
+        div.innerHTML = `<span class="alt-letter">${letras[idx]})</span><span class="alt-text">${texto}</span>`;
+        div.addEventListener('click', () => selecionarAlternativa(idx));
+        container.appendChild(div);
+    });
 
-        function loadSavedSession() {
-            const session = JSON.parse(localStorage.getItem(SESSION_KEY));
-            if (session) {
-                quizData = session.quizData;
-                currentQuestion = session.currentQuestion;
-                answers = session.answers;
-                answered = session.answered;
-                confirmed = session.confirmed;
-                
-                startQuiz(true);
-            }
-        }
-
-        function startNewSession() {
-            localStorage.removeItem(SESSION_KEY);
-            document.getElementById('continueSession').classList.remove('show');
-            showSetup();
-        }
-
-        // Funções do quiz
-        function startQuiz(continueSession = false) {
-            if (!continueSession) {
-                // Criar novo quiz baseado na configuração
-                quizData = [];
-                
-                selectedDisciplines.forEach(discipline => {
-                    const questions = questionBank[discipline];
-                    // Embaralhar e pegar a quantidade proporcional
-                    const shuffled = shuffleArray([...questions]);
-                    const qtyPerDiscipline = Math.floor(totalQuestions / selectedDisciplines.length);
-                    
-                    // Distribuir questões proporcionalmente
-                    let qty = qtyPerDiscipline;
-                    if (discipline === selectedDisciplines[selectedDisciplines.length - 1]) {
-                        qty = totalQuestions - (qtyPerDiscipline * (selectedDisciplines.length - 1));
-                    }
-                    
-                    const selected = shuffled.slice(0, Math.min(qty, questions.length));
-                    selected.forEach(q => {
-                        quizData.push({
-                            ...q,
-                            discipline: discipline,
-                            disciplineName: getDisciplineName(discipline)
-                        });
-                    });
-                });
-                
-                // Embaralhar tudo
-                quizData = shuffleArray(quizData);
-                
-                // Inicializar arrays
-                answers = new Array(quizData.length).fill(null);
-                answered = new Array(quizData.length).fill(false);
-                confirmed = new Array(quizData.length).fill(false);
-                currentQuestion = 0;
-            }
-            
-            // Atualizar interface
-            document.getElementById('setupContainer').style.display = 'none';
-            document.getElementById('continueSession').style.display = 'none';
-            document.getElementById('disciplineMiniCards').style.display = 'flex';
-            document.getElementById('progressBar').style.display = 'block';
-            document.getElementById('quizContainer').style.display = 'block';
-            
-            // Atualizar contadores nos cards
-            updateDisciplineCounts();
-            
-            // Carregar primeira questão
-            loadQuestion();
-        }
-
-        function getDisciplineName(discipline) {
-            const names = {
-                legislacao: 'Legislação e SUS',
-                portugues: 'Língua Portuguesa',
-                informatica: 'Informática Básica',
-                raciocinio: 'Raciocínio Lógico',
-                historia: 'História e Geografia do Tocantins'
-            };
-            return names[discipline];
-        }
-
-        function showSetup() {
-            document.getElementById('setupContainer').style.display = 'block';
-            document.getElementById('disciplineMiniCards').style.display = 'none';
-            document.getElementById('progressBar').style.display = 'none';
-            document.getElementById('quizContainer').style.display = 'none';
-            document.getElementById('resultsContainer').classList.remove('show');
-            
-            checkSavedSession();
-        }
-
-        // Funções de navegação e resposta
-        function loadQuestion() {
-            const question = quizData[currentQuestion];
-            document.getElementById('questionNumber').textContent = `Questão ${currentQuestion + 1} de ${quizData.length}`;
-            
-            const disciplineTag = document.getElementById('disciplineTag');
-            disciplineTag.textContent = question.disciplineName;
-            disciplineTag.className = 'discipline-tag';
-            
-            if (question.discipline === 'legislacao') {
-                disciplineTag.classList.add('tag-legislacao');
-            } else if (question.discipline === 'portugues') {
-                disciplineTag.classList.add('tag-portugues');
-            } else if (question.discipline === 'informatica') {
-                disciplineTag.classList.add('tag-informatica');
-            } else if (question.discipline === 'raciocinio') {
-                disciplineTag.classList.add('tag-raciocinio');
-            } else if (question.discipline === 'historia') {
-                disciplineTag.classList.add('tag-historia');
-            }
-            
-            document.getElementById('questionText').textContent = question.question;
-
-            const optionsContainer = document.getElementById('optionsContainer');
-            optionsContainer.innerHTML = '';
-
-            question.options.forEach((option, index) => {
-                const optionDiv = document.createElement('div');
-                optionDiv.className = 'option';
-                if (answers[currentQuestion] === index) optionDiv.classList.add('selected');
-                if (confirmed[currentQuestion]) {
-                    optionDiv.classList.add('answered');
-                    if (index === question.correct) optionDiv.classList.add('correct');
-                    else if (index === answers[currentQuestion]) optionDiv.classList.add('incorrect');
-                }
-
-                const input = document.createElement('input');
-                input.type = 'radio';
-                input.name = 'option';
-                input.value = index;
-                input.id = `option${index}`;
-                input.checked = answers[currentQuestion] === index;
-                input.disabled = confirmed[currentQuestion];
-                input.onchange = () => selectOption(index);
-
-                const label = document.createElement('label');
-                label.htmlFor = `option${index}`;
-                label.textContent = `${String.fromCharCode(65 + index)}) ${option}`;
-
-                optionDiv.appendChild(input);
-                optionDiv.appendChild(label);
-                optionsContainer.appendChild(optionDiv);
-            });
-
-            updateProgressBar();
-            updateButtons();
-            updateDisciplinePerformance();
-            
-            if (confirmed[currentQuestion]) {
-                showExplanation();
-            } else {
-                document.getElementById('explanationBox').classList.remove('show');
-            }
-        }
-
-        function selectOption(index) {
-            if (!confirmed[currentQuestion]) {
-                answers[currentQuestion] = index;
-                answered[currentQuestion] = true;
-                
-                const options = document.querySelectorAll('.option');
-                options.forEach((opt, i) => {
-                    opt.classList.remove('selected');
-                    if (i === index) opt.classList.add('selected');
-                });
-                
-                updateButtons();
-            }
-        }
-
-        function confirmAnswer() {
-            if (answered[currentQuestion]) {
-                confirmed[currentQuestion] = true;
-                updateDisciplinePerformance();
-                saveProgress();
-                loadQuestion();
-            }
-        }
-
-        function showExplanation() {
-            const question = quizData[currentQuestion];
-            const isCorrect = answers[currentQuestion] === question.correct;
-            
-            document.getElementById('explanationTitle').textContent = isCorrect ? '✓ Resposta Correta!' : '✗ Resposta Incorreta';
-            document.getElementById('explanationText').textContent = question.explanation;
-            document.getElementById('explanationBox').classList.add('show');
-        }
-
-        function nextQuestion() {
-            if (currentQuestion < quizData.length - 1) {
-                currentQuestion++;
-                loadQuestion();
-            } else {
-                showResults();
-            }
-        }
-
-        function previousQuestion() {
-            if (currentQuestion > 0) {
-                currentQuestion--;
-                loadQuestion();
-            }
-        }
-
-        function updateProgressBar() {
-            const answeredCount = confirmed.filter(c => c).length;
-            const progress = (answeredCount / quizData.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-        }
-
-        function updateButtons() {
-            document.getElementById('btnPrev').disabled = currentQuestion === 0;
-            
-            if (confirmed[currentQuestion]) {
-                document.getElementById('btnConfirm').style.display = 'none';
-                document.getElementById('btnNext').style.display = 'block';
-                document.getElementById('btnNext').textContent = currentQuestion === quizData.length - 1 ? 'Finalizar Quiz →' : 'Próxima →';
-            } else {
-                document.getElementById('btnConfirm').style.display = 'block';
-                document.getElementById('btnNext').style.display = 'none';
-                document.getElementById('btnConfirm').disabled = !answered[currentQuestion];
-            }
-        }
-
-        function updateDisciplineCounts() {
-            const counts = {
-                legislacao: 0,
-                portugues: 0,
-                informatica: 0,
-                raciocinio: 0,
-                historia: 0
-            };
-            
-            quizData.forEach(q => {
-                counts[q.discipline]++;
-            });
-            
-            document.getElementById('scoreLeg').textContent = `0/${counts.legislacao}`;
-            document.getElementById('scorePort').textContent = `0/${counts.portugues}`;
-            document.getElementById('scoreInf').textContent = `0/${counts.informatica}`;
-            document.getElementById('scoreRac').textContent = `0/${counts.raciocinio}`;
-            document.getElementById('scoreHist').textContent = `0/${counts.historia}`;
-        }
-
-        function updateDisciplinePerformance() {
-            const stats = {
-                legislacao: { total: 0, acertos: 0 },
-                portugues: { total: 0, acertos: 0 },
-                informatica: { total: 0, acertos: 0 },
-                raciocinio: { total: 0, acertos: 0 },
-                historia: { total: 0, acertos: 0 }
-            };
-
-            for (let i = 0; i < quizData.length; i++) {
-                stats[quizData[i].discipline].total++;
-                if (confirmed[i] && answers[i] === quizData[i].correct) {
-                    stats[quizData[i].discipline].acertos++;
-                }
-            }
-
-            document.getElementById('scoreLeg').textContent = `${stats.legislacao.acertos}/${stats.legislacao.total}`;
-            document.getElementById('progressLeg').style.width = stats.legislacao.total > 0 ? `${(stats.legislacao.acertos/stats.legislacao.total)*100}%` : '0%';
-
-            document.getElementById('scorePort').textContent = `${stats.portugues.acertos}/${stats.portugues.total}`;
-            document.getElementById('progressPort').style.width = stats.portugues.total > 0 ? `${(stats.portugues.acertos/stats.portugues.total)*100}%` : '0%';
-
-            document.getElementById('scoreInf').textContent = `${stats.informatica.acertos}/${stats.informatica.total}`;
-            document.getElementById('progressInf').style.width = stats.informatica.total > 0 ? `${(stats.informatica.acertos/stats.informatica.total)*100}%` : '0%';
-
-            document.getElementById('scoreRac').textContent = `${stats.raciocinio.acertos}/${stats.raciocinio.total}`;
-            document.getElementById('progressRac').style.width = stats.raciocinio.total > 0 ? `${(stats.raciocinio.acertos/stats.raciocinio.total)*100}%` : '0%';
-
-            document.getElementById('scoreHist').textContent = `${stats.historia.acertos}/${stats.historia.total}`;
-            document.getElementById('progressHist').style.width = stats.historia.total > 0 ? `${(stats.historia.acertos/stats.historia.total)*100}%` : '0%';
-        }
-
-        function showResults() {
-            let correctCount = 0;
-            let correctByDiscipline = {
-                legislacao: { total: 0, acertos: 0 },
-                portugues: { total: 0, acertos: 0 },
-                informatica: { total: 0, acertos: 0 },
-                raciocinio: { total: 0, acertos: 0 },
-                historia: { total: 0, acertos: 0 }
-            };
-            
-            for (let i = 0; i < quizData.length; i++) {
-                correctByDiscipline[quizData[i].discipline].total++;
-                if (answers[i] === quizData[i].correct) {
-                    correctCount++;
-                    correctByDiscipline[quizData[i].discipline].acertos++;
-                }
-            }
-            
-            const percentage = Math.round((correctCount / quizData.length) * 100);
-            
-            document.getElementById('scorePercentage').textContent = percentage + '%';
-            
-            let message = '';
-            if (percentage >= 90) message = '🌟 Excelente! Você domina todos os conteúdos!';
-            else if (percentage >= 70) message = '📚 Muito bem! Continue estudando.';
-            else if (percentage >= 50) message = '✏️ Bom estudo! Reveja as disciplinas com menor aproveitamento.';
-            else message = '📖 Estude mais e tente novamente!';
-            
-            document.getElementById('resultsMessage').textContent = message;
-            document.getElementById('resultsDetails').textContent = `Total: ${correctCount} de ${quizData.length} questões.`;
-            
-            const summaryDiv = document.getElementById('disciplineSummary');
-            summaryDiv.innerHTML = `
-                <div class="discipline-card leg">
-                    <div class="discipline-name">Legislação</div>
-                    <div class="discipline-score">${correctByDiscipline.legislacao.acertos}/${correctByDiscipline.legislacao.total}</div>
-                    <div>${Math.round(correctByDiscipline.legislacao.acertos/correctByDiscipline.legislacao.total*100) || 0}%</div>
-                </div>
-                <div class="discipline-card port">
-                    <div class="discipline-name">Português</div>
-                    <div class="discipline-score">${correctByDiscipline.portugues.acertos}/${correctByDiscipline.portugues.total}</div>
-                    <div>${Math.round(correctByDiscipline.portugues.acertos/correctByDiscipline.portugues.total*100) || 0}%</div>
-                </div>
-                <div class="discipline-card inf">
-                    <div class="discipline-name">Informática</div>
-                    <div class="discipline-score">${correctByDiscipline.informatica.acertos}/${correctByDiscipline.informatica.total}</div>
-                    <div>${Math.round(correctByDiscipline.informatica.acertos/correctByDiscipline.informatica.total*100) || 0}%</div>
-                </div>
-                <div class="discipline-card rac">
-                    <div class="discipline-name">Raciocínio</div>
-                    <div class="discipline-score">${correctByDiscipline.raciocinio.acertos}/${correctByDiscipline.raciocinio.total}</div>
-                    <div>${Math.round(correctByDiscipline.raciocinio.acertos/correctByDiscipline.raciocinio.total*100) || 0}%</div>
-                </div>
-                <div class="discipline-card hist">
-                    <div class="discipline-name">Tocantins</div>
-                    <div class="discipline-score">${correctByDiscipline.historia.acertos}/${correctByDiscipline.historia.total}</div>
-                    <div>${Math.round(correctByDiscipline.historia.acertos/correctByDiscipline.historia.total*100) || 0}%</div>
-                </div>
-            `;
-            
-            document.getElementById('quizContainer').style.display = 'none';
-            document.getElementById('resultsContainer').classList.add('show');
-            
-            // Limpar sessão após concluir
-            localStorage.removeItem(SESSION_KEY);
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
-            // Configurar listeners para rádios
-            document.querySelectorAll('input[name="questionCount"]').forEach(radio => {
-                radio.addEventListener('change', updateTotalQuestions);
-            });
-            
-            updateTotalQuestions();
-            checkSavedSession();
+    // Se já havia uma resposta para essa questão, restaurar
+    if (estado.respostas[estado.indiceAtual] !== undefined && estado.respostas[estado.indiceAtual] !== -1) {
+        const idx = estado.respostas[estado.indiceAtual];
+        const altDivs = container.querySelectorAll('.alt');
+        altDivs.forEach((div, i) => {
+            if (i === idx) div.classList.add('selected');
         });
-    </script>
+        document.getElementById('btnResponder').disabled = false;
+    } else {
+        document.getElementById('btnResponder').disabled = true;
+    }
+
+    document.getElementById('btnProxima').disabled = true;
+    document.getElementById('feedback').classList.remove('show');
+
+    // Se simulado ativo, responder automaticamente? Não, aguarda interação.
+
+    atualizarPainelResumo();
+}
+
+function selecionarAlternativa(idx) {
+    if (estado.mostrouFeedback) return;
+    const q = getQuestaoAtual();
+    if (estado.respostas[estado.indiceAtual] !== undefined && estado.respostas[estado.indiceAtual] !== -1) {
+        // já respondeu
+        return;
+    }
+    const altDivs = document.querySelectorAll('#alternativasContainer .alt');
+    altDivs.forEach((div, i) => {
+        div.classList.toggle('selected', i === idx);
+    });
+    document.getElementById('btnResponder').disabled = false;
+    // armazena temporariamente, mas só confirma no botão Responder
+    estado.respostas[estado.indiceAtual] = idx;
+}
+
+function responder() {
+    if (estado.mostrouFeedback) return;
+    const q = getQuestaoAtual();
+    const idx = estado.respostas[estado.indiceAtual];
+    if (idx === undefined || idx === -1) {
+        alert('Selecione uma alternativa antes de responder.');
+        return;
+    }
+    const correta = idx === q.correta;
+    if (correta) {
+        estado.acertos++;
+        estado.acertosPorEixo[q.eixo.split(' —')[0]] = (estado.acertosPorEixo[q.eixo.split(' —')[0]] || 0) + 1;
+        estado.acertosPorDificuldade[q.dificuldade] = (estado.acertosPorDificuldade[q.dificuldade] || 0) + 1;
+    } else {
+        estado.erros++;
+        estado.errosPorEixo[q.eixo.split(' —')[0]] = (estado.errosPorEixo[q.eixo.split(' —')[0]] || 0) + 1;
+        estado.errosPorDificuldade[q.dificuldade] = (estado.errosPorDificuldade[q.dificuldade] || 0) + 1;
+        // classificação automática simples (para fins de demonstração, classificamos como 'confusao' por padrão)
+        const causa = prompt('Classifique o erro (digite 1-desconhecimento, 2-confusão conceitual, 3-interpretação, 4-distração, 5-tempo):');
+        let causaKey = 'confusao';
+        if (causa === '1') causaKey = 'desconhecimento';
+        else if (causa === '2') causaKey = 'confusao';
+        else if (causa === '3') causaKey = 'interpretacao';
+        else if (causa === '4') causaKey = 'distracao';
+        else if (causa === '5') causaKey = 'tempo';
+        estado.errosPorCausa[causaKey] = (estado.errosPorCausa[causaKey] || 0) + 1;
+        estado.historicoErros.push({
+            id: q.id,
+            eixo: q.eixo,
+            dificuldade: q.dificuldade,
+            topico: q.eixo.split(' —')[0],
+            alternativas: q.alternativas,
+            correta: q.correta,
+            suaResposta: idx,
+            explicacao: q.explicacao,
+            analise: q.analise,
+            fonte: q.fonte
+        });
+    }
+    estado.respondidas++;
+    estado.questoesPorEixo[q.eixo.split(' —')[0]] = (estado.questoesPorEixo[q.eixo.split(' —')[0]] || 0) + 1;
+    estado.questoesPorDificuldade[q.dificuldade] = (estado.questoesPorDificuldade[q.dificuldade] || 0) + 1;
+
+    // mostrar feedback
+    mostrarFeedback(q, idx, correta);
+    estado.mostrouFeedback = true;
+    document.getElementById('btnResponder').disabled = true;
+    document.getElementById('btnProxima').disabled = false;
+    atualizarPainelResumo();
+}
+
+function mostrarFeedback(q, idx, correta) {
+    const fb = document.getElementById('feedback');
+    fb.classList.add('show');
+    const resultDiv = document.getElementById('resultadoFeedback');
+    if (correta) {
+        resultDiv.textContent = '✅ Correta!';
+        resultDiv.className = 'result correct';
+    } else {
+        resultDiv.textContent = '❌ Incorreta.';
+        resultDiv.className = 'result incorrect';
+    }
+    const letras = ['A', 'B', 'C', 'D'];
+    const suaLetra = letras[idx];
+    const corretaLetra = letras[q.correta];
+    document.getElementById('explicacaoFeedback').innerHTML = `
+        <strong>Comentário:</strong> ${q.explicacao}<br>
+        <strong>Fonte:</strong> ${q.fonte || 'Norma/Edital'}
+    `;
+    let analiseHtml = '';
+    q.analise.forEach((txt, i) => {
+        analiseHtml += `<p><strong>${letras[i]}:</strong> ${txt}</p>`;
+    });
+    document.getElementById('analiseDetalhada').innerHTML = analiseHtml;
+    document.getElementById('classificacaoFeedback').innerHTML = `
+        <strong>Eixo:</strong> ${q.eixo} | 
+        <strong>Dificuldade:</strong> ${q.dificuldade} |
+        <strong>Sua resposta:</strong> ${suaLetra} | 
+        <strong>Gabarito:</strong> ${corretaLetra}
+    `;
+}
+
+function proximaQuestao() {
+    if (!estado.mostrouFeedback) return;
+    estado.indiceAtual++;
+    estado.mostrouFeedback = false;
+    if (estado.indiceAtual < questoes.length) {
+        renderizarQuestao();
+    } else {
+        document.getElementById('questionBox').style.display = 'none';
+        document.getElementById('feedback').classList.remove('show');
+        document.getElementById('painelResumo').innerHTML = '<div style="text-align:center;padding:20px;">🏁 Todas as questões respondidas! Use FINALIZAR para ver o relatório completo.</div>';
+    }
+    atualizarPainelResumo();
+}
+
+function atualizarPainelResumo() {
+    document.getElementById('acertosDisplay').textContent = estado.acertos;
+    document.getElementById('errosDisplay').textContent = estado.erros;
+    const total = estado.respondidas || 1;
+    const pct = total > 0 ? Math.round((estado.acertos / total) * 100) : 0;
+    document.getElementById('aproveitamentoDisplay').textContent = pct + '%';
+    document.getElementById('questaoAtualDisplay').textContent = estado.indiceAtual + 1;
+    document.getElementById('progresso-label').textContent = `${estado.respondidas} / 50 respondidas`;
+}
+
+function mostrarPainel() {
+    let msg = '📊 PAINEL DE DESEMPENHO\n\n';
+    msg += `Questões respondidas: ${estado.respondidas}/50\n`;
+    msg += `✅ Acertos: ${estado.acertos}\n`;
+    msg += `❌ Erros: ${estado.erros}\n`;
+    const total = estado.respondidas || 1;
+    msg += `📈 Aproveitamento geral: ${Math.round((estado.acertos/total)*100)}%\n\n`;
+
+    msg += '--- POR EIXO ---\n';
+    const eixos = ['Eixo 1', 'Eixo 2', 'Eixo 3', 'Eixo 4'];
+    eixos.forEach(e => {
+        const totalEixo = estado.questoesPorEixo[e] || 0;
+        const acertosEixo = estado.acertosPorEixo[e] || 0;
+        const pctEixo = totalEixo > 0 ? Math.round((acertosEixo/totalEixo)*100) : 0;
+        msg += `${e}: ${pctEixo}% (${acertosEixo}/${totalEixo})\n`;
+    });
+    msg += '\n--- POR DIFICULDADE ---\n';
+    ['Fácil', 'Média', 'Difícil'].forEach(d => {
+        const totalD = estado.questoesPorDificuldade[d] || 0;
+        const acertosD = estado.acertosPorDificuldade[d] || 0;
+        const pctD = totalD > 0 ? Math.round((acertosD/totalD)*100) : 0;
+        msg += `${d}: ${pctD}% (${acertosD}/${totalD})\n`;
+    });
+    msg += '\n--- TIPOS DE ERRO ---\n';
+    msg += `Desconhecimento: ${estado.errosPorCausa.desconhecimento || 0}\n`;
+    msg += `Confusão conceitual: ${estado.errosPorCausa.confusao || 0}\n`;
+    msg += `Interpretação: ${estado.errosPorCausa.interpretacao || 0}\n`;
+    msg += `Distração: ${estado.errosPorCausa.distracao || 0}\n`;
+    msg += `Tempo: ${estado.errosPorCausa.tempo || 0}\n`;
+
+    // três tópicos mais fracos
+    msg += '\n--- 3 TÓPICOS MAIS FRACOS ---\n';
+    const fraquezas = eixos.map(e => ({ eixo: e, pct: estado.questoesPorEixo[e] > 0 ? Math.round(((estado.questoesPorEixo[e] - (estado.acertosPorEixo[e]||0)) / estado.questoesPorEixo[e]) * 100) : 0 }));
+    fraquezas.sort((a,b) => b.pct - a.pct);
+    fraquezas.slice(0,3).forEach((f, i) => {
+        msg += `${i+1}. ${f.eixo} — ${f.pct}% de erros\n`;
+    });
+
+    alert(msg);
+}
+
+function mostrarRevisao() {
+    if (estado.historicoErros.length === 0) {
+        alert('📖 Você não errou nenhuma questão até o momento. Continue assim!');
+        return;
+    }
+    let msg = '📖 REVISÃO — CONCEITOS ERRADOS\n\n';
+    estado.historicoErros.forEach((err, i) => {
+        msg += `${i+1}. Questão ${err.id} (${err.eixo}) — Dificuldade: ${err.dificuldade}\n`;
+        msg += `   Tópico: ${err.topico}\n`;
+        msg += `   Sua resposta: ${['A','B','C','D'][err.suaResposta]} | Correta: ${['A','B','C','D'][err.correta]}\n`;
+        msg += `   Explicação: ${err.explicacao.substring(0, 100)}...\n\n`;
+    });
+    alert(msg);
+}
+
+// ============================================================
+// COMANDOS ESPECIAIS (via prompt)
+// ============================================================
+function processarComando(cmd) {
+    const comando = cmd.trim().toUpperCase();
+    if (comando === 'PAINEL') {
+        mostrarPainel();
+        return true;
+    } else if (comando === 'REVISÃO') {
+        mostrarRevisao();
+        return true;
+    } else if (comando === 'REFAZER') {
+        // reapresentar apenas erradas
+        if (estado.historicoErros.length === 0) {
+            alert('Nenhum erro para refazer.');
+            return true;
+        }
+        // vamos resetar o estado para apenas as erradas? complicado. faremos uma lista.
+        let msg = '🔄 REFAZER — Questões que você errou:\n\n';
+        estado.historicoErros.forEach((err, i) => {
+            msg += `${i+1}. Questão ${err.id} — ${err.eixo}\n`;
+        });
+        msg += '\nPara refazer, use o comando REFAZER seguido do número da questão. Exemplo: REFAZER 1';
+        alert(msg);
+        return true;
+    } else if (comando === 'SIMULADO') {
+        estado.simuladoAtivo = !estado.simuladoAtivo;
+        alert(`Modo simulado ${estado.simuladoAtivo ? 'ATIVADO' : 'DESATIVADO'}. No modo simulado, as correções serão rápidas.`);
+        return true;
+    } else if (comando === 'PAUSA') {
+        estado.pausa = !estado.pausa;
+        alert(`Treinamento ${estado.pausa ? 'PAUSADO' : 'CONTINUANDO'}. Questão atual: ${estado.indiceAtual+1}/50.`);
+        return true;
+    } else if (comando === 'CONTINUAR') {
+        estado.pausa = false;
+        alert('Continuando treinamento.');
+        return true;
+    } else if (comando === 'ANULAR') {
+        // anular questão atual (substituir)
+        if (estado.mostrouFeedback) {
+            alert('Você já respondeu esta questão. Não é possível anular após a correção.');
+            return true;
+        }
+        const q = getQuestaoAtual();
+        const confirma = confirm(`Anular questão ${q.id}? Ela será substituída por uma nova do mesmo eixo e dificuldade.`);
+        if (confirma) {
+            // encontrar uma questão do mesmo eixo e dificuldade que não seja a atual e não esteja anulada
+            const substituta = questoes.find(q2 => 
+                q2.eixo === q.eixo && 
+                q2.dificuldade === q.dificuldade && 
+                q2.id !== q.id &&
+                !estado.anuladas.includes(q2.id)
+            );
+            if (substituta) {
+                const idx = estado.indiceAtual;
+                questoes[idx] = { ...substituta };
+                estado.anuladas.push(substituta.id);
+                renderizarQuestao();
+                alert(`Questão anulada e substituída pela questão ${substituta.id}.`);
+            } else {
+                alert('Não foi possível encontrar uma substituta adequada. Tente mais tarde.');
+            }
+        }
+        return true;
+    } else if (comando === 'DICAS') {
+        const q = getQuestaoAtual();
+        alert(`💡 Dica: ${q.dificuldade === 'Fácil' ? 'Foque no conceito central.' : q.dificuldade === 'Média' ? 'Leia com atenção as sutilezas.' : 'Atenção: há uma pegadinha em uma das alternativas.'}`);
+        return true;
+    } else if (comando === 'FONTES') {
+        const q = getQuestaoAtual();
+        alert(`📚 Fonte da última questão: ${q.fonte || 'Não especificada'}`);
+        return true;
+    } else if (comando === 'FINALIZAR') {
+        finalizarTreinamento();
+        return true;
+    }
+    return false;
+}
+
+function finalizarTreinamento() {
+    const total = estado.respondidas || 0;
+    const acertos = estado.acertos;
+    const erros = estado.erros;
+    const pct = total > 0 ? Math.round((acertos/total)*100) : 0;
+
+    let relatorio = '🏁 RELATÓRIO FINAL — SES-TO 2026\n\n';
+    relatorio += `📌 Total de questões: 50\n`;
+    relatorio += `✅ Acertos: ${acertos}\n`;
+    relatorio += `❌ Erros: ${erros}\n`;
+    relatorio += `📈 Aproveitamento geral: ${pct}%\n\n`;
+
+    relatorio += '--- DESEMPENHO POR EIXO ---\n';
+    const eixos = ['Eixo 1', 'Eixo 2', 'Eixo 3', 'Eixo 4'];
+    let tabela = '| Eixo | Questões | Acertos | Erros | Aproveitamento | Ação recomendada |\n';
+    tabela += '|------|---------|---------|-------|----------------|-------------------|\n';
+    eixos.forEach(e => {
+        const totalE = estado.questoesPorEixo[e] || 0;
+        const acertosE = estado.acertosPorEixo[e] || 0;
+        const errosE = estado.errosPorEixo[e] || 0;
+        const pctE = totalE > 0 ? Math.round((acertosE/totalE)*100) : 0;
+        let acao = 'Revisar fundamentos';
+        if (pctE >= 80) acao = 'Manter revisões leves';
+        else if (pctE >= 60) acao = 'Reforçar com exercícios';
+        else acao = 'Revisão intensiva';
+        tabela += `| ${e} | ${totalE} | ${acertosE} | ${errosE} | ${pctE}% | ${acao} |\n`;
+    });
+    relatorio += tabela + '\n';
+
+    relatorio += '--- DESEMPENHO POR DIFICULDADE ---\n';
+    ['Fácil', 'Média', 'Difícil'].forEach(d => {
+        const totalD = estado.questoesPorDificuldade[d] || 0;
+        const acertosD = estado.acertosPorDificuldade[d] || 0;
+        const pctD = totalD > 0 ? Math.round((acertosD/totalD)*100) : 0;
+        relatorio += `${d}: ${pctD}% (${acertosD}/${totalD})\n`;
+    });
+
+    relatorio += '\n--- 10 TÓPICOS COM MELHOR DESEMPENHO ---\n';
+    const melhores = eixos.map(e => ({ eixo: e, pct: estado.questoesPorEixo[e] > 0 ? Math.round((estado.acertosPorEixo[e]/estado.questoesPorEixo[e])*100) : 0 }));
+    melhores.sort((a,b) => b.pct - a.pct);
+    melhores.slice(0, Math.min(10, melhores.length)).forEach((m, i) => {
+        relatorio += `${i+1}. ${m.eixo} — ${m.pct}%\n`;
+    });
+
+    relatorio += '\n--- 10 TÓPICOS COM PIOR DESEMPENHO ---\n';
+    const piores = eixos.map(e => ({ eixo: e, pct: estado.questoesPorEixo[e] > 0 ? Math.round(((estado.questoesPorEixo[e] - estado.acertosPorEixo[e])/estado.questoesPorEixo[e])*100) : 0 }));
+    piores.sort((a,b) => b.pct - a.pct);
+    piores.slice(0, Math.min(10, piores.length)).forEach((p, i) => {
+        relatorio += `${i+1}. ${p.eixo} — ${p.pct}% de erros\n`;
+    });
+
+    relatorio += '\n--- CLASSIFICAÇÃO DOS ERROS ---\n';
+    relatorio += `Desconhecimento: ${estado.errosPorCausa.desconhecimento || 0}\n`;
+    relatorio += `Confusão conceitual: ${estado.errosPorCausa.confusao || 0}\n`;
+    relatorio += `Interpretação: ${estado.errosPorCausa.interpretacao || 0}\n`;
+    relatorio += `Distração: ${estado.errosPorCausa.distracao || 0}\n`;
+    relatorio += `Tempo: ${estado.errosPorCausa.tempo || 0}\n`;
+
+    relatorio += '\n--- QUESTÕES PARA REFAZER ---\n';
+    if (estado.historicoErros.length === 0) {
+        relatorio += 'Nenhuma questão errada. Parabéns!\n';
+    } else {
+        estado.historicoErros.forEach((err, i) => {
+            relatorio += `${i+1}. Questão ${err.id} — ${err.eixo}\n`;
+        });
+    }
+
+    relatorio += '\n--- CONCEITOS QUE PRECISAM DE REVISÃO IMEDIATA ---\n';
+    if (estado.historicoErros.length === 0) {
+        relatorio += 'Nenhum.\n';
+    } else {
+        const conceitos = new Set();
+        estado.historicoErros.forEach(err => {
+            conceitos.add(err.topico);
+        });
+        conceitos.forEach(c => { relatorio += `- ${c}\n`; });
+    }
+
+    relatorio += '\n--- RECOMENDAÇÃO DE ESTUDO ---\n';
+    let recomendacao = 'Distribuir as próximas horas de estudo:\n';
+    const eixosPct = eixos.map(e => ({ eixo: e, pct: estado.questoesPorEixo[e] > 0 ? Math.round(((estado.questoesPorEixo[e] - estado.acertosPorEixo[e])/estado.questoesPorEixo[e])*100) : 0 }));
+    eixosPct.sort((a,b) => b.pct - a.pct);
+    eixosPct.forEach(e => {
+        recomendacao += `- ${e.eixo}: ${e.pct}% de déficit → ${Math.round(e.pct * 0.5)} horas sugeridas\n`;
+    });
+    relatorio += recomendacao;
+
+    relatorio += '\n--- PLANO DE RECUPERAÇÃO DE 7 DIAS ---\n';
+    const plano = [
+        'Dia 1-2: Revisão do eixo com pior desempenho',
+        'Dia 3-4: Exercícios específicos do segundo pior eixo',
+        'Dia 5: Simulado de 20 questões dos eixos mais fracos',
+        'Dia 6: Revisão de legislação e auditoria (Eixo 4)',
+        'Dia 7: Simulado completo de 50 questões'
+    ];
+    plano.forEach((p, i) => { relatorio += `${i+1}. ${p}\n`; });
+
+    relatorio += '\n--- META PARA PRÓXIMO BLOCO ---\n';
+    const meta = pct >= 70 ? 'Manter ou superar 80% de aproveitamento.' : 'Alcançar no mínimo 70% de aproveitamento.';
+    relatorio += meta;
+
+    relatorio += '\n\n--- AVALIAÇÃO DE SEGURANÇA PARA O MÓDULO II ---\n';
+    const seguro = pct >= 70 ? '✅ Você alcançou um nível de segurança adequado para o Módulo II.' : '❌ Você ainda precisa reforçar seus conhecimentos antes do Módulo II.';
+    relatorio += seguro;
+
+    alert(relatorio);
+    // opção de baixar relatório? apenas exibimos.
+}
+
+// ============================================================
+// INICIALIZAÇÃO E EVENTOS
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // inicializar estado
+    renderizarQuestao();
+
+    document.getElementById('btnResponder').addEventListener('click', responder);
+    document.getElementById('btnProxima').addEventListener('click', proximaQuestao);
+    document.getElementById('btnPainel').addEventListener('click', mostrarPainel);
+    document.getElementById('btnRevisao').addEventListener('click', mostrarRevisao);
+
+    // Comandos via prompt (simulação de chat)
+    // Usamos um prompt para comandos, mas podemos também ouvir teclas
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !document.getElementById('btnResponder').disabled) {
+            responder();
+        }
+    });
+
+    // Comandos via input (para facilitar)
+    const inputComando = document.createElement('input');
+    inputComando.placeholder = 'Digite um comando (PAINEL, REVISÃO, etc.)';
+    inputComando.style.cssText = 'width: 100%; padding: 10px; margin-top: 12px; border-radius: 30px; border: 1px solid #b0c8dd; font-size: 14px;';
+    const container = document.querySelector('.container');
+    container.appendChild(inputComando);
+    inputComando.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const cmd = inputComando.value.trim();
+            if (cmd) {
+                processarComando(cmd);
+                inputComando.value = '';
+            }
+        }
+    });
+
+    console.log('🚀 Treinamento SES-TO 2026 iniciado!');
+});
+</script>
 </body>
 </html>
